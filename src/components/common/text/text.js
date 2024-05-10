@@ -9,6 +9,7 @@ import parse, { domToReact } from 'html-react-parser'
 import ExpandButton from './expandButton'
 import TextHeader from './textHeader'
 import { randLocation } from '../../../utils/commonUtils'
+import { getMainContainer } from '../../../utils/sizeUtils'
 
 
 const Text = ({ index, zIndex, sectionTitle, text, handleClick }) => {
@@ -60,7 +61,7 @@ const Text = ({ index, zIndex, sectionTitle, text, handleClick }) => {
   const containerH = getEmifiedPx(20) * 3 + getPx(FONT_SIZES.LEADING_M) * 6
   const marginPercentage = 0.8
   const defaultPosition = useMemo(() =>
-    randLocation(SIZES.getMainContainer(), {
+    randLocation(getMainContainer(), {
       x: containerW * marginPercentage,
       y: containerH * marginPercentage
     }),

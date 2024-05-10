@@ -26,23 +26,13 @@ export const COLORS = {
   LIGHT_BEIGE: '#F6F2EB',
 }
 
-const MARGIN = remify(30)
-const OPEN_INDEX_LEFT_VALUE = 92.5
 export const SIZES = {
-  MARGIN,
-  OPEN_INDEX_LEFT_VALUE,
+  MARGIN: remify(30),
+  OPEN_INDEX_LEFT_VALUE: 92.5,
   TEXT_WIDTH: remify(400),
   ARROW_PADDING: '0.25em',
   IMG_MAX_SIZE: '250px',
   INDEX_STICKY_TOP: '400px',
   ORDERED_COL_GAP: remify(18),
   ORDERED_COL_TOP_PADDING: remify(45),
-  getMainContainer: () => ({
-    left: getPx(MARGIN),
-    right: vw(OPEN_INDEX_LEFT_VALUE) - getPx(MARGIN),
-    top: getPx(MARGIN),
-    bottom: vh()
-  })
 }
-
-export const DEV_TEST_SRC = 'https://ucc8984c429afa034616491197f9.previews.dropboxusercontent.com/p/thumb/ACQP5WV98Z-0BJTA4F2kYvunvEY86YwzAWeXoB39AhoxzwBVMoQ56UZjvi_Uj_Dy9OOLnZ7wAzKa-NuaUh_w-QHKmCq1iJ0Mq5bk0mQhoCyQon0tNxcFg9xFh3zPb0RtgmTlfNF-2tHQUo3I4gvX6O0HoGCV9oMThRWnJ1is1dxpuJy3KsrgRqzLelb8tOFNwIH-zB7EZXOfvej5KxODPzNXutN6EaP4dUkSkMarmRFusjKluzOpiJv-UpNuYFDSa3_jO912GVyGXAit6f3EFIJx-MLXtW4a4S9Cv2DBTsim7hN14DP15Jh_zHwjY-Ppb6hlKRpkxMw1yIaRw5LKB-7MaEjPo-EMHGxlE-w-dMsZcCOVYDCi4wdwocQZyB9-8z0zb-6bdmuvAfweKmfmFGcA/p.jpeg'
