@@ -93,7 +93,7 @@ const IndexTab = ({ onRowClick }) => {
           <FilteredImg
             backgroundColor={COLORS.BROWN}
             src={imgLink}
-            maxSize={SIZES.IMG_MAX_SIZE + 'px'} />}
+            maxSize={SIZES.IMG_MAX_SIZE} />}
       </HeaderContainer>
       <TableContainer>
         <TableHead>

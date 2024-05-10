@@ -42,7 +42,7 @@ const MixedViewSection = ({ index, text, sectionTitle, imgData, isLeft, footnote
   const imgs = useMemo(() =>
     imgData?.map(({ imgLink, imgNum }, i) =>
       // TODO
-      <Figure key={i} backgroundColor={COLORS.BROWN} src={imgLink} maxSize={SIZES.IMG_MAX_SIZE + 'px'} imgNum={imgNum} />
+      <Figure key={i} backgroundColor={COLORS.BROWN} src={imgLink} maxSize={SIZES.IMG_MAX_SIZE} imgNum={imgNum} />
     ), [imgData])
 
   return (

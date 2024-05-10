@@ -33,8 +33,10 @@ export const SIZES = {
   OPEN_INDEX_LEFT_VALUE,
   TEXT_WIDTH: remify(400),
   ARROW_PADDING: '0.25em',
-  IMG_MAX_SIZE: 250,
+  IMG_MAX_SIZE: '250px',
   INDEX_STICKY_TOP: '400px',
+  ORDERED_COL_GAP: remify(18),
+  ORDERED_COL_TOP_PADDING: remify(45),
   getMainContainer: () => ({
     left: getPx(MARGIN),
     right: vw(OPEN_INDEX_LEFT_VALUE) - getPx(MARGIN),

@@ -78,7 +78,6 @@ const Text = ({ index, zIndex, sectionTitle, text, handleClick }) => {
         <TextHeader>{sectionTitle}</TextHeader>
         <TextBodyContainer>
           {isExpanded ? truncated : getParsed(true)}
-          {/* {!isTruncated && <TruncateButton isTruncated={isTruncated} handleClick={handleButtonClick} />} */}
         </TextBodyContainer>
       </TextContainer>
     </Draggable >

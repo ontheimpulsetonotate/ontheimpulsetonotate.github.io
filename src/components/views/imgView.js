@@ -4,9 +4,12 @@ import Img from '../common/img/img'
 
 
 const refWithImg = dataServices.parsedData.filter(({ imgLink }) => imgLink)
-const ImgView = () => {
+const ImgView = ({ isOrdered }) => {
   return (
-    <DragContainer contents={refWithImg} element={Img} />
+    <DragContainer
+      contents={refWithImg}
+      isOrdered={isOrdered}
+      element={Img} />
   )
 }
 

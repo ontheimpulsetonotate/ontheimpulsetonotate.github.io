@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { loopObject, validateString } from './commonUtils'
+import { remify } from './styleUtils'
 
 const flex = (
   alignItems = 'initial',
@@ -35,12 +36,18 @@ const noScrollBar = () => `
   }
 `
 
+const underline = () => `
+  text-decoration: underline;
+  text-underline-offset: ${remify(6)};
+`
+
 const mixins = {
   flex,
   highZIndex,
   draggable,
   paragraphSpacing,
   noScrollBar,
+  underline,
   chain: function () {
     const chainedObject = {}
     let accumulatedReturn = ''

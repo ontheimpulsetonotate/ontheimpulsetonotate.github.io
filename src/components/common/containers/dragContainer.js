@@ -1,21 +1,25 @@
 import styled from 'styled-components'
 import mixins from '../../../utils/mixins'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { quickArray } from '../../../utils/commonUtils'
 import _ from 'lodash'
 import FullContainer from './fullContainer'
+import { SIZES } from '../../../constants/stylesConstants'
+import { getPx } from '../../../utils/styleUtils'
 
-const DragContainer = ({ contents, element: Element }) => {
+const DragContainer = ({ contents, isOrdered, element: Element }) => {
   const [indices, setIndices] = useState(quickArray(contents.length))
   const handleClick = i => setIndices(prev => [..._.without(prev, i), i])
+  const containerRef = useRef() // TODO: remove
 
   return (
-    <StyledContainer>
+    <StyledContainer ref={containerRef}>
       {contents.map((content, i) =>
         <Element
           {...content}
           key={i}
           index={i}
+          isOrdered={isOrdered}
           zIndex={indices.indexOf(i) + 1}
           handleClick={handleClick} />
       )}

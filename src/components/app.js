@@ -10,8 +10,9 @@ import ImgView from './views/imgView'
 import MixedView from './views/mixedView'
 
 const App = () => {
-  const [mode, setMode] = useState(2)
+  const [mode, setMode] = useState(1)
   const [targetFragmentIndex, setTargetFragmentIndex] = useState()
+  const [isOrdered, setIsOrdered] = useState(false)
 
   const menuButtons = [
     { text: 'Text', component: TextView },
@@ -43,11 +44,19 @@ const App = () => {
               </HeaderButton>
             )}
           </menu>
-          {mode !== 2 && <button>Order</button>}
+          {mode !== 2 &&
+            <HeaderButton
+              onClick={() => setIsOrdered(!isOrdered)}
+              $underline={isOrdered}>
+              Order
+            </HeaderButton>}
         </HeaderContainer>
-        <View targetFragmentIndex={targetFragmentIndex} handleFragmentScroll={handleFragmentScroll} />
+        <View
+          isOrdered={isOrdered}
+          targetFragmentIndex={targetFragmentIndex}
+          handleFragmentScroll={handleFragmentScroll} />
         <IndexTab onRowClick={handleIndexRowClick} />
-      </MainContainer>
+      </MainContainer >
     </>
   )
 }
@@ -114,8 +123,7 @@ const HeaderContainer = styled(Header)`
 `
 
 const HeaderButton = styled.button`
-  text-decoration: ${conditionalStyle('$underline', 'underline')};
-  text-underline-offset: ${remify(6)};
+  ${conditionalStyle('$underline', mixins.underline)};
 `
 
 export default App
