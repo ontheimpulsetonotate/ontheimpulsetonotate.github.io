@@ -10,7 +10,7 @@ import ImgView from './views/imgView'
 import MixedView from './views/mixedView'
 
 const App = () => {
-  const [mode, setMode] = useState(1)
+  const [mode, setMode] = useState(0)
   const [targetFragmentIndex, setTargetFragmentIndex] = useState()
   const [isOrdered, setIsOrdered] = useState(false)
 

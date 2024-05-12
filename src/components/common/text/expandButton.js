@@ -3,9 +3,9 @@
 const ExpandButton = ({ isExpanded, handleClick }) => {
   return (
     <span>
-      {isExpanded ? '... ' : ' '}
+      {isExpanded ? ' ' : '... '}
       <button onClick={() => handleClick(!isExpanded)}>
-        [{isExpanded ? 'EXPAND' : 'COLLAPSE'}]
+        [{isExpanded ? 'COLLAPSE' : 'EXPAND'}]
       </button>
     </span>
   )

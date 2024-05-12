@@ -10,7 +10,7 @@ import { FONT_SIZES, SIZES, TIMINGS } from '../../../constants/stylesConstants'
 import { useWindowSize } from '@uidotdev/usehooks'
 
 
-const DragContainer = ({ contents, elemW, elemH, isOrdered, element: Element }) => {
+const Node = ({ contents, elemW, elemH, isOrdered, element: Element }) => {
   const [indices, setIndices] = useState(quickArray(contents.length))
   const handleClick = i => setIndices(prev => [..._.without(prev, i), i])
   const [scrollSize, setScrollSize] = useState()
@@ -76,7 +76,7 @@ const DragContainer = ({ contents, elemW, elemH, isOrdered, element: Element }) 
           mappedPosition={mappedPositions[i]}
           zIndex={indices.indexOf(i) + 1}
           handleClick={handleClick}
-          handleDrag={handleUnmap} />
+          handleDragEnd={handleUnmap} />
       )}
       <ScrollSizer $height={isOrdered ? `${scrollSize}px` : '100vh'} />
     </StyledContainer>
@@ -101,4 +101,4 @@ const ScrollSizer = styled.div`
   transition: height ${TIMINGS.ORDER}ms ease-in-out;
 `
 
-export default DragContainer
+export default Node

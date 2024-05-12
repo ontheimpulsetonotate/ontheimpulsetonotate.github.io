@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../constants/stylesConstants'
 import mixins from '../utils/mixins'
 import Header from './common/header'
-import { remify, toggleStyle } from '../utils/styleUtils'
+import { conditionalStyle, remify, toggleStyle } from '../utils/styleUtils'
 import { useEffect, useMemo, useState } from 'react'
 import dataServices from '../services/dataServices'
 import { addEventListener } from '../utils/reactUtils'
@@ -14,6 +14,7 @@ import FilteredImg, { FilterImgContainer } from './common/img/filteredImg'
 
 const IndexTab = ({ onRowClick }) => {
   const [indexIsOpened, setIndexIsOpened] = useState(false)
+  const [shouldAnimate, setShouldAnimate] = useState(false)
   const [sort, setSort] = useState({ index: 0, isAscending: true })
   const [hoverIndex, setHoverIndex] = useState()
   const [imgIsLoaded, setImgIsLoaded] = useState()
@@ -42,6 +43,7 @@ const IndexTab = ({ onRowClick }) => {
   const handleClick = (e, state) => {
     e.stopPropagation()
     setIndexIsOpened(state)
+    setShouldAnimate(true)
   }
 
   const handleRowClick = (e, data) => {
@@ -62,7 +64,10 @@ const IndexTab = ({ onRowClick }) => {
     return sort.isAscending ? sorted : _.reverse(sorted)
   }, [sort.index, sort.isAscending])
 
-  useEffect(() => addEventListener(document, 'click', () => setIndexIsOpened(false)))
+  useEffect(() => addEventListener(document, 'click', () => {
+    setIndexIsOpened(false)
+    setShouldAnimate(true)
+  }))
 
   const { imgLink } = sortedData[hoverIndex] ?? {}
 
@@ -82,7 +87,11 @@ const IndexTab = ({ onRowClick }) => {
   const buttonFocus = indexIsOpened ? undefined : -1
 
   return (
-    <IndexTabContainer $open={indexIsOpened} onClick={e => handleClick(e, true)}>
+    <IndexTabContainer
+      onClick={e => handleClick(e, true)}
+      onTransitionEnd={() => setShouldAnimate(false)}
+      $open={indexIsOpened}
+      $shouldAnimate={shouldAnimate}>
       <HeaderContainer>
         <h2>Index</h2>
         {!imgLink &&
@@ -143,7 +152,7 @@ ${mixins.highZIndex(4)}
   width: 72.5vw;
   height: 100vh;
   position: absolute;
-  transition: left 400ms ease-in-out;
+  transition: ${conditionalStyle('$shouldAnimate', 'left 400ms ease-in-out')};
   top: 0;
   left: ${toggleStyle('$open', `calc(27.5vw - ${SIZES.PAGE_MARGIN} * 3)`, `calc(${SIZES.OPENED_INDEX_LEFT_VALUE}vw - ${SIZES.PAGE_MARGIN})`)};
   padding: 0 ${SIZES.PAGE_MARGIN};

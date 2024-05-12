@@ -4,7 +4,7 @@ import ExpandButton from '../components/common/text/expandButton'
 export const parseTextView = (text, handleButtonClick, truncate) => {
   let html = `<p>${text}</p>`
     .replace(/<br>$/, '')
-    .replaceAll(/<br>/g, truncate ? '</p><p>' : ' ')
+    .replaceAll(/<br>/g, truncate ? ' ' : '</p><p>')
   const options = {
     replace: domNode => {
       if (domNode.tagName === 'span') {
@@ -17,11 +17,11 @@ export const parseTextView = (text, handleButtonClick, truncate) => {
       }
       if (domNode.tagName === 'a')
         return <>{domToReact(domNode.children)}</>
-      if (truncate && domNode.tagName === 'p' && !domNode.next)
+      if (!truncate && domNode.tagName === 'p' && !domNode.next)
         return (
           <p>
             {domToReact(domNode.children, options)}
-            <ExpandButton isExpanded={false} handleClick={handleButtonClick} />
+            <ExpandButton isExpanded={true} handleClick={handleButtonClick} />
           </p>
         )
     }
