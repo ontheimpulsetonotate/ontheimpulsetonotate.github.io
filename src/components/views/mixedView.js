@@ -3,11 +3,13 @@ import dataServices from '../../services/dataServices'
 import FullContainer from '../common/containers/fullContainer'
 import MixedViewSection from './mixedViewSection'
 import { remify } from '../../utils/styleUtils'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FRAGMENT_ID_PREFIX } from '../../constants/reactConstants'
+import { addEventListener } from '../../utils/reactUtils'
 
 const MixedView = ({ targetFragmentIndex, handleFragmentScroll }) => {
   const containerRef = useRef()
+  const [containerY, setContainerY] = useState(0)
 
   useEffect(() => {
     const container = containerRef.current
@@ -17,6 +19,10 @@ const MixedView = ({ targetFragmentIndex, handleFragmentScroll }) => {
     container.scrollBy({ top, behavior: 'smooth' })
     handleFragmentScroll()
   }, [targetFragmentIndex])
+
+  useEffect(() => addEventListener(containerRef.current, 'scroll', () =>
+    setContainerY(containerRef.current.scrollTop)
+  ), [])
 
   const renderTexts = () => {
     let isLeft = false
@@ -32,10 +38,12 @@ const MixedView = ({ targetFragmentIndex, handleFragmentScroll }) => {
           sectionTitle={sectionTitle}
           footnotes={footnotes}
           imgData={imgData}
+          containerY={containerY}
           isLeft={isLeft} />
       )
     })
   }
+
   return (
     <Container ref={containerRef}>
       {renderTexts()}

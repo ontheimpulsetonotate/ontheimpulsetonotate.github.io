@@ -1,7 +1,7 @@
 import styled, { createGlobalStyle } from 'styled-components'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../constants/stylesConstants'
 import { conditionalStyle, remify } from '../utils/styleUtils'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from './common/header'
 import IndexTab from './indexTab'
 import TextView from './views/textView'
@@ -13,6 +13,8 @@ const App = () => {
   const [mode, setMode] = useState(1)
   const [targetFragmentIndex, setTargetFragmentIndex] = useState()
   const [isOrdered, setIsOrdered] = useState(false)
+
+  useEffect(() => setIsOrdered(false), [mode])
 
   const menuButtons = [
     { text: 'Text', component: TextView },
@@ -102,7 +104,7 @@ const GlobalStyle = createGlobalStyle`
 
 const MainContainer = styled.div`
   position: relative;
-  margin: 0 calc(${SIZES.MARGIN} + ${100 - SIZES.OPEN_INDEX_LEFT_VALUE}vw) 0 ${SIZES.MARGIN};
+  margin: 0 calc(${SIZES.PAGE_MARGIN} + ${100 - SIZES.OPENED_INDEX_LEFT_VALUE}vw) 0 ${SIZES.PAGE_MARGIN};
 `
 
 const HeaderContainer = styled(Header)`

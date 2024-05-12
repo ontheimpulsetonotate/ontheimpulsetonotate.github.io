@@ -32,7 +32,7 @@ const parsedData = (() => {
   ]
 
   const data = Array.from(main.querySelector('tbody').children)
-    .slice(2) // TODO
+    .slice(2)
     .map(tr => {
       const tdArray = Array.from(tr.querySelectorAll('td')).slice(0, dataKeys.length)
       if (!tdArray[0].innerText.match(/^REF/)) return false

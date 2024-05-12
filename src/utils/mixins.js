@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { loopObject, validateString } from './commonUtils'
 import { remify } from './styleUtils'
+import { COLORS } from '../constants/stylesConstants'
 
 const flex = (
   alignItems = 'initial',
@@ -23,7 +24,7 @@ const draggable = () => `
 const paragraphSpacing = lineHeight => `
   line-height: ${lineHeight};
 
-  &:not(:first-child){
+  &:not(:first-of-type){
     padding-top: ${lineHeight};
   }
 `
@@ -41,6 +42,10 @@ const underline = () => `
   text-underline-offset: ${remify(6)};
 `
 
+const border = (strokeWidth, isBottom = true) => `
+  border${validateString(isBottom, '-bottom')}: ${COLORS.BROWN} ${strokeWidth}px solid;
+`
+
 const mixins = {
   flex,
   highZIndex,
@@ -48,6 +53,7 @@ const mixins = {
   paragraphSpacing,
   noScrollBar,
   underline,
+  border,
   chain: function () {
     const chainedObject = {}
     let accumulatedReturn = ''

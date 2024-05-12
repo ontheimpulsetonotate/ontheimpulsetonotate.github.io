@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import FastPoissonDiskSampling from 'fast-2d-poisson-disk-sampling'
 
 export const validateString = (validatorOrString, string) => {
   if (!string) return validatorOrString || ''
@@ -14,6 +14,7 @@ export const loopObject = (object, callback) => {
 }
 
 export const quickArray = (length, callback = i => i) => Array(length).fill(0).map((_, i) => callback(i))
+export const delta = (a, b) => Math.abs(a - b)
 
 export const getDataStringSorter = key => (a, b) => {
   if (!a[key]) return 1
@@ -21,33 +22,58 @@ export const getDataStringSorter = key => (a, b) => {
   return a[key].localeCompare(b[key])
 }
 
-export const randLocation = ({ left, right, top, bottom }, { x, y } = { x: 0, y: 0 }) => {
-  const mapBound = 0.975
-  const stddevX = 0.5
-  const stddevY = 0.6
-  const paddingBoundFactor = 0.5
-
-  return {
-    x: _.clamp(
-      map(gaussianRandom(0, stddevX), -mapBound, mapBound, left + x, right - x),
-      left + x * paddingBoundFactor,
-      right - x * paddingBoundFactor
-    ),
-    y: _.clamp(
-      map(gaussianRandom(0, stddevY), -mapBound, mapBound, top + y, bottom - y),
-      top + y * paddingBoundFactor,
-      bottom - y * paddingBoundFactor
-    )
-  }
+const getBounds = points => {
+  let minX = Infinity
+  let maxX = -Infinity
+  let minY = Infinity
+  let maxY = -Infinity
+  points.forEach(([x, y]) => {
+    minX = Math.min(minX, x)
+    maxX = Math.max(maxX, x)
+    minY = Math.min(minY, y)
+    maxY = Math.max(maxY, y)
+  })
+  return { minX, maxX, minY, maxY }
 }
 
-const gaussianRandom = (mean = 0, stdev = 1) => {
-  const u = 1 - Math.random() // Converting [0,1) to (0,1]
-  const v = Math.random()
-  const z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v)
-  // Transform to the desired mean and standard deviation:
-  return z * stdev + mean
+const genPoisson = (amount, ratio = 1) => {
+  const AREA = 10000
+
+  const width = Math.sqrt(AREA / ratio)
+  const height = width * ratio
+
+  const pds = new FastPoissonDiskSampling({
+    shape: [width, height],
+    radius: 3
+  })
+
+  const allPoints = pds.fill()
+  const pointBounds = getBounds(allPoints)
+
+
+  const getDistToBound = ([x, y]) => Math.min(
+    delta(x, pointBounds.minX),
+    delta(x, pointBounds.maxX),
+    delta(y, pointBounds.minY),
+    delta(y, pointBounds.maxY)
+  )
+
+  const points = allPoints
+    .sort((a, b) => getDistToBound(a) - getDistToBound(b))
+
+  return points.slice(points.length - amount)
 }
 
-const map = (value, inMin, inMax, outMin = 0, outMax = 1) =>
+export const UNMAPPED_BOUNDS = [0, 100]
+export const mapPoisson = (amount, ratio) => {
+  const unmappedPoisson = genPoisson(amount, ratio)
+  const { minX, maxX, minY, maxY } = getBounds(unmappedPoisson)
+  return unmappedPoisson
+    .map(([x, y]) => ({
+      x: map(x, minX, maxX, ...UNMAPPED_BOUNDS),
+      y: map(y, minY, maxY, ...UNMAPPED_BOUNDS)
+    }))
+}
+
+export const map = (value, inMin, inMax, outMin = 0, outMax = 1) =>
   (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin

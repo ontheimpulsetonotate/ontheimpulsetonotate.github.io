@@ -1,102 +1,83 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import Draggable from 'react-draggable'
 import TruncateMarkup from 'react-truncate-markup'
-import { remify, extractStyle, getEmifiedPx, getPx } from '../../../utils/styleUtils'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
+import { conditionalStyle, extractStyle, toggleStyle } from '../../../utils/styleUtils'
+import { FONT_FAMILIES, FONT_SIZES, SIZES, TIMINGS } from '../../../constants/stylesConstants'
 import mixins from '../../../utils/mixins'
-import parse, { domToReact } from 'html-react-parser'
 import ExpandButton from './expandButton'
 import TextHeader from './textHeader'
-import { randLocation } from '../../../utils/commonUtils'
-import { getMainContainer } from '../../../utils/sizeUtils'
+import { parseTextView } from '../../../services/parserServices'
 
 
-const Text = ({ index, zIndex, sectionTitle, text, handleClick }) => {
+const Text = ({ index, zIndex, mappedPosition, sectionTitle, text, handleClick, handleDrag }) => {
+  const draggableRef = useRef()
   const [isExpanded, setIsExpanded] = useState(true)
+  const [forcePosition, setForcePosition] = useState(true)
 
   const handleButtonClick = expand => setIsExpanded(expand)
-  const getParsed = truncate => {
-    let html = `<p>${text}</p>`
-      .replace(/<br>$/, '')
-      .replaceAll(/<br>/g, truncate ? '</p><p>' : ' ')
-    const options = {
-      replace: domNode => {
-        if (domNode.tagName === 'span') {
-          const { attribs, children } = domNode
-          attribs.style += 'text-decoration: none; color:inherit;'
-          if (attribs.style.match('text-decoration:underline')) {
-            const text = children[0]?.data
-            if (text) children[0].data = text.replace(/ \[[0-9]+\]$/, '')
-          }
-        }
-        if (domNode.tagName === 'a')
-          return <>{domToReact(domNode.children)}</>
-        if (truncate && domNode.tagName === 'p' && !domNode.next)
-          return (
-            <p>
-              {domToReact(domNode.children, options)}
-              <ExpandButton isExpanded={false} handleClick={handleButtonClick} />
-            </p>
-          )
-      }
-    }
-
-    return parse(
-      html.replaceAll(/&lt;br&gt;/g, ''),
-      options
-    )
-  }
+  const getParsed = truncate => parseTextView(text, handleButtonClick, truncate)
 
   const truncated = useMemo(() => (
     <TruncateMarkup
-      lines={5}
+      lines={4}
       tokenize='words'
       ellipsis={<ExpandButton isExpanded={isExpanded} handleClick={handleButtonClick} />}>
       {getParsed(false)}
     </TruncateMarkup>
   ), [text])
 
-  const containerW = getPx(SIZES.TEXT_WIDTH)
-  const containerH = getEmifiedPx(20) * 3 + getPx(FONT_SIZES.LEADING_M) * 6
-  const marginPercentage = 0.8
-  const defaultPosition = useMemo(() =>
-    randLocation(getMainContainer(), {
-      x: containerW * marginPercentage,
-      y: containerH * marginPercentage
-    }),
-    [containerW, containerH]
-  )
+  const onClick = () => {
+    handleClick(index)
+    setForcePosition(false)
+  }
+
+  useEffect(() => setForcePosition(true), [mappedPosition])
 
   return (
     <Draggable
-      defaultPosition={{
-        x: defaultPosition.x - containerW / 2,
-        y: defaultPosition.y - containerH / 2
-      }}
-      onMouseDown={() => handleClick(index)}>
-      <TextContainer $zIndex={zIndex}>
-        <TextHeader>{sectionTitle}</TextHeader>
-        <TextBodyContainer>
-          {isExpanded ? truncated : getParsed(true)}
-        </TextBodyContainer>
-      </TextContainer>
+      defaultPosition={mappedPosition}
+      position={forcePosition ? mappedPosition : undefined}
+      ref={draggableRef}
+      onMouseDown={() => onClick()}
+      onStop={() => handleDrag(index, draggableRef.current.state)}>
+      <InnerContainer
+        // onTransitionEnd={() => setIsOrdering(false)}
+        // $isOrdered={isOrdered}
+        // $transition={isOrdering}
+        $zIndex={zIndex}>
+        <TextContainer>
+          <TextHeader>{sectionTitle}</TextHeader>
+          <TextBodyContainer>
+            {isExpanded ? truncated : getParsed(true)}
+          </TextBodyContainer>
+        </TextContainer>
+      </InnerContainer>
+
     </Draggable >
   )
 }
 
-const TextContainer = styled.div`
-  ${mixins.draggable}
-
-  width: ${SIZES.TEXT_WIDTH};
-  padding: ${remify(20)} ${remify(20)}; // TODO
+const InnerContainer = styled.div`
+ ${mixins.draggable}
   z-index: ${extractStyle('$zIndex')};
+  transition: ${conditionalStyle('$transition', `transform ${TIMINGS.ORDER}ms ease-in-out`)};
+  cursor: ${toggleStyle('$isOrdered', 'initial', 'move')};
 
-  border: ${COLORS.BROWN} 1px solid;
+  * {
+    pointer-events: none;
+  }
+`
+
+const TextContainer = styled.div`
+  ${mixins.border(1, false)}
+  width: ${SIZES.TEXT_WIDTH};
+  padding: ${SIZES.ELEM_MARGIN};
   background-color: white;
 `
 
 const TextBodyContainer = styled.div`
+
   p {
    ${mixins.paragraphSpacing(FONT_SIZES.LEADING_M)}
   }

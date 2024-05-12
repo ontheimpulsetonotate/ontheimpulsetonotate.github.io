@@ -3,15 +3,16 @@ import _ from 'lodash'
 import { extractStyle, remify } from '../../../utils/styleUtils'
 import { FONT_FAMILIES, FONT_SIZES } from '../../../constants/stylesConstants'
 import FilteredImg from './filteredImg'
-import { useState } from 'react'
+import { forwardRef, useState } from 'react'
 
 
-const Figure = ({ imgNum, src, backgroundColor, maxSize, ...rest }) => {
+const Figure = forwardRef(({ imgNum, src, backgroundColor, maxSize, ...rest }, ref) => {
   const [isLoaded, setIsLoaded] = useState(false)
 
   return (
     <ImgContainer
       {...rest}
+      ref={ref}
       $opacity={isLoaded ? 1 : 0}>
       <FilteredImg
         src={src}
@@ -21,7 +22,7 @@ const Figure = ({ imgNum, src, backgroundColor, maxSize, ...rest }) => {
       <figcaption><p>REF {imgNum.map(num => _.padStart(num, 3, '0')).join('—')}</p></figcaption>
     </ImgContainer>
   )
-}
+})
 
 const ImgContainer = styled.figure`
   opacity: ${extractStyle('$opacity')};

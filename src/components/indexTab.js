@@ -7,7 +7,7 @@ import { remify, toggleStyle } from '../utils/styleUtils'
 import { useEffect, useMemo, useState } from 'react'
 import dataServices from '../services/dataServices'
 import { addEventListener } from '../utils/reactUtils'
-import { getDataStringSorter } from '../utils/commonUtils'
+import { getDataStringSorter, validateString } from '../utils/commonUtils'
 import SortArrow from './common/text/sortArrow'
 import FilteredImg, { FilterImgContainer } from './common/img/filteredImg'
 
@@ -115,7 +115,7 @@ const IndexTab = ({ onRowClick }) => {
           }
         </TableHead>
         {sortedData.map((data, i) => {
-          const { imgNum, artistLastName, medium, sectionTitle, pageNum } = data
+          const { imgNum, artistFirstName, artistLastName, medium, sectionTitle, pageNum } = data
           return <Row
             key={i}
             onMouseOver={() => handleMouseEnter(i)}
@@ -123,7 +123,7 @@ const IndexTab = ({ onRowClick }) => {
             onClick={e => handleRowClick(e, data)}>
             <p>
               {i === hoverIndex && <HoverArrow>→</HoverArrow>}
-              [{imgNum.map(num => _.padStart(num, 3, '0')).join('—')}] {artistLastName}
+              [{imgNum.map(num => _.padStart(num, 3, '0')).join('—')}] {artistLastName}{validateString(artistFirstName, `, ${artistFirstName}`)}
             </p>
             <p>{medium}</p>
             <p>{sectionTitle}</p>
@@ -145,38 +145,37 @@ ${mixins.highZIndex(4)}
   position: absolute;
   transition: left 400ms ease-in-out;
   top: 0;
-  left: ${toggleStyle('$open', `calc(27.5vw - ${SIZES.MARGIN} * 3)`, `calc(${SIZES.OPEN_INDEX_LEFT_VALUE}vw - ${SIZES.MARGIN})`)};
-  padding: 0 ${SIZES.MARGIN};
+  left: ${toggleStyle('$open', `calc(27.5vw - ${SIZES.PAGE_MARGIN} * 3)`, `calc(${SIZES.OPENED_INDEX_LEFT_VALUE}vw - ${SIZES.PAGE_MARGIN})`)};
+  padding: 0 ${SIZES.PAGE_MARGIN};
 
   background-color: ${COLORS.DARK_BEIGE};
   user-select: none;
   cursor: ${toggleStyle('$open', '', 'pointer')};
 `
 
-const top = 'calc(180px + 20vh)'
 const TableContainer = styled.div`
+  ${mixins.noScrollBar}
   position: absolute;
-  width: calc(100% - ${SIZES.MARGIN} * 2);
-  top: ${top}; // TODO
+  width: calc(100% - ${SIZES.PAGE_MARGIN} * 2);
+  top: ${SIZES.INDEX_STICKY_TOP};
   overflow-y: scroll;
-  height: calc(100vh - ${top});
-  ${mixins.noScrollBar()}
+  height: calc(100vh - ${SIZES.INDEX_STICKY_TOP});
 `
 const HeaderContainer = styled(Header)`
   ${mixins.flex('initial', 'space-between')}
 
   ${FilterImgContainer} {
     position: absolute;
-    top: ${SIZES.MARGIN};
-    right: ${SIZES.MARGIN};
+    top: ${SIZES.PAGE_MARGIN};
+    right: ${SIZES.PAGE_MARGIN};
   }
 `
 
 const Row = styled.div`
+  ${mixins.border(1)}
   display: grid;
-  grid-template-columns: repeat(2, 25%) 1fr ${remify(100)};
+  grid-template-columns: 35% 25% 1fr ${remify(100)};
   width: 100%;
-  border-bottom: ${COLORS.BROWN} 1px solid; // TODO: mixins
   cursor: pointer;
 
   p {
@@ -200,11 +199,11 @@ const Row = styled.div`
 `
 
 const TableHead = styled(Row)`
+  ${mixins.border(2)}
   position: sticky;
   top: -1px;
   background-color: ${COLORS.DARK_BEIGE};
   cursor: initial;
-  border-bottom: ${COLORS.BROWN} 2px solid; // TODO: mixins
 
   p {
     width: fit-content;

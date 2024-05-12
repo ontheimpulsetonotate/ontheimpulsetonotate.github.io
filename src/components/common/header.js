@@ -3,7 +3,7 @@ import { SIZES } from '../../constants/stylesConstants'
 
 
 const Header = styled.div`
-  padding-top: ${SIZES.MARGIN};
+  padding-top: ${SIZES.PAGE_MARGIN};
 `
 
 export default Header

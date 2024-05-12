@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { COLORS, FONT_FAMILIES } from '../../../constants/stylesConstants'
+import { COLORS, FONT_FAMILIES, FONT_SIZES } from '../../../constants/stylesConstants'
 import { useEffect, useState } from 'react'
 import { useHover, useMouse } from '@uidotdev/usehooks'
 import { extractStyle, remify } from '../../../utils/styleUtils'
@@ -16,7 +16,8 @@ const Citation = ({ children, footnote }) => {
         {children}
       </CitationSpan>
       {
-        isHovering && footnote &&
+        isHovering &&
+        footnote &&
         <PopUpCitation
           $x={mouse.x + 20}
           $y={mouse.y + 20}>
@@ -38,12 +39,12 @@ const PopUpCitation = styled.span`
   background-color: ${COLORS.LIGHT_BEIGE};
   left: ${extractStyle('$x')}px;
   top: ${extractStyle('$y')}px;
-  /* width: ${remify(200)}; */
   max-width: ${remify(400)};
   padding: ${remify(10)};
   color: ${COLORS.BLUE};
   border: 2px ${COLORS.BLUE} solid;
   font-family: ${FONT_FAMILIES.APERCU};
+  font-size: ${FONT_SIZES.MEDIUM};
   ${mixins.highZIndex(2)}
 `
 
