@@ -1,16 +1,16 @@
 import dataServices from '../../services/dataServices'
-import Text from '../common/text/text'
-import Node from '../common/containers/node'
+import DragContainer from '../common/containers/dragContainer'
 import { SIZES } from '../../constants/stylesConstants'
+import Text from '../common/text/text'
 
 const TextView = ({ isOrdered }) => {
   const { w, h } = SIZES.getTextContainerSize()
   return (
-    <Node
+    <DragContainer
       contents={dataServices.textData}
       elemW={w}
       elemH={h}
-      isOrdered={isOrdered}
+      isOrdered={undefined}
       element={Text} />
   )
 }

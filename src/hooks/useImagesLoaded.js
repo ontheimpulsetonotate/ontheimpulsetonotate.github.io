@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { useEffect, useState } from 'react'
 
 
-const useImagesLoaded = sources => {
+const useImagesLoaded = (...sources) => {
   const [loadedSources, setLoadedSources] = useState(new Set())
   const [allLoaded, setAllLoaded] = useState(false)
 

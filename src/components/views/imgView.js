@@ -1,19 +1,30 @@
 import { SIZES } from '../../constants/stylesConstants'
 import dataServices from '../../services/dataServices'
-import Node from '../common/containers/node'
+import { getOrderedData } from '../../utils/sizeUtils'
+import DragContainer from '../common/containers/dragContainer'
 import Img from '../common/img/img'
 
 
 const refWithImg = dataServices.parsedData.filter(({ imgLink }) => imgLink)
 const ImgView = ({ isOrdered }) => {
   const imgSize = SIZES.getImgMaxSize()
+
+  const handleOrder = index => {
+    const { colCount, rowHeight, gap, leftMargin, topMargin } = getOrderedData()
+    return {
+      x: index % colCount * (SIZES.getImgMaxSize() + gap) + leftMargin,
+      y: Math.floor(index / colCount) * (rowHeight + gap) + topMargin
+    }
+  }
+
   return (
-    <Node
+    <DragContainer
       contents={refWithImg}
       elemW={imgSize}
       elemH={imgSize}
       isOrdered={isOrdered}
-      element={Img} />
+      element={Img}
+      handleOrder={handleOrder} />
   )
 }
 

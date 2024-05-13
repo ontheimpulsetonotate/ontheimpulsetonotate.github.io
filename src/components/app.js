@@ -1,13 +1,17 @@
-import styled, { createGlobalStyle } from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../constants/stylesConstants'
-import { conditionalStyle, remify } from '../utils/styleUtils'
 import { useEffect, useState } from 'react'
-import Header from './common/header'
-import IndexTab from './indexTab'
-import TextView from './views/textView'
-import mixins from '../utils/mixins'
+import styled, { createGlobalStyle } from 'styled-components'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
 import ImgView from './views/imgView'
 import MixedView from './views/mixedView'
+import TextView from './views/textView'
+import IndexTab from './indexTab'
+import Header from './common/header'
+import { conditionalStyle, remify } from '../utils/styleUtils'
+import mixins from '../utils/mixins'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../constants/stylesConstants'
+
+gsap.registerPlugin(useGSAP)
 
 const App = () => {
   const [mode, setMode] = useState(0)

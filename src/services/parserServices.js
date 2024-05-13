@@ -1,7 +1,7 @@
 import parse, { domToReact } from 'html-react-parser'
 import ExpandButton from '../components/common/text/expandButton'
 
-export const parseTextView = (text, handleButtonClick, truncate) => {
+const parseTextView = (text, handleButtonClick, truncate) => {
   let html = `<p>${text}</p>`
     .replace(/<br>$/, '')
     .replaceAll(/<br>/g, truncate ? ' ' : '</p><p>')
@@ -32,3 +32,9 @@ export const parseTextView = (text, handleButtonClick, truncate) => {
     options
   )
 }
+
+const parserServices = {
+  parseTextView
+}
+
+export default parserServices

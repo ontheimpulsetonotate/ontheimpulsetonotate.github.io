@@ -1,104 +1,145 @@
+import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
+import Draggable from 'react-draggable'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
+import { conditionalStyle, extractStyle, toggleStyle, } from '../../../utils/styleUtils'
+import { TIMINGS } from '../../../constants/stylesConstants'
 import mixins from '../../../utils/mixins'
-import { useEffect, useMemo, useState } from 'react'
-import { UNMAPPED_BOUNDS, map, mapPoisson, quickArray } from '../../../utils/commonUtils'
+import usePrevious from '../../../hooks/usePrevious'
+import useMergedRef from '../../../hooks/useMergedRef'
 import _ from 'lodash'
-import FullContainer from './fullContainer'
-import { extractStyle, toggleStyle, vh, vw } from '../../../utils/styleUtils'
-import { getMainContainer, getOrderedData } from '../../../utils/sizeUtils'
-import { FONT_SIZES, SIZES, TIMINGS } from '../../../constants/stylesConstants'
 import { useWindowSize } from '@uidotdev/usehooks'
 
+const Node = forwardRef(({
+  index,
+  render,
+  zIndex,
+  mappedPosition,
+  isOrdered,
+  handleClick,
+  handleDragEnd,
+  handleOrder,
+  ...rest
+}, ref) => {
+  const draggableRef = useRef()
+  const innerRef = useMergedRef(ref)
+  const [forcePosition, setForcePosition] = useState(true)
 
-const Node = ({ contents, elemW, elemH, isOrdered, element: Element }) => {
-  const [indices, setIndices] = useState(quickArray(contents.length))
-  const handleClick = i => setIndices(prev => [..._.without(prev, i), i])
-  const [scrollSize, setScrollSize] = useState()
-  const { width, height } = useWindowSize()
+  const [isOrdering, setIsOrdering] = useState(false)
+  const prevIsOrdered = usePrevious(isOrdered)
+  const [orderedPosition, setOrderedPosition] = useState()
 
-  const defaultUnmappedPositions = useMemo(() => mapPoisson(
-    contents.length,
-    (vw() / vh()) / (elemW / elemH)
-  ), [])
+  // scaling
+  const [isHovering, setIsHovering] = useState(false)
+  const prevIsHovering = usePrevious(isHovering)
+  const [shouldScale, setShouldScale] = useState(false)
+  const [isScaling, setIsScaling] = useState(false)
 
-  const [unmappedPositions, setUnmappedPositions] = useState(defaultUnmappedPositions)
+  const [hasAnimated, setHasAnimated] = useState(false)
+  const containerId = useMemo(() => `node-${_.uniqueId()}`, [])
 
-  const getPageBounds = () => {
-    const { left, right, top, bottom } = getMainContainer()
-    const MARGIN_PERCENTAGE = 0.8
-    const halfElemW = elemW / 2
-    const halfElemH = elemH / 2
-    const marginX = halfElemW * MARGIN_PERCENTAGE
-    const marginY = halfElemH * MARGIN_PERCENTAGE
-    return {
-      boundsX: [left + marginX - halfElemW, right - marginX - halfElemW],
-      boundsY: [top + marginY - halfElemH, bottom - marginY - halfElemH]
+  const [childRendered, setChildRendered] = useState(false)
+
+  const { width } = useWindowSize()
+  useEffect(() => {
+    if (!handleOrder) return
+    if (!isOrdered) return setOrderedPosition()
+    setOrderedPosition(handleOrder(index))
+  }, [isOrdered, index, width])
+
+  useGSAP(
+    () => {
+      if (childRendered && !hasAnimated)
+        gsap.to(`#${containerId}`, {
+          scale: 1,
+          duration: _.random(0.15, 0.3, true),
+          ease: 'back.out(2)',
+          onComplete: () => setHasAnimated(true)
+        })
+    },
+    {
+      scope: innerRef,
+      dependencies: [childRendered]
     }
-  }
-
-  const convertCoors = ({ x, y }, isMap) => {
-    const { boundsX, boundsY } = getPageBounds()
-    const allBoundsX = isMap ? [UNMAPPED_BOUNDS, boundsX] : [boundsX, UNMAPPED_BOUNDS]
-    const allBoundsY = isMap ? [UNMAPPED_BOUNDS, boundsY] : [boundsY, UNMAPPED_BOUNDS]
-    return {
-      x: map(x, ...allBoundsX.flat()),
-      y: map(y, ...allBoundsY.flat()),
-    }
-  }
-
-  const mappedPositions = useMemo(() =>
-    unmappedPositions.map(({ x, y }) =>
-      convertCoors({ x, y }, true)), [width, height, isOrdered]
   )
 
   useEffect(() => {
-    if (!isOrdered) return
-    const { topMargin, rowHeight, colCount, gap } = getOrderedData()
-    const rowCount = Math.ceil(contents.length / colCount)
-    setScrollSize(topMargin + rowHeight * rowCount + gap * rowCount)
-  }, [width, isOrdered])
+    if (isOrdered || !hasAnimated) return
+    if (isHovering) {
+      setShouldScale(true)
+      setIsScaling(true)
+    } else if (prevIsHovering !== null)
+      setIsScaling(true)
+  }, [prevIsHovering, isHovering, isOrdered, hasAnimated])
 
-  const handleUnmap = (i, coors) =>
-    setUnmappedPositions(prev => {
-      const newPositions = [...prev]
-      newPositions[i] = convertCoors(coors, false)
-      return newPositions
-    })
+  useEffect(() => {
+    if (!isHovering && !isScaling)
+      setShouldScale(false)
+  }, [isHovering, isScaling])
+
+  useEffect(() => {
+    if (prevIsOrdered !== null) setIsOrdering(true)
+  }, [prevIsOrdered, isOrdered])
+
+  useEffect(() => setForcePosition(true), [mappedPosition])
+
+  const onClick = () => {
+    if (isOrdered) return
+    handleClick(index)
+    setForcePosition(false)
+  }
+
+  const onHover = isHovering => {
+    if (!hasAnimated) return
+    setIsHovering(isHovering)
+  }
 
   return (
-    <StyledContainer $isOrdered={isOrdered}>
-      {contents.map((content, i) =>
-        <Element
-          {...content}
-          key={i}
-          index={i}
-          isOrdered={isOrdered}
-          mappedPosition={mappedPositions[i]}
-          zIndex={indices.indexOf(i) + 1}
-          handleClick={handleClick}
-          handleDragEnd={handleUnmap} />
-      )}
-      <ScrollSizer $height={isOrdered ? `${scrollSize}px` : '100vh'} />
-    </StyledContainer>
+    <Draggable
+      defaultPosition={mappedPosition}
+      position={orderedPosition || (forcePosition ? mappedPosition : undefined)}
+      ref={draggableRef}
+      disabled={isOrdered || isOrdering}
+      onMouseDown={onClick}
+      onStop={() => handleDragEnd(index, draggableRef.current.state)}>
+      <InnerContainer
+        ref={innerRef}
+        onClick={() => console.log(index)}
+        onTransitionEnd={() => setIsOrdering(false)}
+        $zIndex={zIndex}
+        $isOrdered={isOrdered}
+        $transition={isOrdering}>
+        {render({
+          ...rest,
+          onMouseOver: () => onHover(true),
+          onMouseOut: () => onHover(false),
+          onTransitionEnd: () => setIsScaling(false),
+          onHover,
+          onRender: () => setChildRendered(true),
+          id: containerId,
+          style: {
+            transform: `scale(${hasAnimated ? ((shouldScale && !isOrdered) ? 1.225 : 1) : _.random(1.1, 1.2, true)})`
+          }
+        })}
+      </InnerContainer>
+    </Draggable >
   )
-}
+})
 
-const StyledContainer = styled(FullContainer)`
-  ${({ $isOrdered }) => mixins.highZIndex($isOrdered ? 0 : 3)}
-  pointer-events: none;
-  overflow-y: ${toggleStyle('$isOrdered', 'scroll', 'hidden')};
+const InnerContainer = styled.div`
+ ${mixins.draggable}
+  z-index: ${extractStyle('$zIndex')};
+  transition: ${conditionalStyle('$transition', `transform ${TIMINGS.ORDER}ms ease-in-out`)};
+  cursor: ${toggleStyle('$isOrdered', 'initial', 'move')};
 
-  div, figure {
-    pointer-events: initial;
+  * {
+    pointer-events: none;
   }
-`
 
-const marginTop = `calc(${SIZES.ORDERED_COL_TOP_PADDING} + ${SIZES.PAGE_MARGIN} + ${FONT_SIZES.REGULAR})`
-const ScrollSizer = styled.div`
-  width: 100vw;
-  height: calc(${extractStyle('$height')} - ${marginTop});
-  margin-top: ${marginTop};
-  transition: height ${TIMINGS.ORDER}ms ease-in-out;
+  > * {
+    transition: transform 150ms ease-in-out;
+  }
 `
 
 export default Node

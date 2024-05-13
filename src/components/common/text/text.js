@@ -1,25 +1,22 @@
-import { useMemo, useRef, useState } from 'react'
-import styled from 'styled-components'
 import TruncateMarkup from 'react-truncate-markup'
-import { FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
-import mixins from '../../../utils/mixins'
-import ExpandButton from './expandButton'
+import parserServices from '../../../services/parserServices'
 import TextHeader from './textHeader'
-import { parseTextView } from '../../../services/parserServices'
-import DraggableContainer from '../containers/draggableContainer'
+import ExpandButton from './expandButton'
+import { useEffect, useMemo, useState } from 'react'
+import styled from 'styled-components'
+import mixins from '../../../utils/mixins'
+import { FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
 
 
-const Text = ({ sectionTitle, text, ...rest }) => {
+const Text = ({ text, sectionTitle, onHover, onRender, ...props }) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const [isHovering, setIsHovering] = useState(false)
-
   const handleButtonClick = expand => {
     setIsExpanded(expand)
-    if (!expand) setIsHovering(false)
+    if (!expand) onHover(false)
   }
-  const getParsed = truncate => parseTextView(text, handleButtonClick, truncate)
-  const containerRef = useRef()
+  useEffect(() => onRender(), [])
 
+  const getParsed = truncate => parserServices.parseTextView(text, handleButtonClick, truncate)
   const truncated = useMemo(() => (
     <TruncateMarkup
       lines={4}
@@ -29,24 +26,16 @@ const Text = ({ sectionTitle, text, ...rest }) => {
     </TruncateMarkup>
   ), [text])
 
-
   return (
-    <DraggableContainer
-      {...rest}
-      ref={containerRef}
-      isOrdered={undefined}
-      isHovering={isHovering}
-      handleHover={setIsHovering}
-      render={props => (
-        <TextContainer {...props}>
-          <TextHeader>{sectionTitle}</TextHeader>
-          <TextBodyContainer>
-            {isExpanded ? getParsed(false) : truncated}
-          </TextBodyContainer>
-        </TextContainer>
-      )} />
+    <TextContainer {...props}>
+      <TextHeader>{sectionTitle}</TextHeader>
+      <TextBodyContainer>
+        {isExpanded ? getParsed(false) : truncated}
+      </TextBodyContainer>
+    </TextContainer>
   )
 }
+
 
 const TextContainer = styled.div`
   ${mixins.border(1, false)}
@@ -67,5 +56,6 @@ const TextBodyContainer = styled.div`
     pointer-events: all;
   }
 `
+
 
 export default Text

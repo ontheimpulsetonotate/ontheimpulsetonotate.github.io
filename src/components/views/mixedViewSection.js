@@ -16,7 +16,7 @@ const MixedViewSection = ({ index, text, sectionTitle, footnotes, imgData, conta
   const [showImg, setShowImg] = useState(false)
   const imgSrcs = useMemo(() => imgData.map(({ imgLink }) => imgLink), [imgData])
 
-  const allLoaded = useImagesLoaded(imgSrcs)
+  const allLoaded = useImagesLoaded(...imgSrcs)
 
   useEffect(() => {
     const { top } = containerRef.current.getBoundingClientRect()
