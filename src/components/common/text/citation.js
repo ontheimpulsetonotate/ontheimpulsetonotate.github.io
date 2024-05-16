@@ -36,15 +36,16 @@ const CitationSpan = styled.span`
 const PopUpCitation = styled.span`
   position: fixed;
   display: block;
-  background-color: ${COLORS.LIGHT_BEIGE};
+  background-color: white;
   left: ${extractStyle('$x')}px;
   top: ${extractStyle('$y')}px;
   max-width: ${remify(400)};
   padding: ${remify(10)};
   color: ${COLORS.BLUE};
-  border: 2px ${COLORS.BLUE} solid;
+  border: 1px ${COLORS.BLUE} solid;
   font-family: ${FONT_FAMILIES.APERCU};
   font-size: ${FONT_SIZES.MEDIUM};
+  line-height: ${FONT_SIZES.LEADING_S};
   ${mixins.highZIndex(2)}
 `
 

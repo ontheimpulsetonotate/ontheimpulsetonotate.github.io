@@ -157,7 +157,7 @@ ${mixins.highZIndex(4)}
   left: ${toggleStyle('$open', `calc(27.5vw - ${SIZES.PAGE_MARGIN} * 3)`, `calc(${SIZES.OPENED_INDEX_LEFT_VALUE}vw - ${SIZES.PAGE_MARGIN})`)};
   padding: 0 ${SIZES.PAGE_MARGIN};
 
-  background-color: ${COLORS.DARK_BEIGE};
+  background-color: ${COLORS.LIGHT_BEIGE};
   user-select: none;
   cursor: ${toggleStyle('$open', '', 'pointer')};
 `
@@ -211,7 +211,7 @@ const TableHead = styled(Row)`
   ${mixins.border(2)}
   position: sticky;
   top: -1px;
-  background-color: ${COLORS.DARK_BEIGE};
+  background-color: ${COLORS.LIGHT_BEIGE};
   cursor: initial;
 
   p {

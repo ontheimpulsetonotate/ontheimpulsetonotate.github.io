@@ -17,7 +17,7 @@ const Node = forwardRef(({
   zIndex,
   mappedPosition,
   isOrdered,
-  handleClick,
+  handleToTop,
   handleDragEnd,
   handleOrder,
   ...rest
@@ -50,10 +50,20 @@ const Node = forwardRef(({
 
   useGSAP(
     () => {
-      if (childRendered && !hasAnimated)
-        gsap.to(`#${containerId}`, {
+      if (!childRendered || hasAnimated) return
+      const id = `#${containerId}`
+
+      gsap
+        .timeline()
+        .to(id, {
+          opacity: 1,
+          duration: 0,
+          delay: _.random(0, 1.5, true),
+          onComplete: () => handleToTop(index)
+        })
+        .to(id, {
           scale: 1,
-          duration: _.random(0.15, 0.3, true),
+          duration: _.random(0.15, 0.2, true),
           ease: 'back.out(2)',
           onComplete: () => setHasAnimated(true)
         })
@@ -86,7 +96,7 @@ const Node = forwardRef(({
 
   const onClick = () => {
     if (isOrdered) return
-    handleClick(index)
+    handleToTop(index)
     setForcePosition(false)
   }
 
@@ -94,6 +104,10 @@ const Node = forwardRef(({
     if (!hasAnimated) return
     setIsHovering(isHovering)
   }
+
+  useEffect(() => {
+    console.log(index, shouldScale)
+  }, [shouldScale])
 
   return (
     <Draggable
@@ -105,7 +119,6 @@ const Node = forwardRef(({
       onStop={() => handleDragEnd(index, draggableRef.current.state)}>
       <InnerContainer
         ref={innerRef}
-        onClick={() => console.log(index)}
         onTransitionEnd={() => setIsOrdering(false)}
         $zIndex={zIndex}
         $isOrdered={isOrdered}
@@ -138,6 +151,7 @@ const InnerContainer = styled.div`
   }
 
   > * {
+    opacity: 0;
     transition: transform 150ms ease-in-out;
   }
 `

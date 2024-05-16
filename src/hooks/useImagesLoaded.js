@@ -11,9 +11,10 @@ const useImagesLoaded = (...sources) => {
       const img = document.createElement('img')
 
       img.onload = () => setLoadedSources(prev => new Set(prev).add(src))
+      img.onerror = err => console.log(err, src)
       img.src = src
     })
-  }, [sources])
+  }, [])
 
   useEffect(() => {
     if (loadedSources.size === _.uniq(sources).length)

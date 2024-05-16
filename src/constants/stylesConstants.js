@@ -29,7 +29,7 @@ export const COLORS = {
 }
 
 
-const IMG_MAX_SIZE = '250px'
+const IMG_MAX_SIZE = '200px'
 const TEXT_WIDTH = remify(300)
 export const SIZES = {
   PAGE_MARGIN: remify(30),

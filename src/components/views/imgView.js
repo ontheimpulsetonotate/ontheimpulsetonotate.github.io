@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { SIZES } from '../../constants/stylesConstants'
 import dataServices from '../../services/dataServices'
 import { getOrderedData } from '../../utils/sizeUtils'
@@ -19,7 +20,7 @@ const ImgView = ({ isOrdered }) => {
 
   return (
     <DragContainer
-      contents={refWithImg}
+      contents={refWithImg.map(ref => _.pick(ref, ['imgLink', 'imgNum']))}
       elemW={imgSize}
       elemH={imgSize}
       isOrdered={isOrdered}

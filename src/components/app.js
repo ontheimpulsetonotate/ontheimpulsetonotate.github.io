@@ -14,7 +14,7 @@ import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../constants/stylesCon
 gsap.registerPlugin(useGSAP)
 
 const App = () => {
-  const [mode, setMode] = useState(0)
+  const [mode, setMode] = useState(1)
   const [targetFragmentIndex, setTargetFragmentIndex] = useState()
   const [isOrdered, setIsOrdered] = useState(false)
 

@@ -17,8 +17,8 @@ const parsedData = (() => {
   const main = tempDiv.querySelector('.grid-container')
   const dataKeys = [
     'imgNum',
-    'imgLink',
     undefined,
+    'imgLink',
     'sectionTitle',
     'pageNum',
     'artistLastName',
@@ -38,14 +38,14 @@ const parsedData = (() => {
       if (!tdArray[0].innerText.match(/^REF/)) return false
       const data = tdArray.reduce((trData, td, i) => {
         const key = dataKeys[i]
-
         const strippedHtml = strip(td.innerHTML)
+
         if (['imgNum', 'pageNum'].includes(key))
           trData[key] = parseNumRange(td.innerHTML)
         else if (['workDetails', 'text'].includes(key))
           trData[key] = td.innerHTML
-        else if (key === 'imgLink')
-          trData[key] = strippedHtml.replace(/dl=0$/, 'raw=1')
+        // else if (key === 'imgLink')
+        //   trData[key] = strippedHtml.replace(/dl=0$/, 'raw=1')
         else if (key === 'footnotes')
           trData[key] = td.innerHTML
             .split('<br><br>')
@@ -57,10 +57,12 @@ const parsedData = (() => {
         return trData
       }, {})
 
+      data.imgLink = `images/REF_${_.padStart(data.imgNum[0], 3, '0')}.webp`
       return data
     })
     .filter(d => d)
 
+  console.log(data)
   return data
 })()
 

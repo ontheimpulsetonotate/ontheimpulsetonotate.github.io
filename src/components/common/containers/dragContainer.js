@@ -65,7 +65,7 @@ const DragContainer = ({ contents, elemW, elemH, isOrdered, element: Element, ha
       return newPositions
     })
 
-  const handleClick = i => setIndices(prev => [..._.without(prev, i), i])
+  const handleToTop = i => setIndices(prev => [..._.without(prev, i), i])
 
   return (
     <StyledContainer $isOrdered={isOrdered}>
@@ -77,7 +77,7 @@ const DragContainer = ({ contents, elemW, elemH, isOrdered, element: Element, ha
           isOrdered={isOrdered}
           mappedPosition={mappedPositions[i]}
           zIndex={indices.indexOf(i) + 1}
-          handleClick={handleClick}
+          handleToTop={handleToTop}
           handleDragEnd={handleUnmap}
           handleOrder={handleOrder}
           render={Element} />

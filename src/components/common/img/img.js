@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { COLORS, SIZES } from '../../../constants/stylesConstants'
 import useImagesLoaded from '../../../hooks/useImagesLoaded'
 import Figure from './figure'
+import _ from 'lodash'
 
 
 const Img = ({ imgLink, imgNum, onRender, ...props }) => {
@@ -11,7 +12,7 @@ const Img = ({ imgLink, imgNum, onRender, ...props }) => {
   }, [isLoaded])
   return (
     <Figure
-      {...props}
+      {..._.omit(props, ['onHover'])}
       backgroundColor={COLORS.BROWN}
       src={imgLink}
       maxSize={SIZES.IMG_MAX_SIZE}
