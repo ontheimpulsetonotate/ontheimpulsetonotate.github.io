@@ -100,8 +100,8 @@ const StyledContainer = styled(FullContainer)`
 const marginTop = `calc(${SIZES.ORDERED_COL_TOP_PADDING} + ${SIZES.PAGE_MARGIN} + ${FONT_SIZES.REGULAR})`
 const ScrollSizer = styled.div`
   width: 100vw;
-  height: calc(${extractStyle('$height')} - ${marginTop});
-  margin-top: ${marginTop};
+  height: calc(${extractStyle('$height')} - ${marginTop} * 2);
+  margin: ${marginTop} 0;
   transition: height ${TIMINGS.ORDER}ms ease-in-out;
 `
 

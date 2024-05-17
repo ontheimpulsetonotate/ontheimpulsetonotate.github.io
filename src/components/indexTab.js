@@ -152,7 +152,7 @@ ${mixins.highZIndex(4)}
   width: 72.5vw;
   height: 100vh;
   position: absolute;
-  transition: ${conditionalStyle('$shouldAnimate', 'left 400ms ease-in-out')};
+  transition: ${conditionalStyle('$shouldAnimate', 'left 600ms ease-in-out')};
   top: 0;
   left: ${toggleStyle('$open', `calc(27.5vw - ${SIZES.PAGE_MARGIN} * 3)`, `calc(${SIZES.OPENED_INDEX_LEFT_VALUE}vw - ${SIZES.PAGE_MARGIN})`)};
   padding: 0 ${SIZES.PAGE_MARGIN};

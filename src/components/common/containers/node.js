@@ -105,9 +105,6 @@ const Node = forwardRef(({
     setIsHovering(isHovering)
   }
 
-  useEffect(() => {
-    console.log(index, shouldScale)
-  }, [shouldScale])
 
   return (
     <Draggable

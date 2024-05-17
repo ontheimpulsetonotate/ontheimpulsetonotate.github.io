@@ -10,11 +10,13 @@ import Header from './common/header'
 import { conditionalStyle, remify } from '../utils/styleUtils'
 import mixins from '../utils/mixins'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../constants/stylesConstants'
+import AboutButton from './aboutButton'
+import About from './about'
 
 gsap.registerPlugin(useGSAP)
 
 const App = () => {
-  const [mode, setMode] = useState(1)
+  const [mode, setMode] = useState(0)
   const [targetFragmentIndex, setTargetFragmentIndex] = useState()
   const [isOrdered, setIsOrdered] = useState(false)
 
@@ -57,11 +59,13 @@ const App = () => {
               Order
             </HeaderButton>}
         </HeaderContainer>
-        <View
+        <About />
+        {/* <View
           isOrdered={isOrdered}
           targetFragmentIndex={targetFragmentIndex}
-          handleFragmentScroll={handleFragmentScroll} />
+          handleFragmentScroll={handleFragmentScroll} /> */}
         <IndexTab onRowClick={handleIndexRowClick} />
+        {/* <AboutButton /> */}
       </MainContainer >
     </>
   )
@@ -72,7 +76,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
   }
 
-  h1, h2, h3, button,menu {
+  h1, h2, h3, button, menu {
     line-height: ${FONT_SIZES.LEADING_S};
   }
 
@@ -82,7 +86,7 @@ const GlobalStyle = createGlobalStyle`
     letter-spacing: 0.02em;
   }
 
-  h1, h2, h3, ${Header} button {
+  h1, h2, h3, ${Header} button, button {
     font-weight: 500;
     font-family: ${FONT_FAMILIES.APERCU};
     text-transform: uppercase;

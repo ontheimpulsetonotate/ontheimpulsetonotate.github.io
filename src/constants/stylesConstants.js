@@ -11,7 +11,7 @@ export const FONT_SIZES = {
   SMALL: remify(10),
   MEDIUM: remify(13),
   REGULAR: remify(15),
-  MIXED: remify(16),
+  LARGE: remify(16),
 
   LEADING_S: remify(15),
   LEADING_M: remify(18),

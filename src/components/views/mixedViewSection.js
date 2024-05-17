@@ -112,7 +112,7 @@ const TextContainer = styled.div`
   flex-direction: column;
 
   p {
-    font-size: ${FONT_SIZES.MIXED};
+    font-size: ${FONT_SIZES.LARGE};
     ${mixins.paragraphSpacing(FONT_SIZES.LEADING_DL)}
   }
 `
@@ -122,7 +122,7 @@ const SectionContainer = styled.div`
   width: 100%;
 
   display: grid;
-  grid-template-columns: calc((92.5vw - 500px) / 2) 500px 1fr; // TODO
+  grid-template-columns: calc((92.5vw - 400px) / 2) 400px 1fr; // TODO
 
   ${TextContainer} {
     padding-top: ${SIZES.MIXED_VIEW_SECTION_PADDING_TOP};
