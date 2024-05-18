@@ -4,13 +4,17 @@ import { useEffect, useState } from 'react'
 
 const useImagesLoaded = (...sources) => {
   const [loadedSources, setLoadedSources] = useState(new Set())
-  const [allLoaded, setAllLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+  const [proportions, setProportions] = useState({})
 
   useEffect(() => {
     sources.forEach(src => {
       const img = document.createElement('img')
 
-      img.onload = () => setLoadedSources(prev => new Set(prev).add(src))
+      img.onload = () => {
+        setLoadedSources(prev => new Set(prev).add(src))
+        setProportions(prev => ({ ...prev, [src]: img.height / img.width }))
+      }
       img.onerror = err => console.log(err, src)
       img.src = src
     })
@@ -18,10 +22,10 @@ const useImagesLoaded = (...sources) => {
 
   useEffect(() => {
     if (loadedSources.size === _.uniq(sources).length)
-      setAllLoaded(true)
+      setLoaded(true)
   }, [sources, loadedSources])
 
-  return allLoaded
+  return { loaded, proportions }
 }
 
 export default useImagesLoaded

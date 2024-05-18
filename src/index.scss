@@ -1,6 +1,7 @@
 body {
   margin: 0;
   overflow: hidden;
+  text-wrap: pretty;
 
   @supports (hanging-punctuation: first) {
     hanging-punctuation: first;

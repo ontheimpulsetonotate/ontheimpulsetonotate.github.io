@@ -13,7 +13,8 @@ export const loopObject = (object, callback) => {
   return object
 }
 
-export const quickArray = (length, callback = i => i) => Array(length).fill(0).map((_, i) => callback(i))
+export const quickArray = (length, callback = i => i) =>
+  Array(length).fill(0).map((_, i) => callback(i))
 export const delta = (a, b) => Math.abs(a - b)
 
 export const getDataStringSorter = key => (a, b) => {

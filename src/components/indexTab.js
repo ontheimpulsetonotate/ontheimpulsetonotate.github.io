@@ -1,15 +1,14 @@
-import styled from 'styled-components'
 import _ from 'lodash'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../constants/stylesConstants'
-import mixins from '../utils/mixins'
-import Header from './common/header'
-import { conditionalStyle, remify, toggleStyle } from '../utils/styleUtils'
 import { useEffect, useMemo, useState } from 'react'
+import styled from 'styled-components'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES, TIMINGS } from '../constants/stylesConstants'
 import dataServices from '../services/dataServices'
-import { addEventListener } from '../utils/reactUtils'
 import { getDataStringSorter, validateString } from '../utils/commonUtils'
-import SortArrow from './common/text/sortArrow'
+import mixins from '../utils/mixins'
+import { addEventListener } from '../utils/reactUtils'
+import Header from './common/header'
 import FilteredImg, { FilterImgContainer } from './common/img/filteredImg'
+import SortArrow from './common/text/sortArrow'
 
 
 const IndexTab = ({ onRowClick }) => {
@@ -22,22 +21,10 @@ const IndexTab = ({ onRowClick }) => {
   const data = dataServices.parsedData
 
   const headers = [
-    {
-      name: 'artist',
-      getSorted: () => _.sortBy(data, frag => frag.imgNum[0])
-    },
-    {
-      name: 'medium',
-      getSorted: () => [...data].sort(getDataStringSorter('medium'))
-    },
-    {
-      name: 'section',
-      getSorted: () => [...data].sort(getDataStringSorter('sectionTitle'))
-    },
-    {
-      name: 'page',
-      getSorted: () => _.sortBy(data, frag => frag.pageNum[0])
-    }
+    ['artist', () => _.sortBy(data, frag => frag.imgNum[0])],
+    ['medium', () => [...data].sort(getDataStringSorter('medium'))],
+    ['section', () => [...data].sort(getDataStringSorter('sectionTitle'))],
+    ['page', () => _.sortBy(data, frag => frag.pageNum[0])]
   ]
 
   const handleClick = (e, state) => {
@@ -59,8 +46,7 @@ const IndexTab = ({ onRowClick }) => {
   }
 
   const sortedData = useMemo(() => {
-    const sorter = headers[sort.index]
-    const sorted = sorter.getSorted()
+    const sorted = headers[sort.index][1]()
     return sort.isAscending ? sorted : _.reverse(sorted)
   }, [sort.index, sort.isAscending])
 
@@ -88,10 +74,13 @@ const IndexTab = ({ onRowClick }) => {
 
   return (
     <IndexTabContainer
+      style={{
+        transition: validateString(shouldAnimate, `left ${TIMINGS.INDEX_SLIDE}ms ease-in-out`),
+        left: indexIsOpened ? `calc(${SIZES.OPENED_INDEX_LEFT_VALUE}vw - ${SIZES.PAGE_MARGIN} * 3)` : `calc(${SIZES.CLOSED_INDEX_LEFT_VALUE}vw - ${SIZES.PAGE_MARGIN})`,
+        cursor: validateString(!indexIsOpened, 'pointer')
+      }}
       onClick={e => handleClick(e, true)}
-      onTransitionEnd={() => setShouldAnimate(false)}
-      $open={indexIsOpened}
-      $shouldAnimate={shouldAnimate}>
+      onTransitionEnd={() => setShouldAnimate(false)}>
       <HeaderContainer>
         <h2>Index</h2>
         {!imgLink &&
@@ -102,12 +91,12 @@ const IndexTab = ({ onRowClick }) => {
           <FilteredImg
             backgroundColor={COLORS.BROWN}
             src={imgLink}
-            maxSize={SIZES.IMG_MAX_SIZE} />}
+            maxSize={SIZES.INDEX_TAB_FIGURE_SIZE} />}
       </HeaderContainer>
       <TableContainer>
         <TableHead>
           {
-            headers.map(({ name }, i) => {
+            headers.map(([name], i) => {
               const isSorting = sort.index === i
               const isPageHeader = name === 'page'
               return (
@@ -149,17 +138,14 @@ const IndexTab = ({ onRowClick }) => {
 
 const IndexTabContainer = styled.div`
 ${mixins.highZIndex(4)}
-  width: 72.5vw;
+  width: ${100 - SIZES.OPENED_INDEX_LEFT_VALUE}vw;
   height: 100vh;
   position: absolute;
-  transition: ${conditionalStyle('$shouldAnimate', 'left 600ms ease-in-out')};
   top: 0;
-  left: ${toggleStyle('$open', `calc(27.5vw - ${SIZES.PAGE_MARGIN} * 3)`, `calc(${SIZES.OPENED_INDEX_LEFT_VALUE}vw - ${SIZES.PAGE_MARGIN})`)};
   padding: 0 ${SIZES.PAGE_MARGIN};
 
   background-color: ${COLORS.LIGHT_BEIGE};
   user-select: none;
-  cursor: ${toggleStyle('$open', '', 'pointer')};
 `
 
 const TableContainer = styled.div`
@@ -181,10 +167,10 @@ const HeaderContainer = styled(Header)`
 `
 
 const Row = styled.div`
-  ${mixins.border(1)}
-  display: grid;
-  grid-template-columns: 35% 25% 1fr ${remify(100)};
+  ${mixins.border()}
   width: 100%;
+  display: grid;
+  grid-template-columns: ${SIZES.INDEX_ARTIST_WIDTH} ${SIZES.INDEX_MEDIUM_WIDTH} 1fr ${SIZES.INDEX_PAGE_NUM_WIDTH};
   cursor: pointer;
 
   p {

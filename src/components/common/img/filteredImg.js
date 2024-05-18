@@ -1,9 +1,8 @@
 import styled from 'styled-components'
-import { extractStyle } from '../../../utils/styleUtils'
 import { useState } from 'react'
 import _ from 'lodash'
 
-const FilteredImg = ({ backgroundColor, maxSize, handleLoad = _.noop, ...rest }) => {
+const FilteredImg = ({ backgroundColor, maxSize, width, height, handleLoad = _.noop, ...rest }) => {
   const [isLoaded, setIsLoaded] = useState(false)
 
   const onLoad = () => {
@@ -13,24 +12,31 @@ const FilteredImg = ({ backgroundColor, maxSize, handleLoad = _.noop, ...rest })
   return (
     <FilterImgContainer
       $backgroundColor={backgroundColor}
+      $width={width}
+      $height={height}
       $maxSize={maxSize}
-      $opacity={isLoaded ? 1 : 0}>
-      <StyledImg alt='' {...rest} onLoad={onLoad} />
+      style={{
+        backgroundColor,
+        opacity: isLoaded ? 1 : 0,
+      }}>
+      <StyledImg
+        alt=''
+        {...rest}
+        style={{
+          width,
+          height,
+          maxWidth: maxSize,
+          maxHeight: maxSize
+        }}
+        onLoad={onLoad} />
     </FilterImgContainer>
   )
 }
 
 export const FilterImgContainer = styled.div`
   display: flex;
-  background-color: ${extractStyle('$backgroundColor')};
   width: fit-content;
   height: fit-content;
-  opacity: ${extractStyle('$opacity')};
-
-  img {
-    max-width: ${extractStyle('$maxSize')};
-    max-height: ${extractStyle('$maxSize')};
-  }
 `
 
 const StyledImg = styled.img`

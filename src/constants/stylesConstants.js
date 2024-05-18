@@ -29,21 +29,32 @@ export const COLORS = {
 }
 
 
-const IMG_MAX_SIZE = '200px'
+const IMG_VIEW_FIGURE_SIZE = '100px'
 const TEXT_WIDTH = remify(300)
 export const SIZES = {
   PAGE_MARGIN: remify(30),
 
-  OPENED_INDEX_LEFT_VALUE: 92.5,
+  UNDERLINE_OFFSET: remify(6),
+
+  OPENED_INDEX_LEFT_VALUE: 27.5,
+  CLOSED_INDEX_LEFT_VALUE: 92.5,
   INDEX_STICKY_TOP: 'calc(180px + 20vh)',
+  INDEX_TAB_FIGURE_SIZE: '250px',
+  INDEX_ARTIST_WIDTH: '35%',
+  INDEX_MEDIUM_WIDTH: '25%',
+  INDEX_PAGE_NUM_WIDTH: remify(100),
   ARROW_PADDING: '0.25em',
 
   ELEM_MARGIN: remify(20),
   HEADER_MARGIN: remify(30),
+  HEADER_INNER_MARGIN: '0.75em',
+  HOME_BUTTON_WIDTH: remify(240),
   TEXT_WIDTH,
+  FIGURE_MARGIN_TOP: remify(8),
 
-  IMG_MAX_SIZE,
-  getImgMaxSize: () => parseFloat(IMG_MAX_SIZE),
+  IMG_VIEW_FIGURE_SIZE,
+
+  getImgViewFIgureSize: () => parseFloat(IMG_VIEW_FIGURE_SIZE),
   getTextContainerSize: () => ({
     w: getPx(TEXT_WIDTH),
     h: getEmifiedPx(20) * 3 + getPx(FONT_SIZES.LEADING_M) * 6
@@ -52,9 +63,25 @@ export const SIZES = {
   ORDERED_COL_GAP: remify(18),
   ORDERED_COL_TOP_PADDING: remify(45),
 
-  MIXED_VIEW_SECTION_PADDING_TOP: remify(225),
+  MIXED_VIEW_PADDING_TOP: remify(225),
+  MIXED_VIEW_PADDING_BOTTOM: remify(150),
+  MIXED_VIEW_SECTION_PADDING_TOP: remify(120),
+  MIXED_VIEW_SECTION_WIDTH: remify(500),
+  MIXED_VIEW_FIGURUE_SIZE: '300px',
+  MIXED_VIEW_FIGURE_MARGIN: remify(15),
+  MIXED_VIEW_TEXT_PADDING: remify(40),
+  CITATION_MAX_WIDTH: remify(400),
+  CITATION_PADDING: remify(10),
+  CITATION_OFFSET: remify(20),
+
+  ABOUT_SECTION_TOP: remify(125),
+  ABOUT_SECTION_DIVIDER_MARGIN: remify(35)
 }
 
+// TODO
 export const TIMINGS = {
   ORDER: 500,
+  NODE_SCALE: 150,
+  MIXED_FIGURE_OPACITY: 100,
+  INDEX_SLIDE: 600
 }

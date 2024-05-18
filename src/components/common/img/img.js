@@ -1,21 +1,21 @@
+import _ from 'lodash'
 import { useEffect } from 'react'
 import { COLORS, SIZES } from '../../../constants/stylesConstants'
 import useImagesLoaded from '../../../hooks/useImagesLoaded'
 import Figure from './figure'
-import _ from 'lodash'
 
 
 const Img = ({ imgLink, imgNum, onRender, ...props }) => {
-  const isLoaded = useImagesLoaded(imgLink)
+  const { loaded, proportions } = useImagesLoaded(imgLink)
   useEffect(() => {
-    if (isLoaded) onRender()
-  }, [isLoaded])
+    if (loaded) onRender(props.index, proportions[imgLink])
+  }, [loaded])
   return (
     <Figure
-      {..._.omit(props, ['onHover'])}
+      {..._.omit(props, ['onHover', 'index', 'onCollapse'])}
       backgroundColor={COLORS.BROWN}
       src={imgLink}
-      maxSize={SIZES.IMG_MAX_SIZE}
+      width={SIZES.IMG_VIEW_FIGURE_SIZE}
       imgNum={imgNum} />
   )
 

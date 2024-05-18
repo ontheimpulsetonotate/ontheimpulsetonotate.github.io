@@ -1,7 +1,6 @@
 import _ from 'lodash'
+import { COLORS, SIZES } from '../constants/stylesConstants'
 import { loopObject, validateString } from './commonUtils'
-import { remify } from './styleUtils'
-import { COLORS } from '../constants/stylesConstants'
 
 const flex = (
   alignItems = 'initial',
@@ -39,11 +38,16 @@ const noScrollBar = () => `
 
 const underline = () => `
   text-decoration: underline;
-  text-underline-offset: ${remify(6)};
+  text-underline-offset: ${SIZES.UNDERLINE_OFFSET};
 `
 
-const border = (strokeWidth, isBottom = true) => `
-  border${validateString(isBottom, '-bottom')}: ${COLORS.BROWN} ${strokeWidth}px solid;
+const border = (strokeWidth = 1, { isBottom = true, color = COLORS.BROWN } = {}) => `
+  border${validateString(isBottom, '-bottom')}: ${color} ${strokeWidth}px solid;
+`
+
+const grid = () => `
+  display: grid;
+  grid-template-columns: calc((${SIZES.CLOSED_INDEX_LEFT_VALUE}vw - ${SIZES.MIXED_VIEW_SECTION_WIDTH}) / 2) ${SIZES.MIXED_VIEW_SECTION_WIDTH} 1fr;
 `
 
 const mixins = {
@@ -54,6 +58,7 @@ const mixins = {
   noScrollBar,
   underline,
   border,
+  grid,
   chain: function () {
     const chainedObject = {}
     let accumulatedReturn = ''

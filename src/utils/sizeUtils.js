@@ -4,10 +4,10 @@ import { getPx, vh, vw } from './styleUtils'
 
 const {
   PAGE_MARGIN,
-  OPENED_INDEX_LEFT_VALUE,
+  CLOSED_INDEX_LEFT_VALUE: OPENED_INDEX_LEFT_VALUE,
   ORDERED_COL_GAP,
   ORDERED_COL_TOP_PADDING,
-  getImgMaxSize
+  getImgViewFIgureSize: getImgMaxSize
 } = SIZES
 
 export const getMainContainer = () => ({
@@ -29,6 +29,8 @@ export const getOrderedData = () => {
     leftMargin: getPx(PAGE_MARGIN),
     topMargin: top,
     colCount: Math.floor((width - maxSize) / (maxSize + gap)) + 1,
-    rowHeight: getPx(FONT_SIZES.SMALL) * 2 + SIZES.getImgMaxSize()
+    rowHeight: getPx(FONT_SIZES.SMALL) * 2 + SIZES.getImgViewFIgureSize(),
+    getRowHeight: proportion =>
+      getPx(FONT_SIZES.SMALL) * 2 + SIZES.getImgViewFIgureSize() * proportion,
   }
 }

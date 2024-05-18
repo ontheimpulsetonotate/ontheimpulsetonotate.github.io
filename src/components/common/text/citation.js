@@ -1,15 +1,14 @@
-import styled from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES } from '../../../constants/stylesConstants'
-import { useEffect, useState } from 'react'
 import { useHover, useMouse } from '@uidotdev/usehooks'
-import { extractStyle, remify } from '../../../utils/styleUtils'
 import parse from 'html-react-parser'
+import styled from 'styled-components'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
 import mixins from '../../../utils/mixins'
 
 const Citation = ({ children, footnote }) => {
   const [hoverRef, isHovering] = useHover()
   const [mouse] = useMouse()
 
+  const getPosition = isX => `calc(${isX ? mouse.x : mouse.y}px + ${SIZES.CITATION_OFFSET})`
   return (
     <>
       <CitationSpan ref={hoverRef}>
@@ -19,8 +18,10 @@ const Citation = ({ children, footnote }) => {
         isHovering &&
         footnote &&
         <PopUpCitation
-          $x={mouse.x + 20}
-          $y={mouse.y + 20}>
+          style={{
+            left: getPosition(true),
+            top: getPosition(false),
+          }}>
           {parse(footnote)}
         </PopUpCitation>
       }
@@ -34,19 +35,19 @@ const CitationSpan = styled.span`
 `
 
 const PopUpCitation = styled.span`
+  ${mixins
+    .chain()
+    .highZIndex(2)
+    .border(1, { isBottom: false, color: COLORS.BLUE })}
   position: fixed;
   display: block;
   background-color: white;
-  left: ${extractStyle('$x')}px;
-  top: ${extractStyle('$y')}px;
-  max-width: ${remify(400)};
-  padding: ${remify(10)};
+  max-width: ${SIZES.CITATION_MAX_WIDTH};
+  padding: ${SIZES.CITATION_PADDING};
   color: ${COLORS.BLUE};
-  border: 1px ${COLORS.BLUE} solid;
   font-family: ${FONT_FAMILIES.APERCU};
   font-size: ${FONT_SIZES.MEDIUM};
   line-height: ${FONT_SIZES.LEADING_S};
-  ${mixins.highZIndex(2)}
 `
 
 export default Citation

@@ -1,31 +1,44 @@
-import { useEffect, useMemo, useState } from 'react'
-import styled from 'styled-components'
-import _ from 'lodash'
 import { useWindowSize } from '@uidotdev/usehooks'
+import _ from 'lodash'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import styled from 'styled-components'
+import { TIMINGS } from '../../../constants/stylesConstants'
+import { UNMAPPED_BOUNDS, map, mapPoisson, quickArray, validateString } from '../../../utils/commonUtils'
+import { getMainContainer } from '../../../utils/sizeUtils'
 import FullContainer from './fullContainer'
-import mixins from '../../../utils/mixins'
-import { UNMAPPED_BOUNDS, map, mapPoisson, quickArray } from '../../../utils/commonUtils'
-import { extractStyle, toggleStyle, vh, vw } from '../../../utils/styleUtils'
-import { getMainContainer, getOrderedData } from '../../../utils/sizeUtils'
-import { FONT_SIZES, SIZES, TIMINGS } from '../../../constants/stylesConstants'
 import Node from './node'
 
 
-const DragContainer = ({ contents, elemW, elemH, isOrdered, element: Element, handleOrder }) => {
-  const [indices, setIndices] = useState(quickArray(contents.length))
-  const [scrollSize, setScrollSize] = useState()
+const DragContainer = ({
+  contents,
+  elemW,
+  elemH,
+  isOrdered,
+  element: Element,
+  memoizedNodeData,
+  orderedPositions = [],
+  scrollSize,
+  handleRender,
+  handleMemoizeNodeData
+}) => {
+  const [zIndices, setZIndices] = useState(
+    memoizedNodeData?.zIndices ?? quickArray(contents.length)
+  )
   const { width, height } = useWindowSize()
+  const containerRef = useRef()
 
-  const defaultUnmappedPositions = useMemo(() => mapPoisson(
+  const { left, right, top, bottom } = getMainContainer()
+  const defaultUnmappedPositions = useMemo(() => memoizedNodeData?.unmappedPositions ?? mapPoisson(
     contents.length,
-    (vw() / vh()) / (elemW / elemH)
+    ((right - left) / (bottom - top)) / (elemW / elemH)
   ), [])
 
   const [unmappedPositions, setUnmappedPositions] = useState(defaultUnmappedPositions)
+  const hasAnimatedRef = useRef(!!memoizedNodeData?.hasAnimated)
 
   const getPageBounds = () => {
     const { left, right, top, bottom } = getMainContainer()
-    const MARGIN_PERCENTAGE = 0.8
+    const MARGIN_PERCENTAGE = 0.5
     const halfElemW = elemW / 2
     const halfElemH = elemH / 2
     const marginX = halfElemW * MARGIN_PERCENTAGE
@@ -52,11 +65,17 @@ const DragContainer = ({ contents, elemW, elemH, isOrdered, element: Element, ha
   )
 
   useEffect(() => {
-    if (!isOrdered) return
-    const { topMargin, rowHeight, colCount, gap } = getOrderedData()
-    const rowCount = Math.ceil(contents.length / colCount)
-    setScrollSize(topMargin + rowHeight * rowCount + gap * rowCount)
-  }, [width, isOrdered])
+    if (!isOrdered)
+      containerRef.current.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [isOrdered])
+
+  useEffect(() => () => {
+    handleMemoizeNodeData({
+      unmappedPositions, zIndices, hasAnimated: hasAnimatedRef.current
+    })
+  }, [])
+
+  const handleToTop = i => setZIndices(prev => [..._.without(prev, i), i])
 
   const handleUnmap = (i, coors) =>
     setUnmappedPositions(prev => {
@@ -65,43 +84,49 @@ const DragContainer = ({ contents, elemW, elemH, isOrdered, element: Element, ha
       return newPositions
     })
 
-  const handleToTop = i => setIndices(prev => [..._.without(prev, i), i])
+  const handleAnimate = () => hasAnimatedRef.current = true
 
   return (
-    <StyledContainer $isOrdered={isOrdered}>
+    <StyledContainer
+      style={{
+        overflowY: isOrdered ? 'scroll' : 'hidden'
+      }}
+      ref={containerRef}>
       {contents.map((content, i) =>
         <Node
           {...content}
           key={i}
           index={i}
           isOrdered={isOrdered}
+          shouldAnimate={!memoizedNodeData?.hasAnimated}
           mappedPosition={mappedPositions[i]}
-          zIndex={indices.indexOf(i) + 1}
+          zIndex={zIndices.indexOf(i) + 1}
+          orderedPosition={orderedPositions[i]}
           handleToTop={handleToTop}
-          handleDragEnd={handleUnmap}
-          handleOrder={handleOrder}
+          handleUnmap={handleUnmap}
+          handleRender={handleRender}
+          handleAnimate={handleAnimate}
           render={Element} />
       )}
-      <ScrollSizer $height={isOrdered ? `${scrollSize}px` : '100vh'} />
+      <ScrollSizer style={{
+        top: validateString(isOrdered, top),
+        height: isOrdered ? `${scrollSize}px` : '100vh'
+      }} />
     </StyledContainer>
   )
 }
 
 const StyledContainer = styled(FullContainer)`
-  ${({ $isOrdered }) => mixins.highZIndex($isOrdered ? 0 : 3)}
   pointer-events: none;
-  overflow-y: ${toggleStyle('$isOrdered', 'scroll', 'hidden')};
 
   div, figure {
     pointer-events: initial;
   }
 `
 
-const marginTop = `calc(${SIZES.ORDERED_COL_TOP_PADDING} + ${SIZES.PAGE_MARGIN} + ${FONT_SIZES.REGULAR})`
 const ScrollSizer = styled.div`
   width: 100vw;
-  height: calc(${extractStyle('$height')} - ${marginTop} * 2);
-  margin: ${marginTop} 0;
+  position: relative;
   transition: height ${TIMINGS.ORDER}ms ease-in-out;
 `
 

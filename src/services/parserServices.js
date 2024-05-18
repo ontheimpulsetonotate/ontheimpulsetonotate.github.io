@@ -1,9 +1,17 @@
 import parse, { domToReact } from 'html-react-parser'
+import Citation from '../components/common/text/citation'
 import ExpandButton from '../components/common/text/expandButton'
 
-const parseTextView = (text, handleButtonClick, truncate) => {
-  let html = `<p>${text}</p>`
-    .replace(/<br>$/, '')
+const parseTextView = (text, {
+  truncate,
+  parseCitation,
+  footnotes,
+  handleButtonClick,
+} = {}) => {
+  let footnoteIndex = 0
+  const trimSpace = '(<br>|\\s|&#8202;)+'
+  const regex = new RegExp(`(^${trimSpace}|${trimSpace}$)`, 'g')
+  const html = `<p>${text.replaceAll(regex, '')}</p>`
     .replaceAll(/<br>/g, truncate ? ' ' : '</p><p>')
   const options = {
     replace: domNode => {
@@ -12,12 +20,17 @@ const parseTextView = (text, handleButtonClick, truncate) => {
         attribs.style += 'text-decoration: none; color:inherit;'
         if (attribs.style.match('text-decoration:underline')) {
           const text = children[0]?.data
-          if (text) children[0].data = text.replace(/ \[[0-9]+\]$/, '')
+          if (text) {
+            const data = text.replace(/ \[[0-9]+\]$/, '')
+            if (parseCitation)
+              return <Citation footnote={footnotes[footnoteIndex++]}>{data}</Citation>
+            children[0].data = data
+          }
         }
       }
       if (domNode.tagName === 'a')
         return <>{domToReact(domNode.children)}</>
-      if (!truncate && domNode.tagName === 'p' && !domNode.next)
+      if (truncate === false && domNode.tagName === 'p' && !domNode.next)
         return (
           <p>
             {domToReact(domNode.children, options)}
