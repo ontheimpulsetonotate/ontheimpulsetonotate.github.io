@@ -1,14 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 import { FRAGMENT_ID_PREFIX } from '../../constants/reactConstants'
 import { COLORS, FONT_SIZES, SIZES, TIMINGS } from '../../constants/stylesConstants'
-import useImagesLoaded from '../../hooks/useImagesLoaded'
 import parserServices from '../../services/parserServices'
 import { validateString } from '../../utils/commonUtils'
 import mixins from '../../utils/mixins'
-import { getPx, vh } from '../../utils/styleUtils'
-import Figure from '../common/img/figure'
 import TextHeader from '../common/text/textHeader'
+import MixedViewImg from './mixedViewImg'
 
 
 const MixedViewSection = ({
@@ -21,39 +19,25 @@ const MixedViewSection = ({
   isLeft
 }) => {
   const containerRef = useRef()
-  const [showImg, setShowImg] = useState(false)
-  const imgSrcs = useMemo(() => imgData.map(({ imgLink }) => imgLink), [imgData])
-
-  const { loaded } = useImagesLoaded(...imgSrcs)
-
-  useEffect(() => {
-    const { top } = containerRef.current.getBoundingClientRect()
-    const headerTop = top + getPx(SIZES.MIXED_VIEW_PADDING_TOP)
-    if (headerTop <= vh(40)) setShowImg(true)
-    else setShowImg(false)
-  }, [containerY])
-
   const imgs = useMemo(() =>
     imgData?.map(({ imgLink, imgNum }, i) =>
-      <Figure
+      <MixedViewImg
         key={i}
-        backgroundColor={COLORS.BROWN}
         src={imgLink}
-        maxSize={SIZES.MIXED_VIEW_FIGURUE_SIZE}
-        imgNum={imgNum} />
+        imgNum={imgNum}
+        containerY={containerY} />
     ), [imgData])
 
   const renderImgContainer = useCallback(isLeftContainer => (
     <ImgContainer
       style={{
-        opacity: showImg && loaded ? 1 : 0,
         paddingLeft: validateString(!isLeft, SIZES.MIXED_VIEW_FIGURE_MARGIN),
         paddingRight: validateString(isLeft, SIZES.MIXED_VIEW_FIGURE_MARGIN),
       }}
       $isLeft={isLeft} >
       {(isLeftContainer ? isLeft : !isLeft) && imgs}
     </ImgContainer>
-  ), [isLeft, loaded, showImg, imgs])
+  ), [isLeft, imgs])
 
   return (
     <SectionContainer id={`${FRAGMENT_ID_PREFIX}${index + 1}`} ref={containerRef}>
@@ -77,7 +61,6 @@ const ImgContainer = styled.div`
     return mixins.flex(flex, 'flex-start')
   }}
 
-  transition: opacity ${TIMINGS.MIXED_FIGURE_OPACITY}ms ease-in-out;
   width: 100%;
   height: 0;
   box-sizing: border-box;
@@ -87,8 +70,12 @@ const ImgContainer = styled.div`
     ${SIZES.MIXED_VIEW_PADDING_TOP} + ${FONT_SIZES.LEADING_M} + ${SIZES.ELEM_MARGIN}
   );
 
-  > figure:not(:first-child) {
-    margin-top: ${SIZES.MIXED_VIEW_FIGURE_MARGIN};
+  > figure {
+    transition: opacity ${TIMINGS.MIXED_FIGURE_OPACITY}ms ease-in-out;
+
+    &:not(:first-child) {
+      margin-top: ${SIZES.MIXED_VIEW_FIGURE_MARGIN};
+    }
   }
 `
 

@@ -26,13 +26,14 @@ const Node = forwardRef(function Node({
 }, ref) {
   const draggableRef = useRef()
   const scaleTimelineRef = useRef()
+  const timeoutRef = useRef()
 
   const innerRef = useMergedRef(ref)
   const [useMappedPosition, setUseMappedPosition] = useState(true)
   const [isHovering, setIsHovering] = useState(false)
   const [isOrdering, setIsOrdering] = useState(true)
 
-  const [hasAnimated, setHasAnimated] = useState(false)
+  const [hasAnimated, setHasAnimated] = useState(!shouldAnimate)
   const [childRendered, setChildRendered] = useState(false)
 
   const containerId = useMemo(() => `node-${_.uniqueId()}`, [])
@@ -48,36 +49,38 @@ const Node = forwardRef(function Node({
     () => {
       if (!childRendered) return
 
-      const animation = gsap
-        .timeline()
-        .to(id,
-          {
-            opacity: 1,
-            duration: shouldAnimate ? 0.25 : 0,
-            ease: 'back.out(2)',
-            delay: shouldAnimate ? _.random(0.25, 2, true) : 0,
-            // onComplete: () => handleToTop(index) // TODO
-            onComplete: handleAnimate
-          })
+      const delay = !index ? 1 : _.random(0, 12.5, true)
 
-      if (shouldAnimate) {
+      timeoutRef.current = setTimeout(() => {
+        if (innerRef.current)
+          innerRef.current.style.visibility = 'initial'
+        const animation = gsap
+          .timeline()
+          .to(id,
+            {
+              opacity: 1,
+              duration: shouldAnimate ? 0.25 : 0,
+              ease: 'back.out(2)',
+              onComplete: handleAnimate
+            })
+
+        if (!shouldAnimate) return
         animation.fromTo(id,
           { scale: _.random(1.25, 2.25, true) },
           {
             scale: 1,
-            duration: _.random(0.3, 0.5, true),
+            duration: _.random(0.75, 1.5, true),
             ease: 'back.out(2)',
             onComplete: () => setHasAnimated(true),
             delay: -0.25
           })
-      } else setHasAnimated(true)
+      }, shouldAnimate ? delay * 1000 : 0)
     },
     {
       scope: innerRef,
       dependencies: [childRendered]
     }
   )
-
 
   useGSAP(
     () => {
@@ -92,18 +95,20 @@ const Node = forwardRef(function Node({
     },
     {
       scope: innerRef,
-      dependencies: [childRendered, isHovering]
+      dependencies: [childRendered, isHovering, hasAnimated]
     }
   )
 
+  useEffect(() => () => clearTimeout(timeoutRef.current), [])
+
   const onClick = () => {
-    if (isOrdered) return
+    if (!hasAnimated || isOrdered) return
     handleToTop(index)
     setUseMappedPosition(false)
   }
 
   const onHover = isHovering => {
-    if (!hasAnimated || isOrdered) return
+    if (isOrdered) return
     setIsHovering(isHovering)
     setIsOrdering(false)
   }
@@ -124,7 +129,7 @@ const Node = forwardRef(function Node({
       defaultPosition={mappedPosition}
       position={orderedPosition || (useMappedPosition ? mappedPosition : undefined)}
       ref={draggableRef}
-      disabled={isOrdered || isOrdering}
+      disabled={isOrdered || isOrdering || !hasAnimated}
       onMouseDown={onClick}
       onStop={onUnmap}>
       <InnerContainer
@@ -132,7 +137,7 @@ const Node = forwardRef(function Node({
         style={{
           zIndex,
           transition: validateString(isOrdered || isOrdering, `transform ${TIMINGS.ORDER}ms ease-in-out`),
-          cursor: isOrdered ? 'initial' : 'move'
+          cursor: isOrdered || !hasAnimated ? 'initial' : 'move'
         }}>
         {render({
           ...rest,
@@ -153,7 +158,8 @@ const Node = forwardRef(function Node({
 })
 
 const InnerContainer = styled.div`
- ${mixins.draggable}
+  ${mixins.draggable}
+  visibility: hidden;
   * {
     pointer-events: none;
   }

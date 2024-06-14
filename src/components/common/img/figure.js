@@ -22,8 +22,8 @@ const Figure = forwardRef(function Figure({
       {...rest}
       ref={ref}
       style={{
+        opacity: isLoaded ? undefined : 0,
         ...style,
-        opacity: isLoaded ? undefined : 0
       }}>
       <FilteredImg
         src={src}
