@@ -1,11 +1,10 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 import { FRAGMENT_ID_PREFIX } from '../../constants/reactConstants'
 import { COLORS, FONT_SIZES, SIZES, TIMINGS } from '../../constants/stylesConstants'
 import parserServices from '../../services/parserServices'
 import { validateString } from '../../utils/commonUtils'
 import mixins from '../../utils/mixins'
-import TextHeader from '../common/text/textHeader'
 import MixedViewImg from './mixedViewImg'
 
 
@@ -13,6 +12,7 @@ const MixedViewSection = ({
   index,
   text,
   sectionTitle,
+  pageNum,
   imgData,
   containerY,
   footnotes,
@@ -27,6 +27,7 @@ const MixedViewSection = ({
         imgNum={imgNum}
         containerY={containerY} />
     ), [imgData])
+  const title = `${sectionTitle}, P. ${pageNum.join('-')}`.toLocaleUpperCase()
 
   const renderImgContainer = useCallback(isLeftContainer => (
     <ImgContainer
@@ -39,12 +40,13 @@ const MixedViewSection = ({
     </ImgContainer>
   ), [isLeft, imgs])
 
+
   return (
     <SectionContainer id={`${FRAGMENT_ID_PREFIX}${index + 1}`} ref={containerRef}>
       {renderImgContainer(true)}
       <TextContainer>
-        <TextHeader>{sectionTitle}</TextHeader>
         {parserServices.parseTextView(text, {
+          title,
           footnotes,
           parseCitation: true,
         })}

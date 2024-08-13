@@ -13,9 +13,12 @@ const Figure = forwardRef(function Figure({
   maxSize,
   width,
   height,
+  bracketNumbers,
   ...rest
 }, ref) {
   const [isLoaded, setIsLoaded] = useState(false)
+  let imgNotation = imgNum.map(num => _.padStart(num, 3, '0')).join('—')
+  if (bracketNumbers) imgNotation = `[${imgNotation}]`
 
   return (
     <ImgContainer
@@ -32,7 +35,7 @@ const Figure = forwardRef(function Figure({
         width={width}
         height={height}
         handleLoad={() => setIsLoaded(true)} />
-      <figcaption><p>REF {imgNum.map(num => _.padStart(num, 3, '0')).join('—')}</p></figcaption>
+      <figcaption><p>{imgNotation}</p></figcaption>
     </ImgContainer>
   )
 })

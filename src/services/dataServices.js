@@ -15,6 +15,8 @@ const parsedData = (() => {
   const tempDiv = document.createElement('div')
   tempDiv.innerHTML = html
   const main = tempDiv.querySelector('.grid-container')
+
+  // TODO: ENUM
   const dataKeys = [
     'imgNum',
     undefined,
@@ -23,19 +25,20 @@ const parsedData = (() => {
     'pageNum',
     'artistLastName',
     'artistFirstName',
+    'medium',
     'workDetails',
     'copyright',
-    'medium',
     'text',
     'footnotes',
-    'associated'
+    'project',
+    'interview'
   ]
 
   const data = Array.from(main.querySelector('tbody').children)
     .slice(2)
     .map(tr => {
       const tdArray = Array.from(tr.querySelectorAll('td')).slice(0, dataKeys.length)
-      if (!tdArray[0].innerText.match(/^REF/)) return false
+      if (!tdArray[0].innerText.match(/^\[[0-9]+\]/)) return false
       const data = tdArray.reduce((trData, td, i) => {
         const key = dataKeys[i]
         const strippedHtml = strip(td.innerHTML)
@@ -44,9 +47,7 @@ const parsedData = (() => {
           trData[key] = parseNumRange(td.innerHTML)
         else if (['workDetails', 'text'].includes(key))
           trData[key] = td.innerHTML
-        // else if (key === 'imgLink')
-        //   trData[key] = strippedHtml.replace(/dl=0$/, 'raw=1')
-        else if (key === 'footnotes')
+        else if (['footnotes', 'project'].includes(key))
           trData[key] = td.innerHTML
             .split('<br><br>')
             .map(notation => notation.replace(/^\[[0-9]+\] /, ''))

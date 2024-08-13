@@ -1,8 +1,10 @@
 import parse, { domToReact } from 'html-react-parser'
 import Citation from '../components/common/text/citation'
 import ExpandButton from '../components/common/text/expandButton'
+import TextHeader from '../components/common/text/textHeader'
 
 const parseTextView = (text, {
+  title,
   truncate,
   parseCitation,
   footnotes,
@@ -13,10 +15,16 @@ const parseTextView = (text, {
   const regex = new RegExp(`(^${trimSpace}|${trimSpace}$)`, 'g')
   const html = `<p>${text.replaceAll(regex, '')}</p>`
     .replaceAll(/<br>/g, truncate ? ' ' : '</p><p>')
+    .replaceAll(/&lt;br&gt;/g, '')
+
   const options = {
     replace: domNode => {
+      const { children } = domNode
+      if (domNode.tagName === 'h3')
+        return <></>
+
       if (domNode.tagName === 'span') {
-        const { attribs, children } = domNode
+        const { attribs } = domNode
         attribs.style += 'text-decoration: none; color:inherit;'
         if (attribs.style.match('text-decoration:underline')) {
           const text = children[0]?.data
@@ -28,20 +36,31 @@ const parseTextView = (text, {
           }
         }
       }
-      if (domNode.tagName === 'a')
-        return <>{domToReact(domNode.children)}</>
-      if (truncate === false && domNode.tagName === 'p' && !domNode.next)
-        return (
+
+      if (domNode.tagName === 'a') // TODO: ?
+        return <>{domToReact(children)}</>
+
+      if (!domNode.next && domNode.tagName === 'p') {
+        if (truncate === false)
+          return (
+            <p>
+              {domToReact(children, options)}
+              <ExpandButton isExpanded={true} handleClick={handleButtonClick} />
+            </p>
+          )
+        else if (title) return (
           <p>
-            {domToReact(domNode.children, options)}
-            <ExpandButton isExpanded={true} handleClick={handleButtonClick} />
-          </p>
+            {domToReact(children, options)}
+            <TextHeader inline> {title}</TextHeader>
+          </p >
         )
+      }
+
     }
   }
 
   return parse(
-    html.replaceAll(/&lt;br&gt;/g, ''),
+    html,
     options
   )
 }

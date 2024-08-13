@@ -24,7 +24,8 @@ const MixedViewImg = ({ src, imgNum, containerY }) => {
       backgroundColor={COLORS.BROWN}
       src={src}
       maxSize={SIZES.MIXED_VIEW_FIGURUE_SIZE}
-      imgNum={imgNum} />
+      imgNum={imgNum}
+      bracketNumbers />
   )
 }
 

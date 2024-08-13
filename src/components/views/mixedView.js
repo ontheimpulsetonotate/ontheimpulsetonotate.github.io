@@ -27,7 +27,7 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
   const renderTexts = () => {
     let isLeft = false
 
-    return dataServices.textData.map(({ text, sectionTitle, footnotes }, i) => {
+    return dataServices.textData.map(({ text, sectionTitle, footnotes, pageNum }, i) => {
       const imgData = dataServices.getImgsByTitle(sectionTitle)
       if (imgData.length) isLeft = !isLeft
       return (
@@ -37,6 +37,7 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
           text={text}
           sectionTitle={sectionTitle}
           footnotes={footnotes}
+          pageNum={pageNum}
           imgData={imgData}
           containerY={containerY}
           isLeft={isLeft} />
