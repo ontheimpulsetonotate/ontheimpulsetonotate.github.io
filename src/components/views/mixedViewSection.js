@@ -5,6 +5,7 @@ import { COLORS, FONT_SIZES, SIZES, TIMINGS } from '../../constants/stylesConsta
 import parserServices from '../../services/parserServices'
 import { validateString } from '../../utils/commonUtils'
 import mixins from '../../utils/mixins'
+import Citation from '../common/text/citation'
 import MixedViewImg from './mixedViewImg'
 
 
@@ -20,11 +21,10 @@ const MixedViewSection = ({
 }) => {
   const containerRef = useRef()
   const imgs = useMemo(() =>
-    imgData?.map(({ imgLink, imgNum }, i) =>
+    imgData?.map((data, i) =>
       <MixedViewImg
         key={i}
-        src={imgLink}
-        imgNum={imgNum}
+        data={data}
         containerY={containerY} />
     ), [imgData])
   const title = `${sectionTitle}, P. ${pageNum.join('-')}`.toLocaleUpperCase()

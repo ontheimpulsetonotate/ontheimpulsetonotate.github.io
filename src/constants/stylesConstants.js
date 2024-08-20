@@ -8,7 +8,7 @@ export const FONT_FAMILIES = {
 }
 
 export const FONT_SIZES = {
-  SMALL: remify(10),
+  SMALL: remify(11),
   MEDIUM: remify(13),
   REGULAR: remify(15),
   LARGE: remify(16),
@@ -72,7 +72,7 @@ export const SIZES = {
   MIXED_VIEW_TEXT_PADDING: remify(40),
   CITATION_MAX_WIDTH: remify(400),
   CITATION_PADDING: remify(10),
-  CITATION_OFFSET: remify(20),
+  CITATION_OFFSET: remify(10),
 
   ABOUT_SECTION_TOP: remify(125),
   ABOUT_SECTION_DIVIDER_MARGIN: remify(35)

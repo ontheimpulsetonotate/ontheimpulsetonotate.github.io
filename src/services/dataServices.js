@@ -72,7 +72,7 @@ const textData = parsedData.filter(({ text }) => text)
 const getImgsByTitle = title =>
   parsedData
     .filter(({ sectionTitle }) => title === sectionTitle)
-    .map(data => _.pick(data, 'imgLink', 'imgNum'))
+// .map(data => _.pick(data, 'imgLink', 'imgNum'))
 
 const dataServices = {
   strip,
