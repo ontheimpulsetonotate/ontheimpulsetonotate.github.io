@@ -1,11 +1,10 @@
-import parse from 'html-react-parser'
 import { useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../../constants/stylesConstants'
+import { COLORS, SIZES } from '../../constants/stylesConstants'
 import useImagesLoaded from '../../hooks/useImagesLoaded'
 import { vh } from '../../utils/styleUtils'
 import Figure from '../common/img/figure'
 import Citation from '../common/text/citation'
+import ProjectCitation from '../common/text/projectCitation'
 
 const MixedViewImg = ({ data, containerY }) => {
   const { imgLink, imgNum, artistFirstName, artistLastName, medium, workDetails, copyright } = data
@@ -20,13 +19,9 @@ const MixedViewImg = ({ data, containerY }) => {
   }, [containerY])
 
   return (
-    <Citation footnote={
-      <Footnote>
-        <h3>{artistLastName} {artistFirstName}</h3>
-        <h3>{medium}</h3>
-        <p><span>{parse(workDetails)}</span> <span>{parse(copyright)}</span></p>
-      </Footnote>
-    } imgRef={imgRef}>
+    <Citation
+      footnote={<ProjectCitation {...data} />}
+      imgRef={imgRef}>
       <Figure
         style={{
           opacity: isShowing && loaded ? 1 : 0,
@@ -41,17 +36,5 @@ const MixedViewImg = ({ data, containerY }) => {
   )
 }
 
-const Footnote = styled.div`
-  h3 {
-    font-family: ${FONT_FAMILIES.APERCU_COND};
-    font-size: ${FONT_SIZES.SMALL};
-  }
-
-  p {
-    padding-top: 1em;
-    font-size: ${FONT_SIZES.SMALL};
-    font-family: ${FONT_FAMILIES.APERCU};
-  }
-`
 
 export default MixedViewImg

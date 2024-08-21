@@ -8,27 +8,26 @@ const About = () => {
     <Container>
       <InnerContainer>
         <div>
-          <h3>ABOUT</h3>
           <p>
-            <i>On the Impulse to Notate</i> assembles an array of dialogic encounters.
+            <i>On the Impulse to Notate</i> assembles an array of  dialogic encounters.
             Composed in fragments — written  and collected, designed and curated — this
             catalog resists linear narrative formulas to favor an open poetic syntax.
           </p>
           <p>
-            Here, the designer relies on her propensity to notate,
-            aggregate, and persistently recompose.
+            Here, the designer relies on her propensity to
+            notate, aggregate, and persistently recompose.
           </p>
           <p>
-            She materializes language that promotes movement toward
-            knowledge and craft in conversation.
+            She materializes language that promotes movement
+            toward knowledge and craft in conversation.
           </p>
           <p>
             She reads and translates stories spatially, frequently shifting their frames.
           </p>
           <hr />
           <p>
-            This website is a direct translation of the book of the same name, designed and
-            written by Lydia Chodosh in partial fulfillment of the RISD Graphic Design MFA.
+            This website is a direct translation of the book of the same name, designed
+            and written by Lydia Chodosh in partial fulfillment of the RISD Graphic Design MFA.
           </p>
         </div>
         <CreditContainer>
@@ -43,7 +42,7 @@ const About = () => {
 
 const Container = styled(FullContainer)`
   ${mixins.grid}
-  background-color: ${COLORS.LIGHT_BEIGE};
+  background-color: ${COLORS.BROWN};
 `
 
 const InnerContainer = styled.div`
@@ -64,7 +63,7 @@ const InnerContainer = styled.div`
 
   hr {
     margin: ${SIZES.ABOUT_SECTION_DIVIDER_MARGIN} 0;
-    background-color: ${COLORS.BROWN};
+    background-color: ${COLORS.LIGHT_BEIGE};
     height: 1px;
     border: 0;
   }

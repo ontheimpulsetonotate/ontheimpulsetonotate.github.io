@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import AboutButton from './aboutButton'
 
-
+// TODO cap rename
 
 const Home = ({
   view: View,
@@ -28,7 +28,7 @@ const Home = ({
         fragmentIndex={mixedViewFragmentIndex}
         handleMemoizeNodeData={handleMemoizeNodeData}
         handleFragmentScroll={handleFragmentScroll} />
-      <AboutButton onClick={handleUnsetMode} />
+      {/* <AboutButton onClick={handleUnsetMode} /> */}
     </>
   )
 }

@@ -30,7 +30,7 @@ const parsedData = (() => {
     'copyright',
     'text',
     'footnotes',
-    'project',
+    'projects',
     'interview'
   ]
 
@@ -47,11 +47,24 @@ const parsedData = (() => {
           trData[key] = parseNumRange(td.innerHTML)
         else if (['workDetails', 'text'].includes(key))
           trData[key] = td.innerHTML
-        else if (['footnotes', 'project'].includes(key))
-          trData[key] = td.innerHTML
+        else if (['footnotes', 'projects'].includes(key)) {
+          const notesArray = td.innerHTML
             .split('<br><br>')
-            .map(notation => notation.replace(/^\[[0-9]+\] /, ''))
+            // .map(notation => notation.replace(/^\[[0-9]+\] /, ''))
             .filter(n => n)
+          const notes = {}
+          notesArray.forEach(note => {
+            const noteNum = note.match(/\[([0-9]+)\]/)?.[1]
+            if (noteNum)
+              notes[noteNum] = note.replace(/^\[[0-9]+\] /, '')
+          })
+
+          trData[key] = notes
+        }
+        // trData[key] = td.innerHTML
+        //   .split('<br><br>')
+        //   // .map(notation => notation.replace(/^\[[0-9]+\] /, ''))
+        //   .filter(n => n)
         else if (key)
           trData[key] = strippedHtml
 
@@ -63,7 +76,7 @@ const parsedData = (() => {
     })
     .filter(d => d)
 
-  console.log(data)
+
   return data
 })()
 

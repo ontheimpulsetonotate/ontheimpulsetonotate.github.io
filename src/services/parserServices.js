@@ -2,12 +2,24 @@ import parse, { domToReact } from 'html-react-parser'
 import Citation from '../components/common/text/citation'
 import ExpandButton from '../components/common/text/expandButton'
 import TextHeader from '../components/common/text/textHeader'
+import ProjectCitation from '../components/common/text/projectCitation'
+
+const _parse = (text, options) => text ? parse(text, options) : undefined
+
+const parseProject = text => {
+  const [title, medium, workDetails] = text.split('<br>')
+  return <ProjectCitation
+    artistLastName={title}
+    medium={medium}
+    workDetails={workDetails} />
+}
 
 const parseTextView = (text, {
   title,
   truncate,
   parseCitation,
   footnotes,
+  projects,
   handleButtonClick,
 } = {}) => {
   let footnoteIndex = 0
@@ -29,9 +41,20 @@ const parseTextView = (text, {
         if (attribs.style.match('text-decoration:underline')) {
           const text = children[0]?.data
           if (text) {
-            const data = text.replace(/ \[[0-9]+\]$/, '')
-            if (parseCitation)
-              return <Citation footnote={footnotes[footnoteIndex++]}>{data}</Citation>
+            const data = text.replace(/ \[[0-9]+\]/, '')
+            if (parseCitation) {
+              const project = projects?.[footnoteIndex + 1]
+
+              const citation =
+                <Citation
+                  footnote={project ?
+                    parseProject(project) :
+                    footnotes?.[footnoteIndex + 1]}>
+                  {data}
+                </Citation>
+              footnoteIndex++
+              return citation
+            }
             children[0].data = data
           }
         }
@@ -66,6 +89,7 @@ const parseTextView = (text, {
 }
 
 const parserServices = {
+  parse: _parse,
   parseTextView
 }
 

@@ -74,7 +74,7 @@ export const SIZES = {
   CITATION_PADDING: remify(10),
   CITATION_OFFSET: remify(10),
 
-  ABOUT_SECTION_TOP: remify(125),
+  ABOUT_SECTION_TOP: remify(250),
   ABOUT_SECTION_DIVIDER_MARGIN: remify(35)
 }
 

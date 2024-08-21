@@ -1,23 +1,29 @@
+import _ from 'lodash'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { SIZES } from '../constants/stylesConstants'
-import mixins from '../utils/mixins'
+import useIsAbout from '../hooks/useIsAbout'
 
 
-const AboutButton = ({ onClick }) => {
+const AboutButton = () => {
+  const isAbout = useIsAbout()
+
   return (
     <LinkContainer>
-      <Link to='about' onClick={onClick}>
-        About
+      <Link to={isAbout ? '..' : 'about'}>
+        {/* [{isAbout ? 'CLOSE' : '+'}] */}
+        INDEX
       </Link>
     </LinkContainer>
   )
 }
 
 const LinkContainer = styled.div`
-  ${mixins.highZIndex(1)}
-  position: fixed;
-  bottom: ${SIZES.PAGE_MARGIN};
+  display: inline;
+  padding-left: 1em;
+
+  a {
+    display: flex;
+  }
 `
 
 

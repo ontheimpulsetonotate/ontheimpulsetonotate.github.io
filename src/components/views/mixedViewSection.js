@@ -5,7 +5,6 @@ import { COLORS, FONT_SIZES, SIZES, TIMINGS } from '../../constants/stylesConsta
 import parserServices from '../../services/parserServices'
 import { validateString } from '../../utils/commonUtils'
 import mixins from '../../utils/mixins'
-import Citation from '../common/text/citation'
 import MixedViewImg from './mixedViewImg'
 
 
@@ -17,6 +16,7 @@ const MixedViewSection = ({
   imgData,
   containerY,
   footnotes,
+  projects,
   isLeft
 }) => {
   const containerRef = useRef()
@@ -32,6 +32,7 @@ const MixedViewSection = ({
   const renderImgContainer = useCallback(isLeftContainer => (
     <ImgContainer
       style={{
+        // height: '100%',
         paddingLeft: validateString(!isLeft, SIZES.MIXED_VIEW_FIGURE_MARGIN),
         paddingRight: validateString(isLeft, SIZES.MIXED_VIEW_FIGURE_MARGIN),
       }}
@@ -48,6 +49,7 @@ const MixedViewSection = ({
         {parserServices.parseTextView(text, {
           title,
           footnotes,
+          projects,
           parseCitation: true,
         })}
       </TextContainer>
@@ -72,7 +74,7 @@ const ImgContainer = styled.div`
     ${SIZES.MIXED_VIEW_PADDING_TOP} + ${FONT_SIZES.LEADING_M} + ${SIZES.ELEM_MARGIN}
   );
 
-  > figure {
+ figure {
     transition: opacity ${TIMINGS.MIXED_FIGURE_OPACITY}ms ease-in-out;
 
     &:not(:first-child) {
