@@ -27,7 +27,7 @@ const MixedViewImg = ({ data, containerY }) => {
           opacity: isShowing && loaded ? 1 : 0,
         }}
         ref={imgRef}
-        backgroundColor={COLORS.BROWN}
+        color={COLORS.BROWN}
         src={imgLink}
         maxSize={SIZES.MIXED_VIEW_FIGURUE_SIZE}
         imgNum={imgNum}

@@ -9,7 +9,11 @@ import DragContainer from '../common/containers/dragContainer'
 import Img from '../common/img/img'
 
 
-const refWithImg = dataServices.parsedData.filter(({ imgLink }) => imgLink)
+const refWithImg =
+  _.shuffle([
+    ...dataServices.parsedData.main.filter(({ imgLink }) => imgLink),
+    ...dataServices.parsedData.interview.filter(({ imgLink }) => imgLink)
+  ]) // TODO
 const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
   const imgSize = SIZES.getImgViewFIgureSize()
   const [proportions, setProportions] = useState(Array(refWithImg.length))
@@ -50,7 +54,7 @@ const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
 
   return (
     <DragContainer
-      contents={refWithImg.map(ref => _.pick(ref, ['imgLink', 'imgNum']))}
+      contents={refWithImg.map(ref => _.pick(ref, ['imgLink', 'imgNum', 'type', 'interviewPrefix']))}
       elemW={imgSize}
       elemH={imgSize}
       element={Img}

@@ -10,8 +10,7 @@ const AboutButton = () => {
   return (
     <LinkContainer>
       <Link to={isAbout ? '..' : 'about'}>
-        {/* [{isAbout ? 'CLOSE' : '+'}] */}
-        INDEX
+        [{isAbout ? 'CLOSE' : '+'}]
       </Link>
     </LinkContainer>
   )
@@ -20,10 +19,6 @@ const AboutButton = () => {
 const LinkContainer = styled.div`
   display: inline;
   padding-left: 1em;
-
-  a {
-    display: flex;
-  }
 `
 
 

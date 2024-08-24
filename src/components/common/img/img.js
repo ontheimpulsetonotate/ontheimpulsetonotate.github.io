@@ -5,15 +5,18 @@ import useImagesLoaded from '../../../hooks/useImagesLoaded'
 import Figure from './figure'
 
 
-const Img = ({ imgLink, imgNum, onRender, ...props }) => {
+const Img = ({ type, imgLink, imgNum, interviewPrefix, onRender, ...props }) => {
   const { loaded, proportions } = useImagesLoaded(imgLink)
   useEffect(() => {
     if (loaded) onRender(props.index, proportions[imgLink])
   }, [loaded])
+
+  // TODO: type enum
   return (
     <Figure
       {..._.omit(props, ['onHover', 'index', 'onCollapse'])}
-      backgroundColor={COLORS.BROWN}
+      color={type === 'interview' ? COLORS.BLUE : COLORS.BROWN}
+      interviewPrefix={interviewPrefix}
       src={imgLink}
       width={SIZES.IMG_VIEW_FIGURE_SIZE}
       imgNum={imgNum} />

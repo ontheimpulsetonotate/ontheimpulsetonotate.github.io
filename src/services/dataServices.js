@@ -38,19 +38,29 @@ const parsedData = (() => {
     .slice(2)
     .map(tr => {
       const tdArray = Array.from(tr.querySelectorAll('td')).slice(0, dataKeys.length)
-      if (!tdArray[0].innerText.match(/^\[[0-9]+\]/)) return false
+      let type
+      if (tdArray[0].innerText.match(/^\[[0-9]+\]/))
+        type = 'main'
+      else if (tdArray[0].innerText.match(/^\[DIALOGUE [A-Z][0-9]\]/))
+        type = 'interview'
+      else return false
+
       const data = tdArray.reduce((trData, td, i) => {
         const key = dataKeys[i]
         const strippedHtml = strip(td.innerHTML)
 
-        if (['imgNum', 'pageNum'].includes(key))
+        if (['imgNum', 'pageNum'].includes(key)) {
           trData[key] = parseNumRange(td.innerHTML)
+          if (key === 'imgNum' && type === 'interview') {
+            trData.interviewPrefix = td.innerHTML.match(/\[DIALOGUE ([A-Z])[0-9]\]/)?.[1]
+          }
+        }
+
         else if (['workDetails', 'text'].includes(key))
           trData[key] = td.innerHTML
         else if (['footnotes', 'projects'].includes(key)) {
           const notesArray = td.innerHTML
             .split('<br><br>')
-            // .map(notation => notation.replace(/^\[[0-9]+\] /, ''))
             .filter(n => n)
           const notes = {}
           notesArray.forEach(note => {
@@ -58,32 +68,36 @@ const parsedData = (() => {
             if (noteNum)
               notes[noteNum] = note.replace(/^\[[0-9]+\] /, '')
           })
-
           trData[key] = notes
         }
-        // trData[key] = td.innerHTML
-        //   .split('<br><br>')
-        //   // .map(notation => notation.replace(/^\[[0-9]+\] /, ''))
-        //   .filter(n => n)
         else if (key)
           trData[key] = strippedHtml
 
         return trData
       }, {})
 
-      data.imgLink = `images/REF_${_.padStart(data.imgNum[0], 3, '0')}.webp`
+      data.type = type
+      // TODO: data.imgNum - multiple
+      if (type === 'main')
+        data.imgLink = `01_Primary-Text/REF_${_.padStart(data.imgNum[0], 3, '0')}.webp`
+      else data.imgLink = `04_Interviews/Interview_${data.interviewPrefix}${data.imgNum}.webp`
       return data
     })
     .filter(d => d)
 
-
-  return data
+  return _.groupBy(data, 'type')
 })()
 
-const textData = parsedData.filter(({ text }) => text)
+const textData = [
+  ...parsedData.main.filter(({ text }) => text),
+  ...parsedData.interview.filter(({ text }) => text),
+] // TODO
+
+console.log(parsedData.interview)
 
 const getImgsByTitle = title =>
   parsedData
+    .main
     .filter(({ sectionTitle }) => title === sectionTitle)
 // .map(data => _.pick(data, 'imgLink', 'imgNum'))
 

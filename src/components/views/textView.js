@@ -8,7 +8,9 @@ const TextView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
   const { w, h } = SIZES.getTextContainerSize()
   return (
     <DragContainer
-      contents={dataServices.textData.slice(0, 50).map(ref => _.pick(ref, ['text', 'sectionTitle']))}
+      contents={
+        _.shuffle(dataServices.textData.map(ref => _.pick(ref, ['text', 'sectionTitle', 'type'])))
+      }
       elemW={w}
       elemH={h}
       element={Text}

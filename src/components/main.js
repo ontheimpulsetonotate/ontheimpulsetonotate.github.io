@@ -16,7 +16,7 @@ import MixedView from './views/mixedView'
 import TextView from './views/textView'
 
 const Main = () => {
-  const [mode, setMode] = useState(2)
+  const [mode, setMode] = useState(0)
   const [mixedViewFragmentIndex, setMixedViewFragmentIndex] = useState()
   const [isOrdered, setIsOrdered] = useState(false)
   const isAbout = useIsAbout()
@@ -94,7 +94,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
   }
 
-  h1, h2, h3, button, menu, a {
+  h1, h2, h3, button, a {
     line-height: ${FONT_SIZES.LEADING_S};
   }
 
@@ -102,7 +102,7 @@ const GlobalStyle = createGlobalStyle`
     color: ${toggleStyle('$isAbout', COLORS.LIGHT_BEIGE, COLORS.BROWN)};
   }
 
-  h1, h2, h3, p, button {
+  h1, h2, h3, p, button, a {
     font-size: ${FONT_SIZES.REGULAR};
     letter-spacing: 0.02em;
   }
