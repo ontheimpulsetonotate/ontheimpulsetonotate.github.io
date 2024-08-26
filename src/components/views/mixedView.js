@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { FRAGMENT_ID_PREFIX } from '../../constants/reactConstants'
 import { SIZES } from '../../constants/stylesConstants'
 import dataServices from '../../services/dataServices'
+import { stringsAreEqual } from '../../utils/commonUtils'
 import { addEventListener } from '../../utils/reactUtils'
 import FullContainer from '../common/containers/fullContainer'
 import MixedViewSection from './mixedViewSection'
@@ -28,18 +29,40 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
     let isLeft = false
 
     return dataServices.textData.map(({ sectionTitle, ...rest }, i) => {
-      const imgData = dataServices.getImgsByTitle(sectionTitle)
-      if (imgData.length) isLeft = !isLeft
+      const data = dataServices.getNodeByTitle(sectionTitle)
+      if (data.length) isLeft = !isLeft
 
+      const associatedInterviews =
+        dataServices.categorizedData.interview.filter(data =>
+          stringsAreEqual(data.interview, sectionTitle))
       return (
-        <MixedViewSection
-          {...rest}
-          key={i}
-          index={i}
-          sectionTitle={sectionTitle}
-          imgData={imgData}
-          containerY={containerY}
-          isLeft={isLeft} />
+        <React.Fragment key={i}>
+          <MixedViewSection
+            {...rest}
+            index={i}
+            type='main'
+            sectionTitle={sectionTitle}
+            data={data}
+            containerY={containerY}
+            isLeft={isLeft} />
+          {
+            associatedInterviews
+              .map(({ interviewPrefix, imgNum, sectionTitle, ...rest }, ii) => {
+                const data = dataServices.getNodeByTitle(sectionTitle)
+                if (data.length) isLeft = !isLeft
+                return <MixedViewSection
+                  {...rest}
+                  key={ii}
+                  index={parseInt(imgNum)}
+                  interviewIndex={ii}
+                  type='interview'
+                  sectionTitle={sectionTitle}
+                  data={[data[ii]]}
+                  containerY={containerY}
+                  isLeft={isLeft} />
+              })
+          }
+        </React.Fragment>
       )
     })
   }

@@ -2,18 +2,22 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 import { FRAGMENT_ID_PREFIX } from '../../constants/reactConstants'
 import { COLORS, FONT_SIZES, SIZES, TIMINGS } from '../../constants/stylesConstants'
+import dataServices from '../../services/dataServices'
 import parserServices from '../../services/parserServices'
-import { validateString } from '../../utils/commonUtils'
+import { stringsAreEqual, validateString } from '../../utils/commonUtils'
 import mixins from '../../utils/mixins'
+import { conditionalStyle, toggleStyle } from '../../utils/styleUtils'
 import MixedViewImg from './mixedViewImg'
 
 
 const MixedViewSection = ({
   index,
+  interviewIndex,
+  type,
   text,
   sectionTitle,
   pageNum,
-  imgData,
+  data,
   containerY,
   footnotes,
   projects,
@@ -21,12 +25,13 @@ const MixedViewSection = ({
 }) => {
   const containerRef = useRef()
   const imgs = useMemo(() =>
-    imgData?.map((data, i) =>
+    data?.map((data, i) =>
       <MixedViewImg
         key={i}
+        type={type}
         data={data}
         containerY={containerY} />
-    ), [imgData])
+    ), [data])
   const title = `${sectionTitle}, P. ${pageNum.join('-')}`.toLocaleUpperCase()
 
   const renderImgContainer = useCallback(isLeftContainer => (
@@ -43,7 +48,11 @@ const MixedViewSection = ({
 
 
   return (
-    <SectionContainer id={`${FRAGMENT_ID_PREFIX}${index + 1}`} ref={containerRef}>
+    <SectionContainer
+      $isInterview={type === 'interview'}
+      $isFirstInterview={!interviewIndex}
+      id={`${FRAGMENT_ID_PREFIX}${index + 1}`}
+      ref={containerRef}>
       {renderImgContainer(true)}
       <TextContainer>
         {parserServices.parseTextView(text, {
@@ -70,9 +79,6 @@ const ImgContainer = styled.div`
   box-sizing: border-box;
   flex-direction: column;
 
-  padding-top: calc(
-    ${SIZES.MIXED_VIEW_PADDING_TOP} + ${FONT_SIZES.LEADING_M} + ${SIZES.ELEM_MARGIN}
-  );
 
  figure {
     transition: opacity ${TIMINGS.MIXED_FIGURE_OPACITY}ms ease-in-out;
@@ -86,8 +92,8 @@ const ImgContainer = styled.div`
 const TextContainer = styled.div`
   ${mixins.flex('initial', 'flex-start')}
   background-color: ${COLORS.LIGHT_BEIGE};
-  padding: ${SIZES.MIXED_VIEW_SECTION_PADDING_TOP} ${SIZES.MIXED_VIEW_TEXT_PADDING} 0; // TODO
-  // padding-top: ${SIZES.MIXED_VIEW_SECTION_PADDING_TOP};
+  padding-left: ${SIZES.MIXED_VIEW_TEXT_PADDING};
+  padding-right: ${SIZES.MIXED_VIEW_TEXT_PADDING};
   height: 100%;
   box-sizing: border-box;
   flex-direction: column;
@@ -98,13 +104,25 @@ const TextContainer = styled.div`
   }
 `
 
-
+const getPadding = ({ $isInterview, $isFirstInterview }) =>
+  !$isInterview ? SIZES.MIXED_VIEW_PADDING_TOP :
+    ($isFirstInterview ?
+      `calc(${SIZES.MIXED_VIEW_INTERVIEW_PADDING_TOP} * 2.5)` :
+      SIZES.MIXED_VIEW_INTERVIEW_PADDING_TOP)
 const SectionContainer = styled.div`
   ${mixins.grid}
   width: 100%;
 
   ${TextContainer} {
-    padding-top: ${SIZES.MIXED_VIEW_PADDING_TOP};
+    padding-top: ${getPadding};
+
+    &, * {
+      color: ${conditionalStyle('$isInterview', COLORS.BLUE)};
+    }
+  }
+
+  ${ImgContainer} {
+    padding-top: ${getPadding};
   }
 `
 

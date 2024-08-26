@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { forwardRef, useState } from 'react'
 import styled from 'styled-components'
-import { FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
 import { extractStyle } from '../../../utils/styleUtils'
 import FilteredImg from './filteredImg'
 
@@ -11,19 +11,21 @@ const Figure = forwardRef(function Figure({
   interviewPrefix,
   style,
   src,
-  color,
+  type,
   maxSize,
   width,
   height,
   bracketNumbers,
+  noCaption = false,
   ...rest
 }, ref) {
   const [isLoaded, setIsLoaded] = useState(false)
   let imgNotation = interviewPrefix ?
-    `${interviewPrefix}${imgNum}` :
+    `DIALOGUE ${interviewPrefix}${imgNum}` :
     imgNum.map(num => _.padStart(num, 3, '0')).join('—')
   if (bracketNumbers) imgNotation = `[${imgNotation}]`
 
+  const color = type === 'interview' ? COLORS.BLUE : COLORS.BROWN
   return (
     <ImgContainer
       {...rest}
@@ -40,7 +42,7 @@ const Figure = forwardRef(function Figure({
         width={width}
         height={height}
         handleLoad={() => setIsLoaded(true)} />
-      {/* <figcaption><p>{imgNotation}</p></figcaption> */}
+      {!noCaption && <figcaption><p>{imgNotation}</p></figcaption>}
     </ImgContainer>
   )
 })

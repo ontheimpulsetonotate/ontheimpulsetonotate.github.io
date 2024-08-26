@@ -18,7 +18,7 @@ const IndexTab = ({ onRowClick }) => {
   const [hoverIndex, setHoverIndex] = useState()
   const [imgIsLoaded, setImgIsLoaded] = useState()
 
-  const data = dataServices.parsedData.main
+  const data = dataServices.categorizedData.main
 
   const headers = [
     ['artist', () => _.sortBy(data, frag => frag.imgNum[0])],

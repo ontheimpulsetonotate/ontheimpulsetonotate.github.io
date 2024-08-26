@@ -16,7 +16,7 @@ import MixedView from './views/mixedView'
 import TextView from './views/textView'
 
 const Main = () => {
-  const [mode, setMode] = useState(0)
+  const [mode, setMode] = useState(2)
   const [mixedViewFragmentIndex, setMixedViewFragmentIndex] = useState()
   const [isOrdered, setIsOrdered] = useState(false)
   const isAbout = useIsAbout()

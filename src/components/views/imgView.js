@@ -10,10 +10,7 @@ import Img from '../common/img/img'
 
 
 const refWithImg =
-  _.shuffle([
-    ...dataServices.parsedData.main.filter(({ imgLink }) => imgLink),
-    ...dataServices.parsedData.interview.filter(({ imgLink }) => imgLink)
-  ]) // TODO
+  _.shuffle(dataServices.allData.filter(({ imgLink }) => imgLink))
 const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
   const imgSize = SIZES.getImgViewFIgureSize()
   const [proportions, setProportions] = useState(Array(refWithImg.length))

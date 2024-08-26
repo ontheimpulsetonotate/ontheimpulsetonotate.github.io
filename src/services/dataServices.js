@@ -1,17 +1,18 @@
 import _ from 'lodash'
 import html from '../data/data'
+import { stringsAreEqual } from '../utils/commonUtils'
 
 
 const strip = html => {
   const doc = new DOMParser().parseFromString(html, 'text/html')
-  return doc.body.textContent || ''
+  return doc.body.textContent.trim() || ''
 }
 
 const parseNumRange = numRangeString =>
   [...numRangeString.matchAll(/[0-9]+/g)]
     .map(match => parseInt(match[0]))
 
-const parsedData = (() => {
+const categorizedData = (() => {
   const tempDiv = document.createElement('div')
   tempDiv.innerHTML = html
   const main = tempDiv.querySelector('.grid-container')
@@ -88,24 +89,20 @@ const parsedData = (() => {
   return _.groupBy(data, 'type')
 })()
 
-const textData = [
-  ...parsedData.main.filter(({ text }) => text),
-  ...parsedData.interview.filter(({ text }) => text),
-] // TODO
+const allData = Object.values(categorizedData).flat()
+const textData = categorizedData.main.filter(({ text }) => text)
 
-console.log(parsedData.interview)
 
-const getImgsByTitle = title =>
-  parsedData
-    .main
-    .filter(({ sectionTitle }) => title === sectionTitle)
-// .map(data => _.pick(data, 'imgLink', 'imgNum'))
+const getNodeByTitle = title =>
+  allData.filter(({ sectionTitle }) => stringsAreEqual(title, sectionTitle))
+
 
 const dataServices = {
   strip,
   parseNumRange,
-  getImgsByTitle,
-  parsedData,
+  getNodeByTitle,
+  categorizedData,
+  allData,
   textData
 }
 

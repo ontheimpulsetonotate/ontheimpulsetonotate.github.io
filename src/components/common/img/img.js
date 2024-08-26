@@ -15,11 +15,12 @@ const Img = ({ type, imgLink, imgNum, interviewPrefix, onRender, ...props }) => 
   return (
     <Figure
       {..._.omit(props, ['onHover', 'index', 'onCollapse'])}
-      color={type === 'interview' ? COLORS.BLUE : COLORS.BROWN}
+      type={type}
       interviewPrefix={interviewPrefix}
       src={imgLink}
       width={SIZES.IMG_VIEW_FIGURE_SIZE}
-      imgNum={imgNum} />
+      imgNum={imgNum}
+      noCaption />
   )
 
 }

@@ -78,3 +78,7 @@ export const mapPoisson = (amount, ratio) => {
 
 export const map = (value, inMin, inMax, outMin = 0, outMax = 1) =>
   (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
+
+export const stringsAreEqual = (stringA, stringB) =>
+  stringA.toLocaleUpperCase().trim() ===
+  stringB.toLocaleUpperCase().trim()

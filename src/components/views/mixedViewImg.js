@@ -7,7 +7,7 @@ import Citation from '../common/text/citation'
 import ProjectCitation from '../common/text/projectCitation'
 
 const MixedViewImg = ({ data, containerY }) => {
-  const { imgLink, imgNum, artistFirstName, artistLastName, medium, workDetails, copyright } = data
+  const { imgLink, imgNum, type, interviewPrefix } = data
   const imgRef = useRef()
   const [isShowing, setIsShowing] = useState(false)
   const { loaded } = useImagesLoaded(imgLink)
@@ -26,6 +26,8 @@ const MixedViewImg = ({ data, containerY }) => {
         style={{
           opacity: isShowing && loaded ? 1 : 0,
         }}
+        type={type}
+        interviewPrefix={interviewPrefix}
         ref={imgRef}
         color={COLORS.BROWN}
         src={imgLink}
