@@ -1,17 +1,22 @@
 import _ from 'lodash'
 import { SIZES } from '../../constants/stylesConstants'
-import dataServices from '../../services/dataServices'
+import apiServices from '../../services/apiServices'
 import DragContainer from '../common/containers/dragContainer'
 import Text from '../common/text/text'
+import { DATA_KEYS } from '../../constants/apiConstants'
 
 const TextView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
   const { w, h } = SIZES.getTextContainerSize()
   return (
     <DragContainer
       contents={
-        _.shuffle(dataServices.allData
+        _.shuffle(apiServices.allData
           .filter(({ text }) => text)
-          .map(ref => _.pick(ref, ['text', 'sectionTitle', 'type'])))
+          .map(ref => _.pick(ref, [
+            DATA_KEYS.TEXT,
+            DATA_KEYS.SECTION_TITLE,
+            DATA_KEYS.TYPE,
+          ])))
       }
       elemW={w}
       elemH={h}

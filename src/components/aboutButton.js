@@ -1,17 +1,21 @@
 import _ from 'lodash'
-import { Link } from 'react-router-dom'
+
+import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import useIsAbout from '../hooks/useIsAbout'
+import useToPrev from '../hooks/useToPrev'
 
 
 const AboutButton = () => {
   const isAbout = useIsAbout()
-
+  const navigate = useNavigate()
+  const toPrev = useToPrev()
   return (
     <LinkContainer>
-      <Link to={isAbout ? '..' : 'about'}>
+      <button
+        onClick={() => isAbout ? toPrev() : navigate('/about')}>
         [{isAbout ? 'CLOSE' : '+'}]
-      </Link>
+      </button>
     </LinkContainer>
   )
 }

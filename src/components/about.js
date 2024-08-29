@@ -4,6 +4,8 @@ import mixins from '../utils/mixins'
 import FullContainer from './common/containers/fullContainer'
 
 const About = () => {
+
+
   return (
     <Container>
       <InnerContainer>

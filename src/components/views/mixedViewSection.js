@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import styled from 'styled-components'
+import { FRAGMENT_TYPES } from '../../constants/apiConstants'
 import { FRAGMENT_ID_PREFIX } from '../../constants/reactConstants'
 import { COLORS, FONT_SIZES, SIZES, TIMINGS } from '../../constants/stylesConstants'
-import dataServices from '../../services/dataServices'
 import parserServices from '../../services/parserServices'
-import { stringsAreEqual, validateString } from '../../utils/commonUtils'
+import { validateString } from '../../utils/commonUtils'
 import mixins from '../../utils/mixins'
-import { conditionalStyle, toggleStyle } from '../../utils/styleUtils'
+import { conditionalStyle } from '../../utils/styleUtils'
 import MixedViewImg from './mixedViewImg'
 
 
@@ -37,7 +37,6 @@ const MixedViewSection = ({
   const renderImgContainer = useCallback(isLeftContainer => (
     <ImgContainer
       style={{
-        // height: '100%',
         paddingLeft: validateString(!isLeft, SIZES.MIXED_VIEW_FIGURE_MARGIN),
         paddingRight: validateString(isLeft, SIZES.MIXED_VIEW_FIGURE_MARGIN),
       }}
@@ -49,7 +48,7 @@ const MixedViewSection = ({
 
   return (
     <SectionContainer
-      $isInterview={type === 'interview'}
+      $isInterview={type === FRAGMENT_TYPES.INTERVIEW}
       $isFirstInterview={!interviewIndex}
       id={`${FRAGMENT_ID_PREFIX}${index + 1}`}
       ref={containerRef}>

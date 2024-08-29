@@ -1,8 +1,9 @@
 import _ from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
+import { DATA_KEYS } from '../constants/apiConstants'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES, TIMINGS } from '../constants/stylesConstants'
-import dataServices from '../services/dataServices'
+import apiServices from '../services/apiServices'
 import { getDataStringSorter, validateString } from '../utils/commonUtils'
 import mixins from '../utils/mixins'
 import { addEventListener } from '../utils/reactUtils'
@@ -18,12 +19,12 @@ const IndexTab = ({ onRowClick }) => {
   const [hoverIndex, setHoverIndex] = useState()
   const [imgIsLoaded, setImgIsLoaded] = useState()
 
-  const data = dataServices.categorizedData.main
+  const data = apiServices.categorizedData.main
 
   const headers = [
     ['artist', () => _.sortBy(data, frag => frag.imgNum[0])],
-    ['medium', () => [...data].sort(getDataStringSorter('medium'))],
-    ['section', () => [...data].sort(getDataStringSorter('sectionTitle'))],
+    ['medium', () => [...data].sort(getDataStringSorter(DATA_KEYS.MEDIUM))],
+    ['section', () => [...data].sort(getDataStringSorter(DATA_KEYS.SECTION_TITLE))],
     ['page', () => _.sortBy(data, frag => frag.pageNum[0])]
   ]
 
@@ -35,7 +36,7 @@ const IndexTab = ({ onRowClick }) => {
 
   const handleRowClick = (e, data) => {
     e.stopPropagation()
-    const { textData } = dataServices
+    const { textData } = apiServices
     const matchByTitle = ({ sectionTitle }) => sectionTitle === data.sectionTitle
     const matches = textData.filter(matchByTitle)
     const index = matches.length === 1 ?

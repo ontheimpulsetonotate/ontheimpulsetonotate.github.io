@@ -2,15 +2,16 @@ import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
 import { SIZES } from '../../constants/stylesConstants'
-import dataServices from '../../services/dataServices'
+import apiServices from '../../services/apiServices'
 import { quickArray } from '../../utils/commonUtils'
 import { getOrderedData } from '../../utils/sizeUtils'
 import DragContainer from '../common/containers/dragContainer'
 import Img from '../common/img/img'
+import { DATA_KEYS } from '../../constants/apiConstants'
 
 
 const refWithImg =
-  _.shuffle(dataServices.allData.filter(({ imgLink }) => imgLink))
+  _.shuffle(apiServices.allData.filter(({ imgLink }) => imgLink))
 const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
   const imgSize = SIZES.getImgViewFIgureSize()
   const [proportions, setProportions] = useState(Array(refWithImg.length))
@@ -51,7 +52,12 @@ const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
 
   return (
     <DragContainer
-      contents={refWithImg.map(ref => _.pick(ref, ['imgLink', 'imgNum', 'type', 'interviewPrefix']))}
+      contents={refWithImg.map(ref => _.pick(ref, [
+        DATA_KEYS.IMG_LINK,
+        DATA_KEYS.IMG_NUM,
+        DATA_KEYS.TYPE,
+        DATA_KEYS.INTERVIEW_PREFIX
+      ]))}
       elemW={imgSize}
       elemH={imgSize}
       element={Img}

@@ -11,10 +11,13 @@ const Img = ({ type, imgLink, imgNum, interviewPrefix, onRender, ...props }) => 
     if (loaded) onRender(props.index, proportions[imgLink])
   }, [loaded])
 
-  // TODO: type enum
   return (
     <Figure
-      {..._.omit(props, ['onHover', 'index', 'onCollapse'])}
+      {..._.omit(props, [
+        'onHover',
+        'index',
+        'onCollapse'
+      ])}
       type={type}
       interviewPrefix={interviewPrefix}
       src={imgLink}

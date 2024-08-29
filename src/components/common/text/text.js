@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import TruncateMarkup from 'react-truncate-markup'
 import styled from 'styled-components'
+import { FRAGMENT_TYPES } from '../../../constants/apiConstants'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
 import parserServices from '../../../services/parserServices'
 import mixins from '../../../utils/mixins'
@@ -40,7 +41,7 @@ const Text = ({
   ), [text])
 
   return (
-    <TextContainer {..._.omit(props, ['index'])} $color={type === 'interview' ? COLORS.BLUE : COLORS.BROWN}>
+    <TextContainer {..._.omit(props, ['index'])} $color={type === FRAGMENT_TYPES.INTERVIEW ? COLORS.BLUE : COLORS.BROWN}>
       <TextHeader>{sectionTitle}</TextHeader>
       <TextBodyContainer>
         {isExpanded ? getParsed(false) : truncated}

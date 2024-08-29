@@ -23,7 +23,7 @@ const useImagesLoaded = (...sources) => {
   useEffect(() => {
     if (loadedSources.size === _.uniq(sources).length)
       setLoaded(true)
-  }, [sources, loadedSources])
+  }, [sources.length, loadedSources.size])
 
   return { loaded, proportions }
 }

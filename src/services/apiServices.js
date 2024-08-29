@@ -1,5 +1,7 @@
 import _ from 'lodash'
-import html from '../data/data'
+import { DATA_KEYS, FRAGMENT_TYPES } from '../constants/apiConstants'
+import noTextHtml from '../data/noText'
+import textHtml from '../data/text'
 import { stringsAreEqual } from '../utils/commonUtils'
 
 
@@ -14,26 +16,26 @@ const parseNumRange = numRangeString =>
 
 const categorizedData = (() => {
   const tempDiv = document.createElement('div')
-  tempDiv.innerHTML = html
+  tempDiv.innerHTML = textHtml
   const main = tempDiv.querySelector('.grid-container')
 
-  // TODO: ENUM
   const dataKeys = [
-    'imgNum',
+    DATA_KEYS.IMG_NUM,
     undefined,
-    'imgLink',
-    'sectionTitle',
-    'pageNum',
-    'artistLastName',
-    'artistFirstName',
-    'medium',
-    'workDetails',
-    'copyright',
-    'text',
-    'footnotes',
-    'projects',
-    'interview'
+    DATA_KEYS.IMG_LINK,
+    DATA_KEYS.SECTION_TITLE,
+    DATA_KEYS.PAGE_NUM,
+    DATA_KEYS.LAST_NAME,
+    DATA_KEYS.FIRST_NAME,
+    DATA_KEYS.MEDIUM,
+    DATA_KEYS.WORK_DETAILS,
+    DATA_KEYS.COPY_RIGHT,
+    DATA_KEYS.TEXT,
+    DATA_KEYS.FOOTNOTES,
+    DATA_KEYS.PROJECTS,
+    DATA_KEYS.INTERVIEW
   ]
+  const dialogueRegExp = /^\[DIALOGUE ([A-Z])[0-9]\]/
 
   const data = Array.from(main.querySelector('tbody').children)
     .slice(2)
@@ -41,25 +43,26 @@ const categorizedData = (() => {
       const tdArray = Array.from(tr.querySelectorAll('td')).slice(0, dataKeys.length)
       let type
       if (tdArray[0].innerText.match(/^\[[0-9]+\]/))
-        type = 'main'
-      else if (tdArray[0].innerText.match(/^\[DIALOGUE [A-Z][0-9]\]/))
-        type = 'interview'
+        type = FRAGMENT_TYPES.MAIN
+      else if (tdArray[0].innerText.match(dialogueRegExp))
+        type = FRAGMENT_TYPES.INTERVIEW
       else return false
 
       const data = tdArray.reduce((trData, td, i) => {
         const key = dataKeys[i]
         const strippedHtml = strip(td.innerHTML)
 
-        if (['imgNum', 'pageNum'].includes(key)) {
+        if ([DATA_KEYS.IMG_NUM, DATA_KEYS.PAGE_NUM].includes(key)) {
           trData[key] = parseNumRange(td.innerHTML)
-          if (key === 'imgNum' && type === 'interview') {
-            trData.interviewPrefix = td.innerHTML.match(/\[DIALOGUE ([A-Z])[0-9]\]/)?.[1]
+          if (key === DATA_KEYS.IMG_NUM && type === FRAGMENT_TYPES.INTERVIEW) {
+            trData[DATA_KEYS.INTERVIEW_PREFIX] =
+              td.innerHTML.match(dialogueRegExp)?.[1]
           }
         }
 
-        else if (['workDetails', 'text'].includes(key))
+        else if ([DATA_KEYS.WORK_DETAILS, DATA_KEYS.TEXT].includes(key))
           trData[key] = td.innerHTML
-        else if (['footnotes', 'projects'].includes(key)) {
+        else if ([DATA_KEYS.FOOTNOTES, DATA_KEYS.PROJECTS].includes(key)) {
           const notesArray = td.innerHTML
             .split('<br><br>')
             .filter(n => n)
@@ -71,22 +74,21 @@ const categorizedData = (() => {
           })
           trData[key] = notes
         }
-        else if (key)
-          trData[key] = strippedHtml
+        else if (key) trData[key] = strippedHtml
 
         return trData
       }, {})
 
-      data.type = type
+      data[DATA_KEYS.TYPE] = type
       // TODO: data.imgNum - multiple
-      if (type === 'main')
-        data.imgLink = `01_Primary-Text/REF_${_.padStart(data.imgNum[0], 3, '0')}.webp`
-      else data.imgLink = `04_Interviews/Interview_${data.interviewPrefix}${data.imgNum}.webp`
+      if (type === FRAGMENT_TYPES.MAIN)
+        data[DATA_KEYS.IMG_LINK] = `01_Primary-Text/REF_${_.padStart(data.imgNum[0], 3, '0')}.webp`
+      else data[DATA_KEYS.IMG_LINK] = `04_Interviews/Interview_${data.interviewPrefix}${data.imgNum}.webp`
       return data
     })
     .filter(d => d)
 
-  return _.groupBy(data, 'type')
+  return _.groupBy(data, DATA_KEYS.TYPE)
 })()
 
 const allData = Object.values(categorizedData).flat()
@@ -97,7 +99,7 @@ const getNodeByTitle = title =>
   allData.filter(({ sectionTitle }) => stringsAreEqual(title, sectionTitle))
 
 
-const dataServices = {
+const apiServices = {
   strip,
   parseNumRange,
   getNodeByTitle,
@@ -106,4 +108,4 @@ const dataServices = {
   textData
 }
 
-export default dataServices
+export default apiServices

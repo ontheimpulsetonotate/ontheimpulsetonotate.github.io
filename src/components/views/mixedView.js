@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+import { FRAGMENT_TYPES } from '../../constants/apiConstants'
 import { FRAGMENT_ID_PREFIX } from '../../constants/reactConstants'
 import { SIZES } from '../../constants/stylesConstants'
-import dataServices from '../../services/dataServices'
+import apiServices from '../../services/apiServices'
 import { stringsAreEqual } from '../../utils/commonUtils'
 import { addEventListener } from '../../utils/reactUtils'
 import FullContainer from '../common/containers/fullContainer'
@@ -28,19 +29,19 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
   const renderTexts = () => {
     let isLeft = false
 
-    return dataServices.textData.map(({ sectionTitle, ...rest }, i) => {
-      const data = dataServices.getNodeByTitle(sectionTitle)
+    return apiServices.textData.map(({ sectionTitle, ...rest }, i) => {
+      const data = apiServices.getNodeByTitle(sectionTitle)
       if (data.length) isLeft = !isLeft
 
       const associatedInterviews =
-        dataServices.categorizedData.interview.filter(data =>
+        apiServices.categorizedData.interview.filter(data =>
           stringsAreEqual(data.interview, sectionTitle))
       return (
         <React.Fragment key={i}>
           <MixedViewSection
             {...rest}
             index={i}
-            type='main'
+            type={FRAGMENT_TYPES.MAIN}
             sectionTitle={sectionTitle}
             data={data}
             containerY={containerY}
@@ -48,14 +49,14 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
           {
             associatedInterviews
               .map(({ interviewPrefix, imgNum, sectionTitle, ...rest }, ii) => {
-                const data = dataServices.getNodeByTitle(sectionTitle)
+                const data = apiServices.getNodeByTitle(sectionTitle)
                 if (data.length) isLeft = !isLeft
                 return <MixedViewSection
                   {...rest}
                   key={ii}
                   index={parseInt(imgNum)}
                   interviewIndex={ii}
-                  type='interview'
+                  type={FRAGMENT_TYPES.INTERVIEW}
                   sectionTitle={sectionTitle}
                   data={[data[ii]]}
                   containerY={containerY}

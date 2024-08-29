@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, Navigate, Route, Routes } from 'react-router-dom'
+import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import styled, { createGlobalStyle } from 'styled-components'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../constants/stylesConstants'
 import useIsAbout from '../hooks/useIsAbout'
@@ -16,24 +16,32 @@ import MixedView from './views/mixedView'
 import TextView from './views/textView'
 
 const Main = () => {
-  const [mode, setMode] = useState(2)
   const [mixedViewFragmentIndex, setMixedViewFragmentIndex] = useState()
   const [isOrdered, setIsOrdered] = useState(false)
   const isAbout = useIsAbout()
+  const [memoizedNodeData, setMemoizedPositions] = useState(Array(2))
 
-  useEffect(() => setIsOrdered(false), [mode])
+  const location = useLocation()
+  const navigate = useNavigate()
+  useEffect(() => setIsOrdered(false), [location.pathname])
 
-  const menuButtons = [
-    { text: 'Text', component: TextView },
-    { text: 'Image', component: ImgView },
-    { text: 'Text+Image', component: MixedView },
-  ]
+  const views = {
+    text: { text: 'Text', component: TextView, url: 'text' },
+    image: { text: 'Image', component: ImgView, url: 'image' },
+    mixed: { text: 'Text+Image', component: MixedView, url: 'text-image' },
+  }
 
   const handleIndexRowClick = i => {
     setMixedViewFragmentIndex(i)
-    setMode(2)
+    navigate(views.mixed.url)
   }
 
+  const handleMemoizeNodeData = (index, nodeData) =>
+    setMemoizedPositions(prev => {
+      const newPositions = [...prev]
+      newPositions[index] = nodeData
+      return newPositions
+    })
 
   return (
     <>
@@ -41,25 +49,25 @@ const Main = () => {
       <MainContainer $isAbout={isAbout}>
         <HeaderContainer>
           <h1>
-            <Link to='/' onClick={() => setMode(0)}>
+            <Link to={`/${views.text.url}`}>
               On the Impulse to Notate
             </Link>
           </h1>
           <menu>
-            {menuButtons.map(({ text }, i) =>
+            {Object.values(views).map(({ text, url }, i) =>
               <HeaderButton
                 key={i}
                 as={Link}
-                to='/'
-                onClick={() => setMode(i)}
-                $underline={i === mode}>
+                to={`/${url}`}
+                $underline={`/${url}` === location.pathname}>
                 {text}
               </HeaderButton>
             )}
           </menu>
           <RightSideNavContainer>
             {
-              !isAbout && mode !== 2 &&
+              !isAbout &&
+              `/${views.mixed.url}` !== location.pathname &&
               <HeaderButton
                 onClick={() => setIsOrdered(!isOrdered)}
                 $underline={isOrdered}>
@@ -70,17 +78,22 @@ const Main = () => {
           </RightSideNavContainer>
         </HeaderContainer>
         <Routes>
-          <Route path='/' element={
-            <Home
-              view={menuButtons[mode]?.component}
-              mode={mode}
-              isOrdered={isOrdered}
-              mixedViewFragmentIndex={mixedViewFragmentIndex}
-              handleFragmentScroll={() => setMixedViewFragmentIndex()}
-              handleUnsetMode={() => setMode()} />
-          } />
+          {Object.values(views).map((data, i) =>
+            <Route
+              key={data.url}
+              path={`/${data.url}`}
+              element={
+                <Home
+                  view={data.component}
+                  memoizedNodeData={memoizedNodeData[i]}
+                  isOrdered={isOrdered}
+                  mixedViewFragmentIndex={mixedViewFragmentIndex}
+                  handleMemoizeNodeData={nodeData => handleMemoizeNodeData(i, nodeData)}
+                  handleFragmentScroll={() => setMixedViewFragmentIndex()} />
+              } />
+          )}
           <Route path='/about' element={<About />} />
-          <Route path='*' element={<Navigate to='/' replace />} />
+          <Route path='*' element={<Navigate to={`/${views.text.url}`} replace />} />
         </Routes>
         {!isAbout && <IndexTab onRowClick={handleIndexRowClick} />}
       </MainContainer >

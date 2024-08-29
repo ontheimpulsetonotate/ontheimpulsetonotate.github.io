@@ -1,5 +1,5 @@
 
-const DATA_KEYS = {
+export const DATA_KEYS = {
   IMG_NUM: 'imgNum',
   IMG_LINK: 'imgLink',
   SECTION_TITLE: 'sectionTitle',
@@ -12,5 +12,13 @@ const DATA_KEYS = {
   TEXT: 'text',
   FOOTNOTES: 'footnotes',
   PROJECTS: 'projects',
+  INTERVIEW: 'interview',
+  TYPE: 'type',
+  INTERVIEW_PREFIX: 'interviewPrefix'
+}
+
+
+export const FRAGMENT_TYPES = {
+  MAIN: 'main',
   INTERVIEW: 'interview'
 }

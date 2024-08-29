@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { forwardRef, useState } from 'react'
 import styled from 'styled-components'
+import { FRAGMENT_TYPES } from '../../../constants/apiConstants'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
 import { extractStyle } from '../../../utils/styleUtils'
 import FilteredImg from './filteredImg'
@@ -25,7 +26,7 @@ const Figure = forwardRef(function Figure({
     imgNum.map(num => _.padStart(num, 3, '0')).join('—')
   if (bracketNumbers) imgNotation = `[${imgNotation}]`
 
-  const color = type === 'interview' ? COLORS.BLUE : COLORS.BROWN
+  const color = type === FRAGMENT_TYPES.INTERVIEW ? COLORS.BLUE : COLORS.BROWN
   return (
     <ImgContainer
       {...rest}

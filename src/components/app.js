@@ -7,7 +7,6 @@ import Main from './main'
 gsap.registerPlugin(useGSAP)
 
 const App = () => {
-
   return (
     <HashRouter>
       <Main />
