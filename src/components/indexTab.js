@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { DATA_KEYS } from '../constants/apiConstants'
+import { DATA_KEYS, FRAGMENT_TYPES } from '../constants/apiConstants'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES, TIMINGS } from '../constants/stylesConstants'
 import apiServices from '../services/apiServices'
 import { getDataStringSorter, validateString } from '../utils/commonUtils'
@@ -19,7 +19,7 @@ const IndexTab = ({ onRowClick }) => {
   const [hoverIndex, setHoverIndex] = useState()
   const [imgIsLoaded, setImgIsLoaded] = useState()
 
-  const data = apiServices.categorizedData.main
+  const data = apiServices.categorizedData[FRAGMENT_TYPES.TEXT]
 
   const headers = [
     ['artist', () => _.sortBy(data, frag => frag.imgNum[0])],

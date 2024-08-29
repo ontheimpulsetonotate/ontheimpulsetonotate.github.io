@@ -26,6 +26,7 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
     setContainerY(containerRef.current.scrollTop)
   ), [])
 
+  // TODO: memoize?
   const renderTexts = () => {
     let isLeft = false
 

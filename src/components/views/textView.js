@@ -3,7 +3,7 @@ import { SIZES } from '../../constants/stylesConstants'
 import apiServices from '../../services/apiServices'
 import DragContainer from '../common/containers/dragContainer'
 import Text from '../common/text/text'
-import { DATA_KEYS } from '../../constants/apiConstants'
+import { DATA_KEYS, FRAGMENT_TYPES } from '../../constants/apiConstants'
 
 const TextView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
   const { w, h } = SIZES.getTextContainerSize()
@@ -11,7 +11,7 @@ const TextView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
     <DragContainer
       contents={
         _.shuffle(apiServices.allData
-          .filter(({ text }) => text)
+          .filter(({ text, type }) => text && type !== FRAGMENT_TYPES.ORPHAN)
           .map(ref => _.pick(ref, [
             DATA_KEYS.TEXT,
             DATA_KEYS.SECTION_TITLE,

@@ -1,6 +1,6 @@
 
 export const DATA_KEYS = {
-  IMG_NUM: 'imgNum',
+  IMG_NUM: 'imgNum', // TODO: rename
   IMG_LINK: 'imgLink',
   SECTION_TITLE: 'sectionTitle',
   PAGE_NUM: 'pageNum',
@@ -19,6 +19,7 @@ export const DATA_KEYS = {
 
 
 export const FRAGMENT_TYPES = {
-  MAIN: 'main',
+  TEXT: 'text',
+  ORPHAN: 'orphan',
   INTERVIEW: 'interview'
 }

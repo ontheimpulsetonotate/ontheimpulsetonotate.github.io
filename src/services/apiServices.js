@@ -37,14 +37,22 @@ const categorizedData = (() => {
   ]
   const dialogueRegExp = /^\[DIALOGUE ([A-Z])[0-9]\]/
 
+  let lastRef
   const data = Array.from(main.querySelector('tbody').children)
     .slice(2)
     .map(tr => {
       const tdArray = Array.from(tr.querySelectorAll('td')).slice(0, dataKeys.length)
       let type
-      if (tdArray[0].innerText.match(/^\[[0-9]+\]/))
-        type = FRAGMENT_TYPES.MAIN
-      else if (tdArray[0].innerText.match(dialogueRegExp))
+
+      const refNum = tdArray[0].innerText
+      const title = tdArray[3].innerText
+
+      if (!refNum.trim() && title)
+        type = FRAGMENT_TYPES.ORPHAN
+
+      else if (refNum.match(/^\[[0-9]+\]/))
+        type = FRAGMENT_TYPES.TEXT
+      else if (refNum.match(dialogueRegExp))
         type = FRAGMENT_TYPES.INTERVIEW
       else return false
 
@@ -54,9 +62,15 @@ const categorizedData = (() => {
 
         if ([DATA_KEYS.IMG_NUM, DATA_KEYS.PAGE_NUM].includes(key)) {
           trData[key] = parseNumRange(td.innerHTML)
-          if (key === DATA_KEYS.IMG_NUM && type === FRAGMENT_TYPES.INTERVIEW) {
-            trData[DATA_KEYS.INTERVIEW_PREFIX] =
-              td.innerHTML.match(dialogueRegExp)?.[1]
+
+          if (key === DATA_KEYS.IMG_NUM) {
+            if (type === FRAGMENT_TYPES.ORPHAN)
+              trData[key] = lastRef
+            else lastRef = trData[key]
+
+            if (type === FRAGMENT_TYPES.INTERVIEW)
+              trData[DATA_KEYS.INTERVIEW_PREFIX] =
+                td.innerHTML.match(dialogueRegExp)?.[1]
           }
         }
 
@@ -81,7 +95,7 @@ const categorizedData = (() => {
 
       data[DATA_KEYS.TYPE] = type
       // TODO: data.imgNum - multiple
-      if (type === FRAGMENT_TYPES.MAIN)
+      if (type === FRAGMENT_TYPES.TEXT)
         data[DATA_KEYS.IMG_LINK] = `01_Primary-Text/REF_${_.padStart(data.imgNum[0], 3, '0')}.webp`
       else data[DATA_KEYS.IMG_LINK] = `04_Interviews/Interview_${data.interviewPrefix}${data.imgNum}.webp`
       return data
@@ -91,12 +105,30 @@ const categorizedData = (() => {
   return _.groupBy(data, DATA_KEYS.TYPE)
 })()
 
+
 const allData = Object.values(categorizedData).flat()
-const textData = categorizedData.main.filter(({ text }) => text)
-
-
 const getNodeByTitle = title =>
   allData.filter(({ sectionTitle }) => stringsAreEqual(title, sectionTitle))
+
+const textData = categorizedData[FRAGMENT_TYPES.TEXT].filter(({ text }) => text)
+const mixedData = categorizedData[FRAGMENT_TYPES.TEXT].map((node) => {
+  const { sectionTitle, imgNum } = node
+  const associatedInterviews =
+    categorizedData.interview.filter(data =>
+      stringsAreEqual(data.interview, sectionTitle))
+
+  const orphanNode = categorizedData[FRAGMENT_TYPES.ORPHAN]
+    .find(data =>
+      _.intersection(data[DATA_KEYS.IMG_NUM], imgNum).length)
+  const orphanInterviews = !orphanNode ? [] :
+    categorizedData.interview.filter(data =>
+      stringsAreEqual(data.interview, orphanNode[DATA_KEYS.SECTION_TITLE]))
+  return [node, associatedInterviews, orphanNode, orphanInterviews]
+})
+
+console.log(categorizedData)
+
+
 
 
 const apiServices = {
