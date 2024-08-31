@@ -97,6 +97,7 @@ const DragContainer = ({
           {...content}
           key={i}
           index={i}
+          nodeData={contents[i]}
           isOrdered={isOrdered}
           shouldAnimate={!memoizedNodeData?.hasAnimated}
           mappedPosition={mappedPositions[i]}

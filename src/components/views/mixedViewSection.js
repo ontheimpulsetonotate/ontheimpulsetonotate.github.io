@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import styled from 'styled-components'
-import { FRAGMENT_TYPES } from '../../constants/apiConstants'
 import { FRAGMENT_ID_PREFIX } from '../../constants/reactConstants'
 import { COLORS, FONT_SIZES, SIZES, TIMINGS } from '../../constants/stylesConstants'
 import parserServices from '../../services/parserServices'
@@ -12,27 +11,27 @@ import MixedViewImg from './mixedViewImg'
 
 const MixedViewSection = ({
   index,
-  interviewIndex,
-  type,
-  text,
-  sectionTitle,
-  pageNum,
-  data,
+  nodeData,
   containerY,
-  footnotes,
-  projects,
   isLeft
 }) => {
+  const {
+    text,
+    sectionTitle,
+    interviewIndex,
+    pageNum,
+    footnotes,
+    projects,
+    isInterview
+  } = nodeData
   const containerRef = useRef()
   const imgs = useMemo(() =>
-    data?.map((data, i) =>
-      data.imgLink &&
+    nodeData.getImgNodes().map((imgNodes, i) =>
       <MixedViewImg
         key={i}
-        type={type}
-        data={data}
+        nodeData={imgNodes}
         containerY={containerY} />
-    ), [data])
+    ), [nodeData, containerY])
   const title = `${sectionTitle}, P. ${pageNum.join('-')}`.toLocaleUpperCase()
 
   const renderImgContainer = useCallback(isLeftContainer => (
@@ -49,9 +48,9 @@ const MixedViewSection = ({
 
   return (
     <SectionContainer
-      $isInterview={type === FRAGMENT_TYPES.INTERVIEW}
+      $isInterview={isInterview}
       $isFirstInterview={!interviewIndex}
-      id={`${FRAGMENT_ID_PREFIX}${index + 1}`}
+      id={index ? `${FRAGMENT_ID_PREFIX}${index}` : undefined}
       ref={containerRef}>
       {renderImgContainer(true)}
       <TextContainer>
@@ -109,13 +108,13 @@ const getPadding = ({ $isInterview, $isFirstInterview }) =>
     ($isFirstInterview ?
       `calc(${SIZES.MIXED_VIEW_INTERVIEW_PADDING_TOP} * 2.5)` :
       SIZES.MIXED_VIEW_INTERVIEW_PADDING_TOP)
+
 const SectionContainer = styled.div`
   ${mixins.grid}
   width: 100%;
 
   ${TextContainer} {
     padding-top: ${getPadding};
-
     &, * {
       color: ${conditionalStyle('$isInterview', COLORS.BLUE)};
     }

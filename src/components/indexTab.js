@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { DATA_KEYS, FRAGMENT_TYPES } from '../constants/apiConstants'
+import { DATA_KEYS } from '../constants/apiConstants'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES, TIMINGS } from '../constants/stylesConstants'
 import apiServices from '../services/apiServices'
 import { getDataStringSorter, validateString } from '../utils/commonUtils'
@@ -19,7 +19,7 @@ const IndexTab = ({ onRowClick }) => {
   const [hoverIndex, setHoverIndex] = useState()
   const [imgIsLoaded, setImgIsLoaded] = useState()
 
-  const data = apiServices.categorizedData[FRAGMENT_TYPES.TEXT]
+  const data = apiServices.indexTabData
 
   const headers = [
     ['artist', () => _.sortBy(data, frag => frag.imgNum[0])],
@@ -34,15 +34,9 @@ const IndexTab = ({ onRowClick }) => {
     setShouldAnimate(true)
   }
 
-  const handleRowClick = (e, data) => {
+  const handleRowClick = (e, { imgNum }) => {
     e.stopPropagation()
-    const { textData } = apiServices
-    const matchByTitle = ({ sectionTitle }) => sectionTitle === data.sectionTitle
-    const matches = textData.filter(matchByTitle)
-    const index = matches.length === 1 ?
-      textData.findIndex(matchByTitle) :
-      textData.findIndex(({ text }) => data.text === text)
-    onRowClick(index)
+    onRowClick(imgNum[0])
     setIndexIsOpened(false)
   }
 
@@ -113,13 +107,20 @@ const IndexTab = ({ onRowClick }) => {
             })
           }
         </TableHead>
-        {sortedData.map((data, i) => {
-          const { imgNum, artistFirstName, artistLastName, medium, sectionTitle, pageNum } = data
+        {sortedData.map((nodeData, i) => {
+          const {
+            imgNum,
+            artistFirstName,
+            artistLastName,
+            medium,
+            sectionTitle,
+            pageNum
+          } = nodeData
           return <Row
             key={i}
             onMouseOver={() => handleMouseEnter(i)}
             onMouseOut={() => setHoverIndex()}
-            onClick={e => handleRowClick(e, data)}>
+            onClick={e => handleRowClick(e, nodeData)}>
             <p>
               {i === hoverIndex && <HoverArrow>→</HoverArrow>}
               [{imgNum.map(num => _.padStart(num, 3, '0')).join('—')}] {artistLastName}{validateString(artistFirstName, `, ${artistFirstName}`)}

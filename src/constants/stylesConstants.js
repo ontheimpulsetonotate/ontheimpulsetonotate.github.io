@@ -54,7 +54,7 @@ export const SIZES = {
 
   IMG_VIEW_FIGURE_SIZE,
 
-  getImgViewFIgureSize: () => parseFloat(IMG_VIEW_FIGURE_SIZE),
+  getImgViewFigureSize: () => parseFloat(IMG_VIEW_FIGURE_SIZE),
   getTextContainerSize: () => ({
     w: getPx(TEXT_WIDTH),
     h: getEmifiedPx(20) * 3 + getPx(FONT_SIZES.LEADING_M) * 6

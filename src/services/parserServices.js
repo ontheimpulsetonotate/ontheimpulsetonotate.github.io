@@ -3,6 +3,7 @@ import Citation from '../components/common/text/citation'
 import ExpandButton from '../components/common/text/expandButton'
 import TextHeader from '../components/common/text/textHeader'
 import ProjectCitation from '../components/common/text/projectCitation'
+import { COLORS } from '../constants/stylesConstants'
 
 const _parse = (text, options) => text ? parse(text, options) : undefined
 
@@ -47,6 +48,7 @@ const parseTextView = (text, {
 
               const citation =
                 <Citation
+                  color={COLORS.BLUE}
                   footnote={project ?
                     parseProject(project) :
                     footnotes?.[footnoteIndex + 1]}>

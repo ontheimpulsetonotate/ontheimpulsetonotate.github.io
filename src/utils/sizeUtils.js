@@ -7,7 +7,7 @@ const {
   CLOSED_INDEX_LEFT_VALUE: OPENED_INDEX_LEFT_VALUE,
   ORDERED_COL_GAP,
   ORDERED_COL_TOP_PADDING,
-  getImgViewFIgureSize: getImgMaxSize
+  getImgViewFigureSize: getImgMaxSize
 } = SIZES
 
 export const getMainContainer = () => ({
@@ -29,8 +29,8 @@ export const getOrderedData = () => {
     leftMargin: getPx(PAGE_MARGIN),
     topMargin: top,
     colCount: Math.floor((width - maxSize) / (maxSize + gap)) + 1,
-    rowHeight: getPx(FONT_SIZES.SMALL) * 2 + SIZES.getImgViewFIgureSize(),
+    rowHeight: getPx(FONT_SIZES.SMALL) * 2 + SIZES.getImgViewFigureSize(),
     getRowHeight: proportion =>
-      getPx(FONT_SIZES.SMALL) * 2 + SIZES.getImgViewFIgureSize() * proportion,
+      getPx(FONT_SIZES.SMALL) * 2 + SIZES.getImgViewFigureSize() * proportion,
   }
 }

@@ -32,6 +32,7 @@ const Main = () => {
   }
 
   const handleIndexRowClick = i => {
+    console.log(i)
     setMixedViewFragmentIndex(i)
     navigate(views.mixed.url)
   }

@@ -6,8 +6,8 @@ import Figure from '../common/img/figure'
 import Citation from '../common/text/citation'
 import ProjectCitation from '../common/text/projectCitation'
 
-const MixedViewImg = ({ data, containerY }) => {
-  const { imgLink, imgNum, type, interviewPrefix } = data
+const MixedViewImg = ({ nodeData, containerY }) => {
+  const { imgLink, isInterview } = nodeData
   const imgRef = useRef()
   const [isShowing, setIsShowing] = useState(false)
   const { loaded } = useImagesLoaded(imgLink)
@@ -18,21 +18,18 @@ const MixedViewImg = ({ data, containerY }) => {
     else setIsShowing(false)
   }, [containerY])
 
+  const opacity = isShowing && loaded ? 1 : 0
+
   return (
     <Citation
-      footnote={<ProjectCitation {...data} />}
+      color={isInterview ? COLORS.BLUE : COLORS.BROWN}
+      footnote={opacity ? <ProjectCitation nodeData={nodeData} /> : null}
       imgRef={imgRef}>
       <Figure
-        style={{
-          opacity: isShowing && loaded ? 1 : 0,
-        }}
-        type={type}
-        interviewPrefix={interviewPrefix}
+        style={{ opacity }}
+        nodeData={nodeData}
         ref={imgRef}
-        color={COLORS.BROWN}
-        src={imgLink}
         maxSize={SIZES.MIXED_VIEW_FIGURUE_SIZE}
-        imgNum={imgNum}
         bracketNumbers />
     </Citation>
   )

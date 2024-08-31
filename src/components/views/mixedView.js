@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { FRAGMENT_TYPES } from '../../constants/apiConstants'
 import { FRAGMENT_ID_PREFIX } from '../../constants/reactConstants'
 import { SIZES } from '../../constants/stylesConstants'
 import apiServices from '../../services/apiServices'
@@ -15,7 +14,7 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
 
   useEffect(() => {
     const container = containerRef.current
-    const section = container?.querySelector(`#${FRAGMENT_ID_PREFIX}${fragmentIndex + 1}`)
+    const section = container?.querySelector(`#${FRAGMENT_ID_PREFIX}${fragmentIndex}`)
     if (!section) return
     const { top } = section.getBoundingClientRect()
     container.scrollBy({ top, behavior: 'smooth' })
@@ -26,41 +25,25 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
     setContainerY(containerRef.current.scrollTop)
   ), [])
 
-  // TODO: memoize?
-  const renderTexts = () => {
+  const mixedViewContent = useMemo(() => {
     let isLeft = false
-
-    return apiServices.mixedData
-      .flat()
-      .filter(node => Array.isArray(node) ? node.length : node?.text)
-      .map((nodeData, i) =>
-        arrayify(nodeData)
-          .map(({ sectionTitle, type, imgNum, ...rest }, ii) => {
-            const data = apiServices.getNodeByTitle(sectionTitle)
-            if (data.map(data => data.imgLink).filter(l => l).length)
-              isLeft = !isLeft
-            const isInterview = type === FRAGMENT_TYPES.INTERVIEW
-            return <MixedViewSection
-              {...rest}
-              key={`${i}-${ii}`}
-              index={isInterview ? parseInt(imgNum) : i} // TODO
-              interviewIndex={isInterview ? ii : undefined}
-              type={
-                isInterview ?
-                  FRAGMENT_TYPES.INTERVIEW :
-                  FRAGMENT_TYPES.TEXT
-              }
-              sectionTitle={sectionTitle}
-              data={isInterview ? [data[ii]] : data}
-              containerY={containerY}
-              isLeft={isLeft} />
-          })
-      )
-  }
+    return apiServices.mixedData.map((textOrInterviews, i) =>
+      arrayify(textOrInterviews).map((nodeData, ii) => {
+        const { imgNum, isImgNode, isInterview, isOrphan } = nodeData
+        if (isImgNode) isLeft = !isLeft
+        return <MixedViewSection
+          key={`${i}-${ii}`}
+          index={!isInterview && !isOrphan ? imgNum[0] : undefined}
+          nodeData={nodeData}
+          containerY={containerY}
+          isLeft={isLeft} />
+      })
+    )
+  }, [containerY])
 
   return (
     <Container ref={containerRef}>
-      {renderTexts()}
+      {mixedViewContent}
     </Container>
   )
 }

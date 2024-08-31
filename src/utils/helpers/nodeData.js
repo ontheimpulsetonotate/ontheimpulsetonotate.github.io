@@ -36,14 +36,9 @@ class NodeData {
   }
 
 
-
   getImgLinks() {
-    const imgLinks = this.imgNum.length === 1 ?
-      [this.getImgLink()] :
-      quickArray(
-        this.imgNum[1] - this.imgNum[0] + 1,
-        i => this.imgNum[0] + i
-      ).map(num => this.getImgLink(num))
+    const imgLinks = this.fullNumRange
+      .map(num => this.getImgLink(num))
     return this.imgLinks = imgLinks.filter(l => l)
   }
 
@@ -53,6 +48,21 @@ class NodeData {
       this.isInterview ?
         `04_Interviews/Interview_${this.interviewPrefix}${imgNum}.webp` :
         undefined
+  }
+
+  getImgNodes() {
+    return this.imgLinks.map(
+      (imgLink, i) =>
+        Object.assign(Object.create(this), { imgNum: [this.fullNumRange[i]], imgLink }))
+  }
+
+  get fullNumRange() {
+    return this.imgNum.length === 1 ?
+      [this.imgNum[0]] :
+      quickArray(
+        this.imgNum[1] - this.imgNum[0] + 1,
+        i => this.imgNum[0] + i
+      )
   }
 
   get isTextNode() {

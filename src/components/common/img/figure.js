@@ -1,18 +1,14 @@
 import _ from 'lodash'
 import { forwardRef, useState } from 'react'
 import styled from 'styled-components'
-import { FRAGMENT_TYPES } from '../../../constants/apiConstants'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
 import { extractStyle } from '../../../utils/styleUtils'
 import FilteredImg from './filteredImg'
 
 
 const Figure = forwardRef(function Figure({
-  imgNum,
-  interviewPrefix,
+  nodeData,
   style,
-  src,
-  type,
   maxSize,
   width,
   height,
@@ -20,13 +16,14 @@ const Figure = forwardRef(function Figure({
   noCaption = false,
   ...rest
 }, ref) {
+  const { imgNum, imgLink, interviewPrefix, isInterview } = nodeData
   const [isLoaded, setIsLoaded] = useState(false)
   let imgNotation = interviewPrefix ?
     `DIALOGUE ${interviewPrefix}${imgNum}` :
     imgNum.map(num => _.padStart(num, 3, '0')).join('—')
   if (bracketNumbers) imgNotation = `[${imgNotation}]`
 
-  const color = type === FRAGMENT_TYPES.INTERVIEW ? COLORS.BLUE : COLORS.BROWN
+  const color = isInterview ? COLORS.BLUE : COLORS.BROWN
   return (
     <ImgContainer
       {...rest}
@@ -37,7 +34,7 @@ const Figure = forwardRef(function Figure({
         ...style,
       }}>
       <FilteredImg
-        src={src}
+        src={imgLink}
         backgroundColor={color}
         maxSize={maxSize}
         width={width}

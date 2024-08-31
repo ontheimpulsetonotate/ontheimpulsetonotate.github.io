@@ -1,31 +1,35 @@
 import _ from 'lodash'
 import { useEffect } from 'react'
-import { COLORS, SIZES } from '../../../constants/stylesConstants'
+import { SIZES } from '../../../constants/stylesConstants'
 import useImagesLoaded from '../../../hooks/useImagesLoaded'
 import Figure from './figure'
 
 
-const Img = ({ type, imgLink, imgNum, interviewPrefix, onRender, ...props }) => {
+const Img = ({
+  nodeData,
+  id,
+  index,
+  onRender,
+  onMouseOver,
+  onMouseOut
+}) => {
+  const { imgLink } = nodeData
   const { loaded, proportions } = useImagesLoaded(imgLink)
+
   useEffect(() => {
-    if (loaded) onRender(props.index, proportions[imgLink])
+    if (loaded) onRender(index, proportions)
   }, [loaded])
 
   return (
     <Figure
-      {..._.omit(props, [
-        'onHover',
-        'index',
-        'onCollapse'
-      ])}
-      type={type}
-      interviewPrefix={interviewPrefix}
+      id={id}
+      nodeData={nodeData}
       src={imgLink}
       width={SIZES.IMG_VIEW_FIGURE_SIZE}
-      imgNum={imgNum}
-      noCaption />
+      noCaption
+      onMouseOver={onMouseOver}
+      onMouseOut={onMouseOut} />
   )
-
 }
 
 export default Img

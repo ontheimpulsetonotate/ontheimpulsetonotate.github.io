@@ -7,14 +7,11 @@ import { quickArray } from '../../utils/commonUtils'
 import { getOrderedData } from '../../utils/sizeUtils'
 import DragContainer from '../common/containers/dragContainer'
 import Img from '../common/img/img'
-import { DATA_KEYS } from '../../constants/apiConstants'
 
 
-const refWithImg =
-  _.shuffle(apiServices.allData.filter(({ imgLink }) => imgLink))
 const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
-  const imgSize = SIZES.getImgViewFIgureSize()
-  const [proportions, setProportions] = useState(Array(refWithImg.length))
+  const imgSize = SIZES.getImgViewFigureSize()
+  const [proportions, setProportions] = useState(Array(apiServices.imgData.length))
 
   const { width } = useWindowSize()
   const { orderedPositions, scrollSize } = useMemo(() => {
@@ -31,7 +28,7 @@ const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
     rows = rows.map(y => y + topMargin)
 
     const cols = quickArray(colCount)
-      .map(col => col * (SIZES.getImgViewFIgureSize() + gap) + leftMargin)
+      .map(col => col * (SIZES.getImgViewFigureSize() + gap) + leftMargin)
 
     return {
       orderedPositions: quickArray(proportions.length, i => ({
@@ -46,18 +43,13 @@ const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
   const handleRender = (index, proportions) =>
     setProportions(prev => {
       const newState = [...prev]
-      newState[index] = proportions
+      newState.splice(index, proportions.length, ...proportions)
       return newState
     })
 
   return (
     <DragContainer
-      contents={refWithImg.map(ref => _.pick(ref, [
-        DATA_KEYS.IMG_LINK,
-        DATA_KEYS.IMG_NUM,
-        DATA_KEYS.TYPE,
-        DATA_KEYS.INTERVIEW_PREFIX
-      ]))}
+      contents={apiServices.imgData}
       elemW={imgSize}
       elemH={imgSize}
       element={Img}

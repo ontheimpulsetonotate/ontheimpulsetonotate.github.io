@@ -2,7 +2,6 @@ import _ from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import TruncateMarkup from 'react-truncate-markup'
 import styled from 'styled-components'
-import { FRAGMENT_TYPES } from '../../../constants/apiConstants'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
 import parserServices from '../../../services/parserServices'
 import mixins from '../../../utils/mixins'
@@ -12,15 +11,17 @@ import TextHeader from './textHeader'
 
 
 const Text = ({
-  text,
-  type,
-  sectionTitle,
+  id,
+  nodeData,
   onHover,
   onRender,
   onCollapse,
-  ...props
+  onMouseOver,
+  onMouseOut
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
+  const { text, sectionTitle, isInterview } = nodeData
+
   const handleButtonClick = expand => {
     setIsExpanded(expand)
     if (!expand) {
@@ -30,7 +31,8 @@ const Text = ({
   }
   useEffect(() => onRender(), [])
 
-  const getParsed = truncate => parserServices.parseTextView(text, { truncate, handleButtonClick })
+  const getParsed = truncate => parserServices
+    .parseTextView(text, { truncate, handleButtonClick })
   const truncated = useMemo(() => (
     <TruncateMarkup
       lines={4}
@@ -41,7 +43,11 @@ const Text = ({
   ), [text])
 
   return (
-    <TextContainer {..._.omit(props, ['index'])} $color={type === FRAGMENT_TYPES.INTERVIEW ? COLORS.BLUE : COLORS.BROWN}>
+    <TextContainer
+      id={id}
+      $color={isInterview ? COLORS.BLUE : COLORS.BROWN}
+      onMouseOver={onMouseOver}
+      onMouseOut={onMouseOut}>
       <TextHeader>{sectionTitle}</TextHeader>
       <TextBodyContainer>
         {isExpanded ? getParsed(false) : truncated}
@@ -49,7 +55,6 @@ const Text = ({
     </TextContainer>
   )
 }
-
 
 const TextContainer = styled.div`
   ${({ $color }) => mixins.border(1, { isBottom: false, color: $color })}

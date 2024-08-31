@@ -3,9 +3,9 @@ import styled from 'styled-components'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
 import mixins from '../../../utils/mixins'
 import parserServices from '../../../services/parserServices'
-import { toggleStyle } from '../../../utils/styleUtils'
+import { extractStyle, toggleStyle } from '../../../utils/styleUtils'
 
-const Citation = ({ children, footnote, imgRef }) => {
+const Citation = ({ children, footnote, color, imgRef }) => {
   const [hoverRef, isHovering] = useHover()
   const [mouse] = useMouse()
 
@@ -30,7 +30,7 @@ const Citation = ({ children, footnote, imgRef }) => {
               imgRef?.current?.getBoundingClientRect().width :
               '25em' // TODO
           }}
-          $isImg={!!imgRef}>
+          $color={color}>
           {typeof footnote === 'string' ? parserServices.parse(footnote) : footnote}
         </PopUpCitation>
       }
@@ -44,10 +44,11 @@ const CitationSpan = styled.span`
 `
 
 const PopUpCitation = styled.span`
-  ${({ $isImg }) => mixins
+  ${mixins
     .chain()
     .highZIndex(2)
-    .border(1, { isBottom: false, color: $isImg ? COLORS.BROWN : COLORS.BLUE })()}
+    .border(1, { isBottom: false })}
+  border-color: ${extractStyle('$color')};
   position: fixed;
   display: block;
   background-color: white;
@@ -55,7 +56,7 @@ const PopUpCitation = styled.span`
   padding: ${SIZES.CITATION_PADDING};
 
   &, * {
-    color: ${toggleStyle('$isImg', COLORS.BROWN, COLORS.BLUE)};
+    color: ${extractStyle('$color')};
   }
 
   font-family: ${FONT_FAMILIES.APERCU};
