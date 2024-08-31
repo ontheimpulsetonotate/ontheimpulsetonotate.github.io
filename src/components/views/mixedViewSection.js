@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 import { FRAGMENT_TYPES } from '../../constants/apiConstants'
 import { FRAGMENT_ID_PREFIX } from '../../constants/reactConstants'
@@ -26,6 +26,7 @@ const MixedViewSection = ({
   const containerRef = useRef()
   const imgs = useMemo(() =>
     data?.map((data, i) =>
+      data.imgLink &&
       <MixedViewImg
         key={i}
         type={type}

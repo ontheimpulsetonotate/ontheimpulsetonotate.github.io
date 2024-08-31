@@ -6,8 +6,11 @@ const useImagesLoaded = (...sources) => {
   const [loadedSources, setLoadedSources] = useState(new Set())
   const [loaded, setLoaded] = useState(false)
   const [proportions, setProportions] = useState({})
+  const hasSources = sources.filter(s => s).length
 
   useEffect(() => {
+    if (!hasSources) return setLoaded(true)
+
     sources.forEach(src => {
       const img = document.createElement('img')
 
@@ -21,7 +24,7 @@ const useImagesLoaded = (...sources) => {
   }, [])
 
   useEffect(() => {
-    if (loadedSources.size === _.uniq(sources).length)
+    if (hasSources && loadedSources.size === _.uniq(sources).length)
       setLoaded(true)
   }, [sources.length, loadedSources.size])
 

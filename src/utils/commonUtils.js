@@ -82,3 +82,8 @@ export const map = (value, inMin, inMax, outMin = 0, outMax = 1) =>
 export const stringsAreEqual = (stringA, stringB) =>
   stringA.toLocaleUpperCase().trim() ===
   stringB.toLocaleUpperCase().trim()
+
+export const arrayify = possibleArray =>
+  Array.isArray(possibleArray) ?
+    possibleArray :
+    [possibleArray]

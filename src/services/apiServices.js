@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import { DATA_KEYS, FRAGMENT_TYPES } from '../constants/apiConstants'
-import noTextHtml from '../data/noText'
 import textHtml from '../data/text'
 import { stringsAreEqual } from '../utils/commonUtils'
+import NodeData from '../utils/helpers/nodeData'
 
 
 const strip = html => {
@@ -35,47 +35,45 @@ const categorizedData = (() => {
     DATA_KEYS.PROJECTS,
     DATA_KEYS.INTERVIEW
   ]
-  const dialogueRegExp = /^\[DIALOGUE ([A-Z])[0-9]\]/
+
+  const interviewRegExp = /^\[DIALOGUE ([A-Z])[0-9]\]/
 
   let lastRef
   const data = Array.from(main.querySelector('tbody').children)
     .slice(2)
     .map(tr => {
       const tdArray = Array.from(tr.querySelectorAll('td')).slice(0, dataKeys.length)
-      let type
-
+      const nodeData = new NodeData()
       const refNum = tdArray[0].innerText
       const title = tdArray[3].innerText
 
       if (!refNum.trim() && title)
-        type = FRAGMENT_TYPES.ORPHAN
-
+        nodeData.type = FRAGMENT_TYPES.ORPHAN
       else if (refNum.match(/^\[[0-9]+\]/))
-        type = FRAGMENT_TYPES.TEXT
-      else if (refNum.match(dialogueRegExp))
-        type = FRAGMENT_TYPES.INTERVIEW
+        nodeData.type = FRAGMENT_TYPES.TEXT
+      else if (refNum.match(interviewRegExp))
+        nodeData.type = FRAGMENT_TYPES.INTERVIEW
       else return false
 
-      const data = tdArray.reduce((trData, td, i) => {
+      tdArray.forEach((td, i) => {
         const key = dataKeys[i]
         const strippedHtml = strip(td.innerHTML)
 
         if ([DATA_KEYS.IMG_NUM, DATA_KEYS.PAGE_NUM].includes(key)) {
-          trData[key] = parseNumRange(td.innerHTML)
+          nodeData[key] = parseNumRange(td.innerHTML)
 
           if (key === DATA_KEYS.IMG_NUM) {
-            if (type === FRAGMENT_TYPES.ORPHAN)
-              trData[key] = lastRef
-            else lastRef = trData[key]
+            if (nodeData.isOrphan)
+              nodeData[key] = lastRef
+            else lastRef = nodeData[key]
 
-            if (type === FRAGMENT_TYPES.INTERVIEW)
-              trData[DATA_KEYS.INTERVIEW_PREFIX] =
-                td.innerHTML.match(dialogueRegExp)?.[1]
+            if (nodeData.isInterview)
+              nodeData.interviewPrefix =
+                td.innerHTML.match(interviewRegExp)?.[1]
           }
         }
-
         else if ([DATA_KEYS.WORK_DETAILS, DATA_KEYS.TEXT].includes(key))
-          trData[key] = td.innerHTML
+          nodeData[key] = td.innerHTML
         else if ([DATA_KEYS.FOOTNOTES, DATA_KEYS.PROJECTS].includes(key)) {
           const notesArray = td.innerHTML
             .split('<br><br>')
@@ -86,19 +84,20 @@ const categorizedData = (() => {
             if (noteNum)
               notes[noteNum] = note.replace(/^\[[0-9]+\] /, '')
           })
-          trData[key] = notes
+          nodeData[key] = notes
         }
-        else if (key) trData[key] = strippedHtml
+        else if (key) nodeData[key] = strippedHtml
+      })
 
-        return trData
-      }, {})
-
-      data[DATA_KEYS.TYPE] = type
-      // TODO: data.imgNum - multiple
-      if (type === FRAGMENT_TYPES.TEXT)
-        data[DATA_KEYS.IMG_LINK] = `01_Primary-Text/REF_${_.padStart(data.imgNum[0], 3, '0')}.webp`
-      else data[DATA_KEYS.IMG_LINK] = `04_Interviews/Interview_${data.interviewPrefix}${data.imgNum}.webp`
-      return data
+      // TODO: nodeData.imgNum - multiple
+      nodeData.getImgLinks()
+      console.log(nodeData.imgLinks)
+      if (nodeData.isText) {
+        nodeData.imgLink = `01_Primary-Text/REF_${_.padStart(nodeData.imgNum[0], 3, '0')}.webp`
+      }
+      else if (nodeData.isInterview)
+        nodeData.imgLink = `04_Interviews/Interview_${nodeData.interviewPrefix}${nodeData.imgNum}.webp`
+      return nodeData
     })
     .filter(d => d)
 
@@ -110,7 +109,9 @@ const allData = Object.values(categorizedData).flat()
 const getNodeByTitle = title =>
   allData.filter(({ sectionTitle }) => stringsAreEqual(title, sectionTitle))
 
-const textData = categorizedData[FRAGMENT_TYPES.TEXT].filter(({ text }) => text)
+const textData = categorizedData[FRAGMENT_TYPES.TEXT]
+  .filter(({ text }) => text)
+
 const mixedData = categorizedData[FRAGMENT_TYPES.TEXT].map((node) => {
   const { sectionTitle, imgNum } = node
   const associatedInterviews =
@@ -126,9 +127,8 @@ const mixedData = categorizedData[FRAGMENT_TYPES.TEXT].map((node) => {
   return [node, associatedInterviews, orphanNode, orphanInterviews]
 })
 
-console.log(categorizedData)
 
-
+// console.log(mixedData.flat(2).filter(t => t))
 
 
 const apiServices = {
@@ -137,7 +137,8 @@ const apiServices = {
   getNodeByTitle,
   categorizedData,
   allData,
-  textData
+  textData,
+  mixedData
 }
 
 export default apiServices
