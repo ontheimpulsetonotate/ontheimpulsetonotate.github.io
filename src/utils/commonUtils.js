@@ -1,4 +1,5 @@
 import FastPoissonDiskSampling from 'fast-2d-poisson-disk-sampling'
+import _ from 'lodash'
 
 export const validateString = (validatorOrString, string) => {
   if (!string) return validatorOrString || ''
@@ -87,3 +88,5 @@ export const arrayify = possibleArray =>
   Array.isArray(possibleArray) ?
     possibleArray :
     [possibleArray]
+
+export const padNumber = number => _.padStart(number, 3, '0')

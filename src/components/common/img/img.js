@@ -11,7 +11,8 @@ const Img = ({
   index,
   onRender,
   onMouseOver,
-  onMouseOut
+  onMouseOut,
+  isOrdered
 }) => {
   const { imgLink } = nodeData
   const { loaded, proportions } = useImagesLoaded(imgLink)
@@ -26,7 +27,7 @@ const Img = ({
       nodeData={nodeData}
       src={imgLink}
       width={SIZES.IMG_VIEW_FIGURE_SIZE}
-      noCaption
+      noCaption={!isOrdered}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut} />
   )

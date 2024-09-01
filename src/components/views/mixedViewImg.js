@@ -7,6 +7,8 @@ import Citation from '../common/text/citation'
 import ProjectCitation from '../common/text/projectCitation'
 
 const MixedViewImg = ({ nodeData, containerY }) => {
+
+
   const { imgLink, isInterview } = nodeData
   const imgRef = useRef()
   const [isShowing, setIsShowing] = useState(false)
@@ -23,7 +25,7 @@ const MixedViewImg = ({ nodeData, containerY }) => {
   return (
     <Citation
       color={isInterview ? COLORS.BLUE : COLORS.BROWN}
-      footnote={opacity ? <ProjectCitation nodeData={nodeData} /> : null}
+      footnote={opacity ? <ProjectCitation {...nodeData} /> : null}
       imgRef={imgRef}>
       <Figure
         style={{ opacity }}

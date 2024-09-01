@@ -28,10 +28,11 @@ const DragContainer = ({
   const containerRef = useRef()
 
   const { left, right, top, bottom } = getMainContainer()
-  const defaultUnmappedPositions = useMemo(() => memoizedNodeData?.unmappedPositions ?? mapPoisson(
-    contents.length,
-    ((right - left) / (bottom - top)) / (elemW / elemH)
-  ), [])
+  const defaultUnmappedPositions = useMemo(() =>
+    memoizedNodeData?.unmappedPositions ?? _.shuffle(mapPoisson(
+      contents.length,
+      ((right - left) / (bottom - top)) / (elemW / elemH)
+    )), [])
 
   const [unmappedPositions, setUnmappedPositions] = useState(defaultUnmappedPositions)
   const hasAnimatedRef = useRef(!!memoizedNodeData?.hasAnimated)

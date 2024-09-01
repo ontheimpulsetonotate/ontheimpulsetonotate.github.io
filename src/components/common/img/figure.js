@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { forwardRef, useState } from 'react'
 import styled from 'styled-components'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
+import { padNumber } from '../../../utils/commonUtils'
 import { extractStyle } from '../../../utils/styleUtils'
 import FilteredImg from './filteredImg'
 
@@ -9,28 +10,30 @@ import FilteredImg from './filteredImg'
 const Figure = forwardRef(function Figure({
   nodeData,
   style,
+  color,
   maxSize,
   width,
   height,
-  bracketNumbers,
+  bracketNumbers = false,
   noCaption = false,
+  noFade = false,
   ...rest
 }, ref) {
   const { imgNum, imgLink, interviewPrefix, isInterview } = nodeData
   const [isLoaded, setIsLoaded] = useState(false)
   let imgNotation = interviewPrefix ?
     `DIALOGUE ${interviewPrefix}${imgNum}` :
-    imgNum.map(num => _.padStart(num, 3, '0')).join('—')
+    imgNum.map(num => padNumber(num)).join('—')
   if (bracketNumbers) imgNotation = `[${imgNotation}]`
 
-  const color = isInterview ? COLORS.BLUE : COLORS.BROWN
+  color ??= isInterview ? COLORS.BLUE : COLORS.BROWN
   return (
     <ImgContainer
       {...rest}
       $color={color}
       ref={ref}
       style={{
-        opacity: isLoaded ? undefined : 0,
+        opacity: noFade ? 1 : isLoaded ? undefined : 0,
         ...style,
       }}>
       <FilteredImg

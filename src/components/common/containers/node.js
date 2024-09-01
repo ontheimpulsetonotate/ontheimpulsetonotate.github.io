@@ -143,6 +143,7 @@ const Node = forwardRef(function Node({
           ...rest,
           index,
           id: containerId,
+          isOrdered,
           onMouseOver: () => onHover(true),
           onMouseOut: () => onHover(false),
           onHover,

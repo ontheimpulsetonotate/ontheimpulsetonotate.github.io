@@ -1,10 +1,10 @@
+import { useEffect } from 'react'
 import styled from 'styled-components'
 import { FONT_FAMILIES, FONT_SIZES } from '../../../constants/stylesConstants'
-import { validateString } from '../../../utils/commonUtils'
 import parserServices from '../../../services/parserServices'
+import { validateString } from '../../../utils/commonUtils'
 
-const ProjectCitation = ({ nodeData }) => {
-  const { artistFirstName, artistLastName, medium, workDetails, copyright } = nodeData
+const ProjectCitation = ({ artistFirstName, artistLastName, medium, workDetails, copyright }) => {
   return (
     <Footnote>
       <h3>{artistLastName}{validateString(artistFirstName, ` ${artistFirstName}`)}</h3>

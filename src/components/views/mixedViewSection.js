@@ -13,7 +13,9 @@ const MixedViewSection = ({
   index,
   nodeData,
   containerY,
-  isLeft
+  isLeft,
+  beforeVisualEssay,
+  afterVisualEssay,
 }) => {
   const {
     text,
@@ -50,6 +52,8 @@ const MixedViewSection = ({
     <SectionContainer
       $isInterview={isInterview}
       $isFirstInterview={!interviewIndex}
+      $beforeVisualEssay={beforeVisualEssay}
+      $afterVisualEssay={afterVisualEssay}
       id={index ? `${FRAGMENT_ID_PREFIX}${index}` : undefined}
       ref={containerRef}>
       {renderImgContainer(true)}
@@ -65,7 +69,6 @@ const MixedViewSection = ({
     </SectionContainer>
   )
 }
-
 
 const ImgContainer = styled.div`
   ${({ $isLeft }) => {
@@ -112,9 +115,13 @@ const getPadding = ({ $isInterview, $isFirstInterview }) =>
 const SectionContainer = styled.div`
   ${mixins.grid}
   width: 100%;
+  border-top: ${conditionalStyle('$afterVisualEssay', `1px solid ${COLORS.BROWN}`)};
+  border-bottom: ${conditionalStyle('$beforeVisualEssay', `1px solid ${COLORS.BROWN}`)};
 
   ${TextContainer} {
     padding-top: ${getPadding};
+    padding-bottom: ${({ $beforeVisualEssay, ...rest }) => $beforeVisualEssay ? getPadding({ ...rest }) : undefined};
+
     &, * {
       color: ${conditionalStyle('$isInterview', COLORS.BLUE)};
     }

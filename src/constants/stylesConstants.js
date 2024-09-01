@@ -23,6 +23,7 @@ export const COLORS = {
   GRAY: '#DEDAD7',
   BROWN: '#A1752A',
   BLUE: '#2583BE',
+  LIGHT_BLUE: '#D3E6F2',
   BEIGE: '#FFF3DE',
   DARK_BEIGE: '#EAE1D0',
   LIGHT_BEIGE: '#F6F2EB',
@@ -32,6 +33,7 @@ export const COLORS = {
 const IMG_VIEW_FIGURE_SIZE = '100px'
 const TEXT_WIDTH = remify(300)
 export const SIZES = {
+  GRID_COUNT: 9,
   PAGE_MARGIN: remify(30),
 
   UNDERLINE_OFFSET: remify(6),
@@ -75,7 +77,9 @@ export const SIZES = {
   CITATION_OFFSET: remify(10),
 
   ABOUT_SECTION_TOP: remify(250),
-  ABOUT_SECTION_DIVIDER_MARGIN: remify(35)
+  ABOUT_SECTION_DIVIDER_MARGIN: remify(35),
+
+  VISUAL_ESSAY_BOTTOM_PADDING: remify(180),
 }
 
 export const TIMINGS = {

@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { DATA_KEYS, FRAGMENT_TYPES } from '../constants/apiConstants'
+import noTextHtml from '../data/noText'
 import textHtml from '../data/text'
 import { stringsAreEqual } from '../utils/commonUtils'
 import NodeData from '../utils/helpers/nodeData'
@@ -8,7 +9,7 @@ import NodeData from '../utils/helpers/nodeData'
 const dataKeys = [
   DATA_KEYS.IMG_NUM,
   undefined,
-  DATA_KEYS.IMG_LINK,
+  undefined,
   DATA_KEYS.SECTION_TITLE,
   DATA_KEYS.PAGE_NUM,
   DATA_KEYS.LAST_NAME,
@@ -60,9 +61,9 @@ const parseCitation = ({ innerHTML }, key, nodeData) => {
   nodeData[key] = notes
 }
 
-const allData = (() => {
+const parseSheet = (html, isVisualEssay) => {
   const tempDiv = document.createElement('div')
-  tempDiv.innerHTML = textHtml
+  tempDiv.innerHTML = html
   const main = tempDiv.querySelector('.grid-container')
 
   let lastRef
@@ -75,9 +76,10 @@ const allData = (() => {
       const title = tdArray[3].innerText
 
       nodeData.type =
-        !refNum.trim() && title ? FRAGMENT_TYPES.ORPHAN :
-          refNum.match(/^\[[0-9]+\]/) ? FRAGMENT_TYPES.TEXT :
-            refNum.match(interviewRegExp) ? FRAGMENT_TYPES.INTERVIEW : undefined
+        isVisualEssay ? FRAGMENT_TYPES.VISUAL_ESSAY :
+          !refNum.trim() && title ? FRAGMENT_TYPES.ORPHAN :
+            refNum.match(/^\[[0-9]+\]/) ? FRAGMENT_TYPES.TEXT :
+              refNum.match(interviewRegExp) ? FRAGMENT_TYPES.INTERVIEW : undefined
 
       if (!nodeData.type) return
 
@@ -98,39 +100,40 @@ const allData = (() => {
     })
     .filter(d => d)
 
+  if (isVisualEssay) return data
+
   return data
-})()
+    .filter(nodeData => nodeData && !nodeData.isInterview)
+    .map(nodeData => {
+      const { sectionTitle } = nodeData
+      const associatedInterviews = nodeData.interview &&
+        data.filter(
+          data => data.isInterview &&
+            stringsAreEqual(data.interview, sectionTitle))
+      return [nodeData, associatedInterviews]
+    })
+    .flat(2)
+    .filter(d => d)
+}
 
-const textData = _.shuffle(
-  allData.filter(({ text, isOrphan }) => text && !isOrphan)
-)
+const mainData = parseSheet(textHtml)
+const visualEssayData = parseSheet(noTextHtml, true)
+console.log(visualEssayData)
 
+const textData = mainData.filter(({ text, isOrphan }) => text && !isOrphan)
 const indexTabData = textData.filter(({ isInterview }) => !isInterview)
-
-const imgData = _.shuffle(
-  allData
-    .filter(({ isImgNode }) => isImgNode)
-    .map(nodeData => nodeData.getImgNodes())
-    .flat()
-)
-
-const mixedData = allData
-  .filter(({ text, isInterview }) => text && !isInterview)
-  .map(nodeData => {
-    const { sectionTitle } = nodeData
-    const associatedInterviews =
-      allData.filter(data =>
-        data.isInterview &&
-        stringsAreEqual(data.interview, sectionTitle))
-    return [nodeData, associatedInterviews]
-  })
+const imgData = mainData
+  .filter(({ isImgNode }) => isImgNode)
+  .map(nodeData => nodeData.getImgNodes())
   .flat()
+const mixedData = mainData.filter(({ text }) => text)
 
 const apiServices = {
   imgData,
   textData,
   mixedData,
-  indexTabData
+  indexTabData,
+  visualEssayData,
 }
 
 export default apiServices

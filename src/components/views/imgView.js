@@ -32,6 +32,7 @@ const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
 
     return {
       orderedPositions: quickArray(proportions.length, i => ({
+        i,
         x: cols[i % colCount],
         y: rows[Math.floor(i / colCount)],
       })),

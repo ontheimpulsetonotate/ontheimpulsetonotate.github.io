@@ -1,3 +1,5 @@
+import { SIZES } from '../constants/stylesConstants'
+
 export const vw = (percentage = 100) => percentage / 100 * window.innerWidth
 export const vh = (percentage = 100) => percentage / 100 * window.innerHeight
 
@@ -16,3 +18,5 @@ export const conditionalStyle = (key, string) => props =>
 export const toggleStyle = (key, styleIfTrue, styleIfFalse) => props =>
   props[key] ? styleIfTrue : styleIfFalse
 
+export const spanCol = (colCount, additionalGaps = 0, marginCount = 0) =>
+  `calc((100vw - ${SIZES.PAGE_MARGIN} * 2 - ${SIZES.ELEM_MARGIN} * ${SIZES.GRID_COUNT - 1}) /${SIZES.GRID_COUNT} * ${colCount} + ${Math.max(Math.ceil(colCount) - 1 + additionalGaps, 0)} * ${SIZES.ELEM_MARGIN} + ${marginCount} * ${SIZES.PAGE_MARGIN})`

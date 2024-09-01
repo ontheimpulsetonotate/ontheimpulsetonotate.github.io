@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { DATA_KEYS } from '../constants/apiConstants'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES, TIMINGS } from '../constants/stylesConstants'
 import apiServices from '../services/apiServices'
-import { getDataStringSorter, validateString } from '../utils/commonUtils'
+import { getDataStringSorter, padNumber, validateString } from '../utils/commonUtils'
 import mixins from '../utils/mixins'
 import { addEventListener } from '../utils/reactUtils'
 import Header from './common/header'
@@ -123,12 +123,12 @@ const IndexTab = ({ onRowClick }) => {
             onClick={e => handleRowClick(e, nodeData)}>
             <p>
               {i === hoverIndex && <HoverArrow>→</HoverArrow>}
-              [{imgNum.map(num => _.padStart(num, 3, '0')).join('—')}] {artistLastName}{validateString(artistFirstName, `, ${artistFirstName}`)}
+              [{imgNum.map(num => padNumber(num)).join('—')}] {artistLastName}{validateString(artistFirstName, `, ${artistFirstName}`)}
             </p>
             <p>{medium}</p>
             <p>{sectionTitle}</p>
             <p>
-              {!!pageNum.length && `P. ${pageNum.map(num => _.padStart(num, 3, '0')).join(' — ')}`}
+              {!!pageNum.length && `P. ${pageNum.map(num => padNumber(num)).join(' — ')}`}
             </p>
           </Row>
         }

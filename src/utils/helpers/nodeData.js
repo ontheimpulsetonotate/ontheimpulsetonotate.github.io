@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import { FRAGMENT_TYPES } from '../../constants/apiConstants'
-import { quickArray } from '../commonUtils'
+import { FRAGMENT_TYPES, VISUAL_ESSAY_IMG_NUM, VISUAL_ESSAY_TITLE } from '../../constants/apiConstants'
+import { padNumber, quickArray, stringsAreEqual } from '../commonUtils'
 
 class NodeData {
   constructor() {
@@ -17,6 +17,7 @@ class NodeData {
     this.text = undefined
     this.footnotes = undefined
     this.projects = undefined
+
     this.interview = undefined
     this.interviewPrefix = undefined
 
@@ -35,6 +36,9 @@ class NodeData {
     return this.type === FRAGMENT_TYPES.ORPHAN
   }
 
+  get isVisualEssay() {
+    return this.type === FRAGMENT_TYPES.VISUAL_ESSAY
+  }
 
   getImgLinks() {
     const imgLinks = this.fullNumRange
@@ -43,17 +47,21 @@ class NodeData {
   }
 
   getImgLink(imgNum = this.imgNum) {
-    return this.isText ?
-      `01_Primary-Text/REF_${_.padStart(imgNum, 3, '0')}.webp` :
-      this.isInterview ?
-        `04_Interviews/Interview_${this.interviewPrefix}${imgNum}.webp` :
+    if (this.isInterview)
+      return `04_Interviews/Interview_${this.interviewPrefix}${imgNum}.webp`
+    const folder = this.isText ? '01_Primary-Text' :
+      this.isVisualEssay ?
+        stringsAreEqual(this.sectionTitle, VISUAL_ESSAY_TITLE.BLUE_INSIGHTS) ?
+          '02_Blue-Insights' :
+          '03_Surface-Manipulation' :
         undefined
+    if (folder) return `${folder}/REF_${padNumber(imgNum)}.webp`
   }
 
   getImgNodes() {
     return this.imgLinks.map(
       (imgLink, i) =>
-        Object.assign(Object.create(this), { imgNum: [this.fullNumRange[i]], imgLink }))
+        Object.assign(new NodeData(), this, { imgNum: [this.fullNumRange[i]], imgLink }))
   }
 
   get fullNumRange() {

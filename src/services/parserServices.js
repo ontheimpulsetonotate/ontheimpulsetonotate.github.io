@@ -1,9 +1,12 @@
 import parse, { domToReact } from 'html-react-parser'
 import Citation from '../components/common/text/citation'
 import ExpandButton from '../components/common/text/expandButton'
-import TextHeader from '../components/common/text/textHeader'
 import ProjectCitation from '../components/common/text/projectCitation'
+import TextHeader from '../components/common/text/textHeader'
+import { BLEED_DIRECTIONS } from '../constants/apiConstants'
 import { COLORS } from '../constants/stylesConstants'
+import { spanCol, vw } from '../utils/styleUtils'
+import apiServices from './apiServices'
 
 const _parse = (text, options) => text ? parse(text, options) : undefined
 
@@ -90,9 +93,33 @@ const parseTextView = (text, {
   )
 }
 
+const parseVisualEssay = visualEssay =>
+  visualEssay.map(([imgNum, colStart, colEnd, top, alignBottom, bleedDirection]) => {
+    const nodeData = apiServices
+      .visualEssayData
+      .find(data => data.imgNum[0] === imgNum)
+    nodeData.imgLink = nodeData.imgLinks[0]
+    const colSpan = [colStart, colEnd]
+    const width = spanCol(colSpan[1] - colSpan[0], bleedDirection ? 1 : 0)
+    const left = spanCol(
+      colSpan[0] - 1,
+      colSpan[0] % 1 ? 0 : bleedDirection === BLEED_DIRECTIONS.LEFT ? 0 : 1,
+      1
+    )
+    return {
+      nodeData,
+      top: Math.max(top - 990, 0) * vw() / 1512, // TODO
+      width,
+      left,
+      alignBottom,
+    }
+  })
+
+
 const parserServices = {
   parse: _parse,
-  parseTextView
+  parseTextView,
+  parseVisualEssay
 }
 
 export default parserServices

@@ -40,6 +40,7 @@ const Citation = ({ children, footnote, color, imgRef }) => {
 
 const CitationSpan = styled.span`
   color: ${COLORS.BLUE};
+  height: fit-content;
   cursor: default;
 `
 

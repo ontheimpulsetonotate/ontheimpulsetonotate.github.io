@@ -17,9 +17,24 @@ export const DATA_KEYS = {
   INTERVIEW_PREFIX: 'interviewPrefix'
 }
 
-
 export const FRAGMENT_TYPES = {
   TEXT: 'text',
   ORPHAN: 'orphan',
-  INTERVIEW: 'interview'
+  INTERVIEW: 'interview',
+  VISUAL_ESSAY: 'visual-essay',
+}
+
+export const VISUAL_ESSAY_IMG_NUM = {
+  BLUE_INSIGHTS: 65,
+  SURFACE_MANIPULATION: 162
+}
+
+export const VISUAL_ESSAY_TITLE = {
+  BLUE_INSIGHTS: 'blue insights',
+  SURFACE_MANIPULATION: 'surface manipulation'
+}
+
+export const BLEED_DIRECTIONS = {
+  LEFT: 'left',
+  RIGHT: 'right'
 }
