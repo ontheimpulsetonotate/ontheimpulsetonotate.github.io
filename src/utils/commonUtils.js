@@ -90,3 +90,8 @@ export const arrayify = possibleArray =>
     [possibleArray]
 
 export const padNumber = number => _.padStart(number, 3, '0')
+
+export const filterFalsy = array => array.filter(e => e)
+
+export const sortLike = (array, modelArray) =>
+  array.sort((a, b) => modelArray.indexOf(a) - modelArray.indexOf(b))

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { TIMINGS } from '../../../constants/stylesConstants'
 import { UNMAPPED_BOUNDS, map, mapPoisson, quickArray, validateString } from '../../../utils/commonUtils'
-import { getMainContainer } from '../../../utils/sizeUtils'
+import { getMainContainer } from '../../../utils/styleUtils'
 import FullContainer from './fullContainer'
 import Node from './node'
 

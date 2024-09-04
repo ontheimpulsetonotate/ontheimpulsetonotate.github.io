@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { SIZES } from '../../constants/stylesConstants'
 import apiServices from '../../services/apiServices'
 import { quickArray } from '../../utils/commonUtils'
-import { getOrderedData } from '../../utils/sizeUtils'
+import { getOrderedData } from '../../utils/styleUtils'
 import DragContainer from '../common/containers/dragContainer'
 import Img from '../common/img/img'
 

@@ -59,6 +59,7 @@ const Text = ({
 const TextContainer = styled.div`
   ${({ $color }) => mixins.border(1, { isBottom: false, color: $color })}
   width: ${SIZES.TEXT_WIDTH};
+  // width: ${SIZES.TEXT_WIDTH_SIZE_L.css};
   padding: ${SIZES.ELEM_MARGIN};
   background-color: white;
 

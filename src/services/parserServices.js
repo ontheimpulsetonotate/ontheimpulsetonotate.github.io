@@ -5,7 +5,8 @@ import ProjectCitation from '../components/common/text/projectCitation'
 import TextHeader from '../components/common/text/textHeader'
 import { BLEED_DIRECTIONS } from '../constants/apiConstants'
 import { COLORS } from '../constants/stylesConstants'
-import { spanCol, vw } from '../utils/styleUtils'
+import { getVw } from '../utils/sizeUtils'
+import { spanCol } from '../utils/styleUtils'
 import apiServices from './apiServices'
 
 const _parse = (text, options) => text ? parse(text, options) : undefined
@@ -108,7 +109,7 @@ const parseVisualEssay = visualEssay =>
     )
     return {
       nodeData,
-      top: Math.max(top - 990, 0) * vw() / 1512, // TODO
+      top: Math.max(top - 990, 0) * getVw() / 1512, // TODO
       width,
       left,
       alignBottom,

@@ -8,7 +8,7 @@ import { SIZES, TIMINGS } from '../../../constants/stylesConstants'
 import useMergedRef from '../../../hooks/useMergedRef'
 import { validateString } from '../../../utils/commonUtils'
 import mixins from '../../../utils/mixins'
-import { getPx } from '../../../utils/styleUtils'
+import { getPx } from '../../../utils/sizeUtils'
 
 const Node = forwardRef(function Node({
   index,

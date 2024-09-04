@@ -1,4 +1,5 @@
-import { getEmifiedPx, getPx, remify } from '../utils/styleUtils'
+// import { getSize } from '../utils/sizeUtils'
+import { getEmifiedPx, getPx, getSize, remify } from '../utils/sizeUtils'
 
 export const FONT_FAMILIES = {
   APERCU: '"Apercu", sans-serif',
@@ -32,6 +33,7 @@ export const COLORS = {
 
 const IMG_VIEW_FIGURE_SIZE = '100px'
 const TEXT_WIDTH = remify(300)
+const TEXT_WIDTH_SIZE_L = getSize(({ l: 318, xl: 404 }))
 export const SIZES = {
   GRID_COUNT: 9,
   PAGE_MARGIN: remify(30),
@@ -52,6 +54,8 @@ export const SIZES = {
   HEADER_INNER_MARGIN: '0.75em',
   HOME_BUTTON_WIDTH: remify(240),
   TEXT_WIDTH,
+  TEXT_WIDTH_SIZE_L,
+
   FIGURE_MARGIN_TOP: remify(8),
 
   IMG_VIEW_FIGURE_SIZE,

@@ -1,36 +1,40 @@
-import { FONT_SIZES, SIZES } from '../constants/stylesConstants'
-import { getPx, vh, vw } from './styleUtils'
+import { BreakptSizer } from './helpers/breakptSizer'
 
 
-const {
-  PAGE_MARGIN,
-  CLOSED_INDEX_LEFT_VALUE: OPENED_INDEX_LEFT_VALUE,
-  ORDERED_COL_GAP,
-  ORDERED_COL_TOP_PADDING,
-  getImgViewFigureSize: getImgMaxSize
-} = SIZES
+export const remify = px => `${px / getRem(1)}rem`
+export const getPx = emString => parseFloat(emString.replace(/rem$/, '')) * getRem()
+export const getEmifiedPx = px => getPx(remify(px))
 
-export const getMainContainer = () => ({
-  left: getPx(PAGE_MARGIN),
-  right: vw(OPENED_INDEX_LEFT_VALUE) - getPx(PAGE_MARGIN),
-  top: getPx(ORDERED_COL_TOP_PADDING) + getPx(PAGE_MARGIN) + getPx(FONT_SIZES.REGULAR),
-  bottom: vh()
-})
-
-export const getOrderedData = () => {
-  const maxSize = getImgMaxSize()
-  const { left, right, top } = getMainContainer()
-  const width = right - left
-
-  const gap = getPx(ORDERED_COL_GAP)
-
-  return {
-    gap,
-    leftMargin: getPx(PAGE_MARGIN),
-    topMargin: top,
-    colCount: Math.floor((width - maxSize) / (maxSize + gap)) + 1,
-    rowHeight: getPx(FONT_SIZES.SMALL) * 2 + SIZES.getImgViewFigureSize(),
-    getRowHeight: proportion =>
-      getPx(FONT_SIZES.SMALL) * 2 + SIZES.getImgViewFigureSize() * proportion,
-  }
+export const Unit = {
+  Vw: 'vw',
+  Vh: 'vh',
+  Dvw: 'dvw',
+  Dvh: 'dvh',
+  Px: 'px',
+  '%': '%',
+  Em: 'em',
+  Rem: 'rem'
 }
+
+const createSuffixFunction = suffix => quantity => `${quantity}${suffix}`
+export const px = createSuffixFunction(Unit.Px)
+export const vw = createSuffixFunction(Unit.Vw)
+export const vh = createSuffixFunction(Unit.Vh)
+export const dvw = createSuffixFunction(Unit.Dvw)
+export const dvh = createSuffixFunction(Unit.Dvh)
+export const percent = createSuffixFunction(Unit['%'])
+export const em = createSuffixFunction(Unit.Em)
+export const rem = createSuffixFunction(Unit.Rem)
+
+export const getVw = (percentage = 100) => percentage / 100 * window.innerWidth
+export const getVh = (percentage = 100) => percentage / 100 * window.innerHeight
+export const getRem = (multiplier = 1) => parseFloat(getComputedStyle(
+  document.documentElement).fontSize) * multiplier
+
+export const getSize = (breakptSizes) =>
+  new BreakptSizer(breakptSizes).getSize(false)
+
+export const getRemSize = (breakptSizes) =>
+  new BreakptSizer(breakptSizes).getSize(true)
+
+
