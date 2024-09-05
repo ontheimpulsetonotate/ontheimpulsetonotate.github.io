@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 import { FRAGMENT_ID_PREFIX } from '../../constants/reactConstants'
-import { COLORS, FONT_SIZES, SIZES, TIMINGS } from '../../constants/stylesConstants'
+import { COLORS, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES, TIMINGS } from '../../constants/stylesConstants'
 import parserServices from '../../services/parserServices'
 import { validateString } from '../../utils/commonUtils'
 import mixins from '../../utils/mixins'
@@ -101,8 +101,9 @@ const TextContainer = styled.div`
   flex-direction: column;
 
   p {
-    font-size: ${FONT_SIZES.LARGE};
-    ${mixins.paragraphSpacing(FONT_SIZES.LEADING_DL)}
+    ${mixins.chain()
+    .dynamicSizes({ fontSize: FONT_SIZES_RESPONSIVE.LARGE })
+    .paragraphSpacing(FONT_SIZES_RESPONSIVE.LEADING_DL)}
   }
 `
 

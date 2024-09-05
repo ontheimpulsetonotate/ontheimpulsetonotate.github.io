@@ -1,6 +1,10 @@
+import * as changeCase from 'change-case'
 import _ from 'lodash'
 import { COLORS, SIZES } from '../constants/stylesConstants'
-import { loopObject, validateString } from './commonUtils'
+import breakpts from '../data/breakpoints'
+import { arrayify, loopObject, quickArray, validateString } from './commonUtils'
+import { getSize } from './sizeUtils'
+import Size from './helpers/size'
 
 const flex = (
   alignItems = 'initial',
@@ -20,13 +24,16 @@ const draggable = () => `
   position: absolute;
 `
 
-const paragraphSpacing = lineHeight => `
-  line-height: ${lineHeight};
+const paragraphSpacing = lineHeights => {
+  const string = `
+  ${dynamicSizes({ lineHeight: lineHeights })};
 
   &:not(:first-of-type){
-    padding-top: ${lineHeight};
+    ${dynamicSizes({ paddingTop: lineHeights })};
   }
 `
+  return string
+}
 
 const noScrollBar = () => `
   -ms-overflow-style: none;
@@ -50,15 +57,47 @@ const grid = () => `
   grid-template-columns: calc((${SIZES.CLOSED_INDEX_LEFT_VALUE}vw - ${SIZES.MIXED_VIEW_SECTION_WIDTH}) / 2) ${SIZES.MIXED_VIEW_SECTION_WIDTH} 1fr;
 `
 
+const dynamicSizes = config => {
+  const fallbackValues = {}
+  return ['m', 'l', 'xl', 'xxl'].reduce((cssStatement, _, i, breakpoints) => {
+    let cssStyles = ''
+    loopObject(config, (styleName, sizes) => {
+      styleName = changeCase.kebabCase(styleName)
+      const sizeValue = sizes[i] ?? fallbackValues[styleName]
+      fallbackValues[styleName] = sizeValue
+
+      const nextSizeValue = sizes[i + 1]
+
+      const size = nextSizeValue ?
+        getSize({ [breakpoints[i]]: sizeValue, [breakpoints[i + 1]]: nextSizeValue }) :
+        new Size(sizeValue)
+
+      cssStyles += (`${styleName}: ${validateString(size?.css)};`)
+    })
+
+    // TODO?
+    const queries = [
+      `(min-width: ${breakpts.m}px) and (max-width: ${breakpts.l - 1}px)`,
+      `(min-width: ${breakpts.l}px) and (max-width: ${breakpts.xl - 1}px)`,
+      `(min-width: ${breakpts.xl}px) and (max-width: ${breakpts.xxl - 1}px)`,
+      `(min-width: ${breakpts.xxl}px)`,
+    ]
+
+    return cssStatement += `@media screen and ${queries[i]} {${cssStyles}};`
+  }, '')
+}
+
 const mixins = {
   flex,
   highZIndex,
   draggable,
+
   paragraphSpacing,
   noScrollBar,
   underline,
   border,
   grid,
+  dynamicSizes,
   chain: function () {
     const chainedObject = {}
     let accumulatedReturn = ''

@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 import styled from 'styled-components'
-import { FONT_FAMILIES, FONT_SIZES } from '../../../constants/stylesConstants'
+import { FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
 import parserServices from '../../../services/parserServices'
 import { validateString } from '../../../utils/commonUtils'
+import mixins from '../../../utils/mixins'
 
 const ProjectCitation = ({ artistFirstName, artistLastName, medium, workDetails, copyright }) => {
   return (
@@ -16,19 +17,24 @@ const ProjectCitation = ({ artistFirstName, artistLastName, medium, workDetails,
       </p>
     </Footnote>
   )
-
 }
 
 
 const Footnote = styled.span`
+  h3, p {
+    ${mixins.dynamicSizes({ fontSize: FONT_SIZES_RESPONSIVE.SMALL })}
+  }
+
   h3 {
     font-family: ${FONT_FAMILIES.APERCU_COND};
-    font-size: ${FONT_SIZES.SMALL};
+    ${mixins.dynamicSizes({ lineHeight: FONT_SIZES_RESPONSIVE.LEADING_XS })}
   }
 
   p {
-    padding-top: 1em;
-    font-size: ${FONT_SIZES.SMALL};
+    ${mixins
+    .chain()
+    .dynamicSizes({ paddingTop: FONT_SIZES_RESPONSIVE.LEADING_XS })
+    .paragraphSpacing(FONT_SIZES_RESPONSIVE.LEADING_XS)}
     font-family: ${FONT_FAMILIES.APERCU};
   }
 `

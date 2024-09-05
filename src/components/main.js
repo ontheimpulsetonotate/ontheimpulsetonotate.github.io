@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import styled, { createGlobalStyle } from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../constants/stylesConstants'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES } from '../constants/stylesConstants'
+import breakpts from '../data/breakpoints'
 import useIsAbout from '../hooks/useIsAbout'
 import mixins from '../utils/mixins'
 import { toggleStyle } from '../utils/styleUtils'
@@ -108,6 +109,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   h1, h2, h3, button, a {
+    font-size: ${FONT_SIZES.REGULAR};
     line-height: ${FONT_SIZES.LEADING_S};
   }
 
@@ -116,8 +118,25 @@ const GlobalStyle = createGlobalStyle`
   }
 
   h1, h2, h3, p, button, a {
-    font-size: ${FONT_SIZES.REGULAR};
     letter-spacing: 0.02em;
+  }
+
+
+  // TODO: remove
+  i {
+    @media screen and (min-width: ${breakpts.xxl}px) {
+      background-image: 'aa';
+    }
+
+    @media screen and (min-width: ${breakpts.xl}px) and (max-width: ${breakpts.xxl + 1}px) {
+      background-image: 'aa';
+    }
+  }
+
+  p {
+    &, & button {
+      ${mixins.dynamicSizes({ fontSize: FONT_SIZES_RESPONSIVE.REGULAR })}
+    }
   }
 
   h1, h2, h3, ${Header} button, a {

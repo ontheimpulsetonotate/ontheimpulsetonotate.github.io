@@ -1,8 +1,7 @@
 import _ from 'lodash'
 import breakpts from '../../data/breakpoints'
 import { sortLike } from '../commonUtils'
-import { getRem } from '../sizeUtils'
-import { Breakpt, breakptSorted } from '../breakpts'
+import { breakptSorted, getRem } from '../sizeUtils'
 import Size from './size'
 
 const lHeight = 620
@@ -11,7 +10,7 @@ const xxlSmHeight = 800
 
 export class BreakptSizer {
   constructor(breakptSizes) {
-    this.breakptSizes = Breakpt.Xxl in breakptSizes ?
+    this.breakptSizes = 'xxl' in breakptSizes ?
       {
         ...breakptSizes,
         xxlSm: breakptSizes.xxlSm ?? breakptSizes.xxl

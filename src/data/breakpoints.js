@@ -3,7 +3,7 @@ const breakpts = {
   m: 1280,
   l: 1512,
   xl: 1728,
-  xxl: 2560
+  xxl: 1920
 }
 
 export default breakpts

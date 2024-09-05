@@ -1,5 +1,6 @@
 // import { getSize } from '../utils/sizeUtils'
-import { getEmifiedPx, getPx, getSize, remify } from '../utils/sizeUtils'
+import Size from '../utils/helpers/size'
+import { getEmifiedPx, getPx, getRemSize, getSize, remify } from '../utils/sizeUtils'
 
 export const FONT_FAMILIES = {
   APERCU: '"Apercu", sans-serif',
@@ -10,7 +11,6 @@ export const FONT_FAMILIES = {
 
 export const FONT_SIZES = {
   SMALL: remify(11),
-  MEDIUM: remify(13),
   REGULAR: remify(15),
   LARGE: remify(16),
 
@@ -18,6 +18,16 @@ export const FONT_SIZES = {
   LEADING_M: remify(18),
   LEADING_DL: remify(20),
   LEADING_L: remify(40),
+}
+
+export const FONT_SIZES_RESPONSIVE = {
+  SMALL: [10.75, 11],
+  REGULAR: [14, 15],
+  TEXT_HEADER: [14.25, 15],
+  LARGE: [15.75, 16, 16.25, 16.5],
+  LEADING_XS: [12.75, 13],
+  LEADING_M: [17, 18],
+  LEADING_DL: [19.75, 20, 20.25, 20.5],
 }
 
 export const COLORS = {
@@ -50,6 +60,7 @@ export const SIZES = {
   ARROW_PADDING: '0.25em',
 
   ELEM_MARGIN: remify(20),
+  TEXT_HEADER_MARGIN: remify(30),
   HEADER_MARGIN: remify(30),
   HEADER_INNER_MARGIN: '0.75em',
   HOME_BUTTON_WIDTH: remify(240),
@@ -63,7 +74,7 @@ export const SIZES = {
   getImgViewFigureSize: () => parseFloat(IMG_VIEW_FIGURE_SIZE),
   getTextContainerSize: () => ({
     w: getPx(TEXT_WIDTH),
-    h: getEmifiedPx(20) * 3 + getPx(FONT_SIZES.LEADING_M) * 6
+    h: getEmifiedPx(20) * 3 + getPx(FONT_SIZES.LEADING_M) * 6 // TODO: use responsive value instead
   }),
 
   ORDERED_COL_GAP: remify(18),

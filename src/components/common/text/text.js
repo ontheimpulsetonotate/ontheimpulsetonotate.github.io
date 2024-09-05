@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import TruncateMarkup from 'react-truncate-markup'
 import styled from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES } from '../../../constants/stylesConstants'
 import parserServices from '../../../services/parserServices'
 import mixins from '../../../utils/mixins'
 import { extractStyle } from '../../../utils/styleUtils'
@@ -70,7 +70,7 @@ const TextContainer = styled.div`
 
 const TextBodyContainer = styled.div`
   p {
-   ${mixins.paragraphSpacing(FONT_SIZES.LEADING_M)}
+   ${mixins.paragraphSpacing(FONT_SIZES_RESPONSIVE.LEADING_M)}
   }
 
   button {

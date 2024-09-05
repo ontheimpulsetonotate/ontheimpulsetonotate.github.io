@@ -1,6 +1,6 @@
 import { useHover, useMouse } from '@uidotdev/usehooks'
 import styled from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES } from '../../../constants/stylesConstants'
 import mixins from '../../../utils/mixins'
 import parserServices from '../../../services/parserServices'
 import { extractStyle, toggleStyle } from '../../../utils/styleUtils'
@@ -61,9 +61,10 @@ const PopUpCitation = styled.span`
   }
 
   font-family: ${FONT_FAMILIES.APERCU};
-  font-size: ${FONT_SIZES.SMALL};
+  ${mixins.dynamicSizes({ fontSize: FONT_SIZES_RESPONSIVE.SMALL })}
+
   &, p {
-    line-height: ${FONT_SIZES.LEADING_S};
+    ${mixins.dynamicSizes({ lineHeight: FONT_SIZES_RESPONSIVE.LEADING_XS })}
   }
 `
 

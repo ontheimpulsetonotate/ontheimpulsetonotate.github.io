@@ -1,5 +1,6 @@
 import { BreakptSizer } from './helpers/breakptSizer'
 
+export const breakptSorted = ['s', 'm', 'l', 'xl', 'xxl']
 
 export const remify = px => `${px / getRem(1)}rem`
 export const getPx = emString => parseFloat(emString.replace(/rem$/, '')) * getRem()
@@ -36,5 +37,3 @@ export const getSize = (breakptSizes) =>
 
 export const getRemSize = (breakptSizes) =>
   new BreakptSizer(breakptSizes).getSize(true)
-
-
