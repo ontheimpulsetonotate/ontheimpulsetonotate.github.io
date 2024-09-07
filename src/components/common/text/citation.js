@@ -1,11 +1,11 @@
 import { useHover, useMouse } from '@uidotdev/usehooks'
 import styled from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES } from '../../../constants/stylesConstants'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
 import mixins from '../../../utils/mixins'
 import parserServices from '../../../services/parserServices'
 import { extractStyle, toggleStyle } from '../../../utils/styleUtils'
 
-const Citation = ({ children, footnote, color, imgRef }) => {
+const Citation = ({ children, footnote, color, imgRef, fixedSize }) => {
   const [hoverRef, isHovering] = useHover()
   const [mouse] = useMouse()
 
@@ -26,9 +26,7 @@ const Citation = ({ children, footnote, color, imgRef }) => {
             right: isLeft ? undefined : `calc(100vw - ${mouse.x}px + ${SIZES.CITATION_OFFSET})`,
             top: !isTop ? undefined : `calc(${mouse.y}px + ${SIZES.CITATION_OFFSET})`,
             bottom: isTop ? undefined : `calc(100vh - ${mouse.y}px + ${SIZES.CITATION_OFFSET})`,
-            width: imgRef?.current ?
-              imgRef?.current?.getBoundingClientRect().width :
-              '25em' // TODO
+            width: !fixedSize ? imgRef?.current?.getBoundingClientRect().width : undefined
           }}
           $color={color}>
           {typeof footnote === 'string' ? parserServices.parse(footnote) : footnote}
@@ -48,7 +46,11 @@ const PopUpCitation = styled.span`
   ${mixins
     .chain()
     .highZIndex(2)
-    .border(1, { isBottom: false })}
+    .border(1, { isBottom: false })
+    .dynamicSizes({
+      fontSize: FONT_SIZES_RESPONSIVE.SMALL,
+      width: SIZES_RESPONSIVE.CITATION_WIDTH
+    })}
   border-color: ${extractStyle('$color')};
   position: fixed;
   display: block;
@@ -61,7 +63,7 @@ const PopUpCitation = styled.span`
   }
 
   font-family: ${FONT_FAMILIES.APERCU};
-  ${mixins.dynamicSizes({ fontSize: FONT_SIZES_RESPONSIVE.SMALL })}
+
 
   &, p {
     ${mixins.dynamicSizes({ lineHeight: FONT_SIZES_RESPONSIVE.LEADING_XS })}

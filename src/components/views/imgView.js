@@ -4,13 +4,13 @@ import { useMemo, useState } from 'react'
 import { SIZES } from '../../constants/stylesConstants'
 import apiServices from '../../services/apiServices'
 import { quickArray } from '../../utils/commonUtils'
-import { getOrderedData } from '../../utils/styleUtils'
+import { getImgViewFigureSize, getOrderedData } from '../../utils/styleUtils'
 import DragContainer from '../common/containers/dragContainer'
 import Img from '../common/img/img'
 
 
 const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
-  const imgSize = SIZES.getImgViewFigureSize()
+  const imgSize = getImgViewFigureSize()
   const [proportions, setProportions] = useState(Array(apiServices.imgData.length))
 
   const { width } = useWindowSize()
@@ -28,7 +28,7 @@ const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
     rows = rows.map(y => y + topMargin)
 
     const cols = quickArray(colCount)
-      .map(col => col * (SIZES.getImgViewFigureSize() + gap) + leftMargin)
+      .map(col => col * (getImgViewFigureSize() + gap) + leftMargin)
 
     return {
       orderedPositions: quickArray(proportions.length, i => ({

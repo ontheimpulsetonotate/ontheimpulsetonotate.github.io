@@ -1,3 +1,4 @@
+import breakpts from '../data/breakpoints'
 import { BreakptSizer } from './helpers/breakptSizer'
 
 export const breakptSorted = ['s', 'm', 'l', 'xl', 'xxl']
@@ -37,3 +38,18 @@ export const getSize = (breakptSizes) =>
 
 export const getRemSize = (breakptSizes) =>
   new BreakptSizer(breakptSizes).getSize(true)
+
+export const getBreakpt = () => {
+  const i = [...Object.values(breakpts), Infinity]
+    .sort()
+    .findIndex(breakpt => breakpt >= window.innerWidth) + 1
+  return breakptSorted[Math.min(i, breakptSorted.length - 1)]
+}
+
+// TODO
+export const desktopQueries = [
+  `(min-width: ${breakpts.m}px) and (max-width: ${breakpts.l - 1}px)`,
+  `(min-width: ${breakpts.l}px) and (max-width: ${breakpts.xl - 1}px)`,
+  `(min-width: ${breakpts.xl}px) and (max-width: ${breakpts.xxl - 1}px)`,
+  `(min-width: ${breakpts.xxl}px)`,
+]

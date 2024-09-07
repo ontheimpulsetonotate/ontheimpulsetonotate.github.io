@@ -118,17 +118,18 @@ const parseSheet = (html, isVisualEssay) => {
 
 const mainData = parseSheet(textHtml)
 const visualEssayData = parseSheet(noTextHtml, true)
-console.log(visualEssayData)
 
 const textData = mainData.filter(({ text, isOrphan }) => text && !isOrphan)
 const indexTabData = textData.filter(({ isInterview }) => !isInterview)
 const imgData = mainData
   .filter(({ isImgNode }) => isImgNode)
-  .map(nodeData => nodeData.getImgNodes())
+  .map(nodeData => nodeData.getImgNodes(mainData))
   .flat()
 const mixedData = mainData.filter(({ text }) => text)
+console.log(mainData, mixedData, imgData)
 
 const apiServices = {
+  mainData,
   imgData,
   textData,
   mixedData,

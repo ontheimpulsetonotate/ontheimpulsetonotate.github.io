@@ -71,7 +71,9 @@ const IndexTab = ({ onRowClick }) => {
     <IndexTabContainer
       style={{
         transition: validateString(shouldAnimate, `left ${TIMINGS.INDEX_SLIDE}ms ease-in-out`),
-        left: indexIsOpened ? `calc(${SIZES.OPENED_INDEX_LEFT_VALUE}vw - ${SIZES.PAGE_MARGIN} * 3)` : `calc(${SIZES.CLOSED_INDEX_LEFT_VALUE}vw - ${SIZES.PAGE_MARGIN})`,
+        left: indexIsOpened ?
+          `calc(${SIZES.OPENED_INDEX_LEFT_VALUE}vw - ${SIZES.PAGE_MARGIN} * 3)` :
+          `calc(${SIZES.CLOSED_INDEX_LEFT_VALUE}vw - ${SIZES.PAGE_MARGIN})`,
         cursor: validateString(!indexIsOpened, 'pointer')
       }}
       onClick={e => handleClick(e, true)}

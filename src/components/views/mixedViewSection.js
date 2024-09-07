@@ -1,7 +1,8 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 import { FRAGMENT_ID_PREFIX } from '../../constants/reactConstants'
-import { COLORS, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES, TIMINGS } from '../../constants/stylesConstants'
+import { COLORS, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE, TIMINGS } from '../../constants/stylesConstants'
+import apiServices from '../../services/apiServices'
 import parserServices from '../../services/parserServices'
 import { validateString } from '../../utils/commonUtils'
 import mixins from '../../utils/mixins'
@@ -28,7 +29,7 @@ const MixedViewSection = ({
   } = nodeData
   const containerRef = useRef()
   const imgs = useMemo(() =>
-    nodeData.getImgNodes().map((imgNodes, i) =>
+    nodeData.getImgNodes(apiServices.mainData).map((imgNodes, i) =>
       <MixedViewImg
         key={i}
         nodeData={imgNodes}
@@ -46,7 +47,6 @@ const MixedViewSection = ({
       {(isLeftContainer ? isLeft : !isLeft) && imgs}
     </ImgContainer>
   ), [isLeft, imgs])
-
 
   return (
     <SectionContainer
@@ -81,6 +81,9 @@ const ImgContainer = styled.div`
   box-sizing: border-box;
   flex-direction: column;
 
+  > span:not(:first-child) {
+    margin-top: ${SIZES.ELEM_MARGIN};
+  }
 
  figure {
     transition: opacity ${TIMINGS.MIXED_FIGURE_OPACITY}ms ease-in-out;
@@ -100,7 +103,7 @@ const TextContainer = styled.div`
   box-sizing: border-box;
   flex-direction: column;
 
-  p {
+  > p {
     ${mixins.chain()
     .dynamicSizes({ fontSize: FONT_SIZES_RESPONSIVE.LARGE })
     .paragraphSpacing(FONT_SIZES_RESPONSIVE.LEADING_DL)}
@@ -114,13 +117,32 @@ const getPadding = ({ $isInterview, $isFirstInterview }) =>
       SIZES.MIXED_VIEW_INTERVIEW_PADDING_TOP)
 
 const SectionContainer = styled.div`
-  ${mixins.grid}
+  display: flex;
   width: 100%;
   border-top: ${conditionalStyle('$afterVisualEssay', `1px solid ${COLORS.BROWN}`)};
   border-bottom: ${conditionalStyle('$beforeVisualEssay', `1px solid ${COLORS.BROWN}`)};
 
+  &:first-child {
+    ${TextContainer},
+    ${ImgContainer} {
+      padding-top: ${SIZES.MIXED_VIEW_FIRST_PADDING_TOP};
+    }
+  }
+
+  &:not(:first-child) {
+    ${TextContainer},
+    ${ImgContainer} {
+      padding-top: ${getPadding};
+    }
+  }
+
   ${TextContainer} {
-    padding-top: ${getPadding};
+    ${mixins
+    .dynamicSizes({
+      width: SIZES_RESPONSIVE.MIXED_VIEW_SECTION_WIDTH
+    })}
+    flex: none;
+
     padding-bottom: ${({ $beforeVisualEssay, ...rest }) => $beforeVisualEssay ? getPadding({ ...rest }) : undefined};
 
     &, * {
@@ -128,9 +150,9 @@ const SectionContainer = styled.div`
     }
   }
 
-  ${ImgContainer} {
+  /* ${ImgContainer} {
     padding-top: ${getPadding};
-  }
+  } */
 `
 
 export default MixedViewSection

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { COLORS, SIZES } from '../../constants/stylesConstants'
+import { COLORS, SIZES, SIZES_RESPONSIVE } from '../../constants/stylesConstants'
 import useImagesLoaded from '../../hooks/useImagesLoaded'
 import { getVh } from '../../utils/sizeUtils'
 import Figure from '../common/img/figure'
@@ -29,7 +29,7 @@ const MixedViewImg = ({ nodeData, containerY }) => {
         style={{ opacity }}
         nodeData={nodeData}
         ref={imgRef}
-        maxSize={SIZES.MIXED_VIEW_FIGURUE_SIZE}
+        maxSize={SIZES_RESPONSIVE.MIXED_VIEW_FIGURUE_SIZE}
         bracketNumbers />
     </Citation>
   )

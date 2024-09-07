@@ -1,9 +1,13 @@
 import styled from 'styled-components'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import _ from 'lodash'
+import mixins from '../../../utils/mixins'
+import { extractStyle } from '../../../utils/styleUtils'
 
 const FilteredImg = ({ backgroundColor, maxSize, width, height, handleLoad = _.noop, ...rest }) => {
   const [isLoaded, setIsLoaded] = useState(false)
+
+  // useEffect(() => console.log(width), [])
 
   const onLoad = () => {
     handleLoad()
@@ -11,10 +15,6 @@ const FilteredImg = ({ backgroundColor, maxSize, width, height, handleLoad = _.n
   }
   return (
     <FilterImgContainer
-      $backgroundColor={backgroundColor}
-      $width={width}
-      $height={height}
-      $maxSize={maxSize}
       style={{
         backgroundColor,
         opacity: isLoaded ? 1 : 0,
@@ -22,12 +22,9 @@ const FilteredImg = ({ backgroundColor, maxSize, width, height, handleLoad = _.n
       <StyledImg
         alt=''
         {...rest}
-        style={{
-          width,
-          height,
-          maxWidth: maxSize,
-          maxHeight: maxSize
-        }}
+        $width={width}
+        $height={height}
+        $maxSize={maxSize}
         onLoad={onLoad} />
     </FilterImgContainer>
   )
@@ -43,6 +40,13 @@ const StyledImg = styled.img`
   object-fit: cover;
   filter: grayscale(100%);
   mix-blend-mode: screen;
+  ${({ $width, $height, $maxSize }) => mixins
+    .dynamicSizes({
+      width: $width,
+      height: $height,
+      maxWidth: $maxSize,
+      maxHeight: $maxSize
+    })}
 `
 
 export default FilteredImg

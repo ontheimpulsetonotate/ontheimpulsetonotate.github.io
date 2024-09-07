@@ -109,7 +109,7 @@ const parseVisualEssay = visualEssay =>
     )
     return {
       nodeData,
-      top: Math.max(top - 990, 0) * getVw() / 1512, // TODO
+      top,
       width,
       left,
       alignBottom,

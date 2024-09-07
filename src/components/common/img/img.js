@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { useEffect } from 'react'
-import { SIZES } from '../../../constants/stylesConstants'
+import { SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
 import useImagesLoaded from '../../../hooks/useImagesLoaded'
 import Figure from './figure'
 
@@ -26,7 +26,7 @@ const Img = ({
       id={id}
       nodeData={nodeData}
       src={imgLink}
-      width={SIZES.IMG_VIEW_FIGURE_SIZE}
+      width={SIZES_RESPONSIVE.IMG_VIEW_FIGURE_SIZE}
       noCaption={!isOrdered}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut} />

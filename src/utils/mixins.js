@@ -1,9 +1,8 @@
 import * as changeCase from 'change-case'
 import _ from 'lodash'
 import { COLORS, SIZES } from '../constants/stylesConstants'
-import breakpts from '../data/breakpoints'
-import { arrayify, loopObject, quickArray, validateString } from './commonUtils'
-import { getSize } from './sizeUtils'
+import { arrayify, loopObject, validateString } from './commonUtils'
+import { getSize, desktopQueries } from './sizeUtils'
 import Size from './helpers/size'
 
 const flex = (
@@ -54,7 +53,10 @@ const border = (strokeWidth = 1, { isBottom = true, color = COLORS.BROWN } = {})
 
 const grid = () => `
   display: grid;
-  grid-template-columns: calc((${SIZES.CLOSED_INDEX_LEFT_VALUE}vw - ${SIZES.MIXED_VIEW_SECTION_WIDTH}) / 2) ${SIZES.MIXED_VIEW_SECTION_WIDTH} 1fr;
+  ${dynamicSizes({
+
+})}
+  grid-template-columns: 1fr ${SIZES.MIXED_VIEW_SECTION_WIDTH} 1fr;
 `
 
 const dynamicSizes = config => {
@@ -63,8 +65,13 @@ const dynamicSizes = config => {
     let cssStyles = ''
     loopObject(config, (styleName, sizes) => {
       styleName = changeCase.kebabCase(styleName)
+      sizes = arrayify(sizes)
       const sizeValue = sizes[i] ?? fallbackValues[styleName]
       fallbackValues[styleName] = sizeValue
+
+      if (!sizeValue) return
+      if (typeof sizeValue === 'string')
+        return cssStyles += (`${styleName}: ${sizeValue};`)
 
       const nextSizeValue = sizes[i + 1]
 
@@ -74,16 +81,7 @@ const dynamicSizes = config => {
 
       cssStyles += (`${styleName}: ${validateString(size?.css)};`)
     })
-
-    // TODO?
-    const queries = [
-      `(min-width: ${breakpts.m}px) and (max-width: ${breakpts.l - 1}px)`,
-      `(min-width: ${breakpts.l}px) and (max-width: ${breakpts.xl - 1}px)`,
-      `(min-width: ${breakpts.xl}px) and (max-width: ${breakpts.xxl - 1}px)`,
-      `(min-width: ${breakpts.xxl}px)`,
-    ]
-
-    return cssStatement += `@media screen and ${queries[i]} {${cssStyles}};`
+    return cssStatement += `@media screen and ${desktopQueries[i]} {${cssStyles}};`
   }, '')
 }
 
@@ -91,7 +89,6 @@ const mixins = {
   flex,
   highZIndex,
   draggable,
-
   paragraphSpacing,
   noScrollBar,
   underline,

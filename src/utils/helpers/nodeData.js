@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { FRAGMENT_TYPES, VISUAL_ESSAY_IMG_NUM, VISUAL_ESSAY_TITLE } from '../../constants/apiConstants'
+import { FRAGMENT_TYPES, VISUAL_ESSAY_TITLE } from '../../constants/apiConstants'
 import { padNumber, quickArray, stringsAreEqual } from '../commonUtils'
 
 class NodeData {
@@ -41,6 +41,7 @@ class NodeData {
   }
 
   getImgLinks() {
+    // /console.log(this.fullNumRange)
     const imgLinks = this.fullNumRange
       .map(num => this.getImgLink(num))
     return this.imgLinks = imgLinks.filter(l => l)
@@ -58,10 +59,20 @@ class NodeData {
     if (folder) return `${folder}/REF_${padNumber(imgNum)}.webp`
   }
 
-  getImgNodes() {
-    return this.imgLinks.map(
-      (imgLink, i) =>
-        Object.assign(new NodeData(), this, { imgNum: [this.fullNumRange[i]], imgLink }))
+
+  getImgNodes(allData) {
+    const sameTitle = this.isInterview ?
+      [this] :
+      allData.filter(data => data.sectionTitle === this.sectionTitle)
+
+
+    const result = sameTitle.map((data) =>
+      data.imgLinks.map((imgLink, i) =>
+        Object.assign(new NodeData(), data, { imgNum: [data.fullNumRange[i]], imgLink })
+      )
+    ).flat()
+
+    return result
   }
 
   get fullNumRange() {

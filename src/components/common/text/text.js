@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import TruncateMarkup from 'react-truncate-markup'
 import styled from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES } from '../../../constants/stylesConstants'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
 import parserServices from '../../../services/parserServices'
 import mixins from '../../../utils/mixins'
 import { extractStyle } from '../../../utils/styleUtils'
@@ -57,10 +57,14 @@ const Text = ({
 }
 
 const TextContainer = styled.div`
-  ${({ $color }) => mixins.border(1, { isBottom: false, color: $color })}
-  width: ${SIZES.TEXT_WIDTH};
-  // width: ${SIZES.TEXT_WIDTH_SIZE_L.css};
-  padding: ${SIZES.ELEM_MARGIN};
+  ${({ $color }) => mixins
+    .chain()
+    .border(1, { isBottom: false, color: $color })
+    .dynamicSizes({
+      width: SIZES_RESPONSIVE.TEXT_WIDTH,
+      padding: SIZES_RESPONSIVE.TEXT_PADDING
+    })}
+  box-sizing: border-box;
   background-color: white;
 
   &, * {
