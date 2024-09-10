@@ -1,10 +1,14 @@
+import React from 'react'
 import styled from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../constants/stylesConstants'
-import mixins from '../utils/mixins'
-import FullContainer from './common/containers/fullContainer'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE } from '../../constants/stylesConstants'
+import useIsMobile from '../../hooks/useIsMobile'
+import mixins from '../../utils/mixins'
+import FullContainer from '../common/containers/fullContainer'
 
 const About = () => {
-
+  const isMobile = useIsMobile()
+  const Container = isMobile ? MobileContainer : DesktopContainer
+  const InnerContainer = isMobile ? InnerMobileContainer : InnerDesktopContainer
 
   return (
     <Container>
@@ -42,43 +46,59 @@ const About = () => {
   )
 }
 
-const Container = styled(FullContainer)`
-  ${mixins.grid}
+const DesktopContainer = styled(FullContainer)`
+  ${mixins.flex('center', 'center')}
   background-color: ${COLORS.BROWN};
-`
-
-const InnerContainer = styled.div`
-  grid-column-start: 2;
-  margin-top: ${SIZES.ABOUT_SECTION_TOP};
-  padding: 0 ${SIZES.MIXED_VIEW_TEXT_PADDING};
-
-  h3 {
-    font-family: ${FONT_FAMILIES.APERCU_COND};
-    margin-bottom: ${SIZES.HEADER_MARGIN};
-  }
+  min-height: 800px;
 
   * {
-    font-size: ${FONT_SIZES.LARGE};
-    line-height:  ${FONT_SIZES.LEADING_DL};
-    margin-bottom: ${FONT_SIZES.LEADING_DL};
+  ${mixins
+    .dynamicSizes({
+      fontSize: FONT_SIZES_RESPONSIVE.LARGE
+    })}
+    line-height:  ${FONT_SIZES.LEADING_L.css};
+    margin-bottom: ${FONT_SIZES.LEADING_L.css};
   }
 
   hr {
-    margin: ${SIZES.ABOUT_SECTION_DIVIDER_MARGIN} 0;
+    margin: ${SIZES.ELEM_MARGIN_DESKTOP.css} 0;
     background-color: ${COLORS.LIGHT_BEIGE};
     height: 1px;
     border: 0;
   }
 `
 
+const MobileContainer = styled(DesktopContainer)`
+  padding: 0 ${SIZES.PAGE_MARGIN_MOBILE.css};
+  align-items: initial;
+  box-sizing: border-box;
+  min-height: auto;
+  overflow-y: scroll;
+
+`
+
+const InnerDesktopContainer = styled.div`
+  ${mixins
+    .dynamicSizes({
+      width: SIZES_RESPONSIVE.MIXED_VIEW_SECTION_WIDTH
+    })}
+  flex: none;
+  padding: 0 ${SIZES.MIXED_VIEW_TEXT_PADDING.css};
+`
+
+const InnerMobileContainer = styled.div`
+  max-width: ${SIZES.PAGE_MAX_WIDTH.css};
+  padding-top: ${SIZES.PAGE_MARGIN_TOP.css};
+`
+
 const CreditContainer = styled.div`
-  margin-top: calc(${FONT_SIZES.LEADING_DL} * 2);
+  margin-top: ${FONT_SIZES.LEADING_L.mult(2).css};
   text-transform: uppercase;
 
   p {
     margin: 0;
     font-family: ${FONT_FAMILIES.APERCU_COND};
-    font-size: ${FONT_SIZES.REGULAR};
+    font-size: ${FONT_SIZES.REGULAR.css};
   }
 `
 

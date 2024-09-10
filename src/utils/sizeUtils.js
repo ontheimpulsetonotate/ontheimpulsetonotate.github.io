@@ -1,7 +1,7 @@
 import breakpts from '../data/breakpoints'
 import { BreakptSizer } from './helpers/breakptSizer'
 
-export const breakptSorted = ['s', 'm', 'l', 'xl', 'xxl']
+export const breakptSorted = ['xs', 's', 'm', 'l', 'xl', 'xxl']
 
 export const remify = px => `${px / getRem(1)}rem`
 export const getPx = emString => parseFloat(emString.replace(/rem$/, '')) * getRem()
@@ -33,10 +33,10 @@ export const getVh = (percentage = 100) => percentage / 100 * window.innerHeight
 export const getRem = (multiplier = 1) => parseFloat(getComputedStyle(
   document.documentElement).fontSize) * multiplier
 
-export const getSize = (breakptSizes) =>
+export const getSize = breakptSizes =>
   new BreakptSizer(breakptSizes).getSize(false)
 
-export const getRemSize = (breakptSizes) =>
+export const getRemSize = breakptSizes =>
   new BreakptSizer(breakptSizes).getSize(true)
 
 export const getBreakpt = () => {
@@ -48,8 +48,19 @@ export const getBreakpt = () => {
 
 // TODO
 export const desktopQueries = [
+  `(min-width: ${breakpts.s}px) and (max-width: ${breakpts.m - 1}px)`,
   `(min-width: ${breakpts.m}px) and (max-width: ${breakpts.l - 1}px)`,
   `(min-width: ${breakpts.l}px) and (max-width: ${breakpts.xl - 1}px)`,
   `(min-width: ${breakpts.xl}px) and (max-width: ${breakpts.xxl - 1}px)`,
   `(min-width: ${breakpts.xxl}px)`,
 ]
+
+export const mobileQueries = [
+  `(max-width: ${breakpts.xs - 1}px)`,
+  `(min-width: ${breakpts.xs}px) and (max-width: ${breakpts.s - 1}px)`,
+  `(min-width: ${breakpts.s}px) and (max-width: ${breakpts.m - 1}px)`
+]
+
+const MOBILE_BP = breakpts.s
+export const MOBILE_QUERY = `max-width: ${MOBILE_BP}px`
+export const DESKTOP_QUERY = `min-width: ${MOBILE_BP + 1}px`

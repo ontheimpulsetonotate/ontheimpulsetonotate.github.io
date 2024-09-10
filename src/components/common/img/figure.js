@@ -12,6 +12,8 @@ const Figure = forwardRef(function Figure({
   style,
   color,
   maxSize,
+  maxWidth,
+  maxHeight,
   width,
   height,
   bracketNumbers = false,
@@ -39,7 +41,8 @@ const Figure = forwardRef(function Figure({
       <FilteredImg
         src={imgLink}
         backgroundColor={color}
-        maxSize={maxSize}
+        maxWidth={maxWidth ?? maxSize}
+        maxHeight={maxHeight ?? maxSize}
         width={width}
         height={height}
         handleLoad={() => setIsLoaded(true)} />
@@ -50,11 +53,11 @@ const Figure = forwardRef(function Figure({
 
 const ImgContainer = styled.figure`
   > figcaption > p {
-    font-size: ${FONT_SIZES.SMALL};
+    font-size: ${FONT_SIZES.SMALL.css};
     color: ${extractStyle('$color')};
     font-family: ${FONT_FAMILIES.APERCU_COND};
     font-weight: 500;
-    margin-top: ${SIZES.FIGURE_MARGIN_TOP};
+    margin-top: ${SIZES.FIGURE_MARGIN_TOP.css};
   }
 `
 

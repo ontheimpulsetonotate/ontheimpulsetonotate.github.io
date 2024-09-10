@@ -1,31 +1,31 @@
 import _ from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { DATA_KEYS } from '../constants/apiConstants'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES, TIMINGS } from '../constants/stylesConstants'
-import apiServices from '../services/apiServices'
-import { getDataStringSorter, padNumber, validateString } from '../utils/commonUtils'
-import mixins from '../utils/mixins'
-import { addEventListener } from '../utils/reactUtils'
-import Header from './common/header'
-import FilteredImg, { FilterImgContainer } from './common/img/filteredImg'
-import SortArrow from './common/text/sortArrow'
+import { DATA_KEYS } from '../../constants/apiConstants'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES, SIZES_RESPONSIVE, TIMINGS } from '../../constants/stylesConstants'
+import apiServices from '../../services/apiServices'
+import { getDataStringSorter, padNumber, validateString } from '../../utils/commonUtils'
+import Size from '../../utils/helpers/size'
+import mixins from '../../utils/mixins'
+import { addEventListener } from '../../utils/reactUtils'
+import Header from '../common/header'
+import FilteredImg, { FilterImgContainer } from '../common/img/filteredImg'
+import SortArrow from '../common/text/sortArrow'
 
 
-const IndexTab = ({ onRowClick }) => {
+const IndexDesktop = ({ onRowClick }) => {
   const [indexIsOpened, setIndexIsOpened] = useState(false)
   const [shouldAnimate, setShouldAnimate] = useState(false)
   const [sort, setSort] = useState({ index: 0, isAscending: true })
   const [hoverIndex, setHoverIndex] = useState()
-  const [imgIsLoaded, setImgIsLoaded] = useState()
 
   const data = apiServices.indexTabData
 
   const headers = [
-    ['artist', () => _.sortBy(data, frag => frag.imgNum[0])],
+    ['reference', () => _.sortBy(data, frag => frag.imgNum[0])],
     ['medium', () => [...data].sort(getDataStringSorter(DATA_KEYS.MEDIUM))],
     ['section', () => [...data].sort(getDataStringSorter(DATA_KEYS.SECTION_TITLE))],
-    ['page', () => _.sortBy(data, frag => frag.pageNum[0])]
+    ['read', () => _.sortBy(data, frag => frag.pageNum[0])]
   ]
 
   const handleClick = (e, state) => {
@@ -50,30 +50,19 @@ const IndexTab = ({ onRowClick }) => {
     setShouldAnimate(true)
   }))
 
-  const { imgLink } = sortedData[hoverIndex] ?? {}
-
-  useEffect(() => {
-    if (!imgLink) return
-    const img = document.createElement('img')
-    img.onload = () => setImgIsLoaded(true)
-    img.src = imgLink
-  }, [hoverIndex])
-
-  const handleMouseEnter = i => {
-    setHoverIndex(i)
-    setImgIsLoaded(false)
-  }
-
+  const { imgLinks } = sortedData[hoverIndex] ?? {}
+  const imgLink = imgLinks?.[0]
+  const handleMouseEnter = i => setHoverIndex(i)
 
   const buttonFocus = indexIsOpened ? undefined : -1
 
   return (
-    <IndexTabContainer
+    <IndexDesktopContainer
       style={{
         transition: validateString(shouldAnimate, `left ${TIMINGS.INDEX_SLIDE}ms ease-in-out`),
         left: indexIsOpened ?
-          `calc(${SIZES.OPENED_INDEX_LEFT_VALUE}vw - ${SIZES.PAGE_MARGIN} * 3)` :
-          `calc(${SIZES.CLOSED_INDEX_LEFT_VALUE}vw - ${SIZES.PAGE_MARGIN})`,
+          SIZES.OPENED_INDEX_LEFT_VALUE.sub(SIZES.PAGE_MARGIN_DESKTOP.mult(3)).css :
+          SIZES.CLOSED_INDEX_LEFT_VALUE.sub(SIZES.PAGE_MARGIN_DESKTOP).css,
         cursor: validateString(!indexIsOpened, 'pointer')
       }}
       onClick={e => handleClick(e, true)}
@@ -84,11 +73,12 @@ const IndexTab = ({ onRowClick }) => {
           <button
             onClick={e => handleClick(e, false)}
             tabIndex={buttonFocus}>[CLOSE]</button>}
-        {hoverIndex !== undefined && imgIsLoaded &&
+        {hoverIndex !== undefined &&
           <FilteredImg
-            backgroundColor={COLORS.BROWN}
             src={imgLink}
-            maxSize={SIZES.INDEX_TAB_FIGURE_SIZE} />}
+            backgroundColor={COLORS.BROWN}
+            maxWidth={SIZES_RESPONSIVE.INDEX_TAB_FIGURE_SIZE}
+            maxHeight={SIZES_RESPONSIVE.INDEX_TAB_FIGURE_SIZE} />}
       </HeaderContainer>
       <TableContainer>
         <TableHead>
@@ -130,23 +120,23 @@ const IndexTab = ({ onRowClick }) => {
             <p>{medium}</p>
             <p>{sectionTitle}</p>
             <p>
-              {!!pageNum.length && `P. ${pageNum.map(num => padNumber(num)).join(' — ')}`}
+              {!!pageNum.length && `P. ${pageNum.map(num => padNumber(num)).join('—')}`}
             </p>
           </Row>
         }
         )}
       </TableContainer>
-    </IndexTabContainer>
+    </IndexDesktopContainer>
   )
 }
 
-const IndexTabContainer = styled.div`
+const IndexDesktopContainer = styled.div`
 ${mixins.highZIndex(4)}
-  width: ${100 - SIZES.OPENED_INDEX_LEFT_VALUE}vw;
+  width: ${Size.subFromFullWidth(SIZES.OPENED_INDEX_LEFT_VALUE).css};
   height: 100vh;
   position: absolute;
   top: 0;
-  padding: 0 ${SIZES.PAGE_MARGIN};
+  padding: 0 ${SIZES.PAGE_MARGIN_DESKTOP.css};
 
   background-color: ${COLORS.LIGHT_BEIGE};
   user-select: none;
@@ -155,18 +145,18 @@ ${mixins.highZIndex(4)}
 const TableContainer = styled.div`
   ${mixins.noScrollBar}
   position: absolute;
-  width: calc(100% - ${SIZES.PAGE_MARGIN} * 2);
-  top: ${SIZES.INDEX_STICKY_TOP};
+  width: calc(100% - ${SIZES.PAGE_MARGIN_DESKTOP.mult(2).css});
+  top: ${SIZES.INDEX_STICKY_TOP.css};
   overflow-y: scroll;
-  height: calc(100vh - ${SIZES.INDEX_STICKY_TOP});
+  height: ${Size.subFromFullHeight(SIZES.INDEX_STICKY_TOP).css};
 `
 const HeaderContainer = styled(Header)`
   ${mixins.flex('initial', 'space-between')}
 
   ${FilterImgContainer} {
     position: absolute;
-    top: ${SIZES.PAGE_MARGIN};
-    right: ${SIZES.PAGE_MARGIN};
+    top: ${SIZES.PAGE_MARGIN_DESKTOP.css};
+    right: ${SIZES.PAGE_MARGIN_DESKTOP.css};
   }
 `
 
@@ -174,14 +164,18 @@ const Row = styled.div`
   ${mixins.border()}
   width: 100%;
   display: grid;
-  grid-template-columns: ${SIZES.INDEX_ARTIST_WIDTH} ${SIZES.INDEX_MEDIUM_WIDTH} 1fr ${SIZES.INDEX_PAGE_NUM_WIDTH};
+  grid-template-columns: ${SIZES.INDEX_ARTIST_WIDTH} ${SIZES.INDEX_MEDIUM_WIDTH} 1fr ${SIZES.INDEX_PAGE_NUM_WIDTH.css};
   cursor: pointer;
 
   p {
     font-family: ${FONT_FAMILIES.APERCU_COND};
     font-weight: normal;
-    line-height: ${FONT_SIZES.LEADING_L};
+    line-height: ${FONT_SIZES.LEADING_M.css};
     text-transform: uppercase;
+    margin: 0.75em 0;
+    &:not(:last-child){
+      margin-right: 0.25em;
+    }
   }
 
   th {
@@ -212,7 +206,7 @@ const TableHead = styled(Row)`
 `
 
 const HoverArrow = styled.span`
-  padding-right: ${SIZES.ARROW_PADDING};
+  padding-right: ${SIZES.ARROW_PADDING.css};
 `
 
-export default IndexTab
+export default IndexDesktop

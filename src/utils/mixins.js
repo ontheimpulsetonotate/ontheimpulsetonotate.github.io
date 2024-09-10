@@ -1,8 +1,8 @@
 import * as changeCase from 'change-case'
 import _ from 'lodash'
 import { COLORS, SIZES } from '../constants/stylesConstants'
-import { arrayify, loopObject, validateString } from './commonUtils'
-import { getSize, desktopQueries } from './sizeUtils'
+import { arrayify, loopObject, quickArray, validateString } from './commonUtils'
+import { getSize, desktopQueries, mobileQueries } from './sizeUtils'
 import Size from './helpers/size'
 
 const flex = (
@@ -23,12 +23,12 @@ const draggable = () => `
   position: absolute;
 `
 
-const paragraphSpacing = lineHeights => {
+const paragraphSpacing = (lineHeights, isMobile) => {
   const string = `
-  ${dynamicSizes({ lineHeight: lineHeights })};
+  ${dynamicSizes({ lineHeight: lineHeights }, isMobile)};
 
   &:not(:first-of-type){
-    ${dynamicSizes({ paddingTop: lineHeights })};
+    ${dynamicSizes({ paddingTop: lineHeights }, isMobile)};
   }
 `
   return string
@@ -44,30 +44,26 @@ const noScrollBar = () => `
 
 const underline = () => `
   text-decoration: underline;
-  text-underline-offset: ${SIZES.UNDERLINE_OFFSET};
+  text-underline-offset: ${SIZES.UNDERLINE_OFFSET.css};
 `
 
 const border = (strokeWidth = 1, { isBottom = true, color = COLORS.BROWN } = {}) => `
   border${validateString(isBottom, '-bottom')}: ${color} ${strokeWidth}px solid;
 `
 
-const grid = () => `
-  display: grid;
-  ${dynamicSizes({
 
-})}
-  grid-template-columns: 1fr ${SIZES.MIXED_VIEW_SECTION_WIDTH} 1fr;
-`
-
-const dynamicSizes = config => {
+const dynamicSizes = (config, isMobile) => {
   const fallbackValues = {}
-  return ['m', 'l', 'xl', 'xxl'].reduce((cssStatement, _, i, breakpoints) => {
+  const breakpts = isMobile ? [undefined, 'xs', 's', 'm'] : ['s', 'm', 'l', 'xl', 'xxl']
+  const queries = isMobile ? mobileQueries : desktopQueries
+  return breakpts.reduce((cssStatement, _, i, breakpoints) => {
     let cssStyles = ''
     loopObject(config, (styleName, sizes) => {
       styleName = changeCase.kebabCase(styleName)
-      sizes = arrayify(sizes)
+      sizes = [arrayify(sizes)[0], ...arrayify(sizes)]
       const sizeValue = sizes[i] ?? fallbackValues[styleName]
       fallbackValues[styleName] = sizeValue
+
 
       if (!sizeValue) return
       if (typeof sizeValue === 'string')
@@ -75,13 +71,13 @@ const dynamicSizes = config => {
 
       const nextSizeValue = sizes[i + 1]
 
-      const size = nextSizeValue ?
+      const size = (nextSizeValue && sizeValue !== nextSizeValue) ?
         getSize({ [breakpoints[i]]: sizeValue, [breakpoints[i + 1]]: nextSizeValue }) :
         new Size(sizeValue)
 
       cssStyles += (`${styleName}: ${validateString(size?.css)};`)
     })
-    return cssStatement += `@media screen and ${desktopQueries[i]} {${cssStyles}};`
+    return cssStatement += `@media screen and ${queries[i]} {${cssStyles}};`
   }, '')
 }
 
@@ -93,7 +89,6 @@ const mixins = {
   noScrollBar,
   underline,
   border,
-  grid,
   dynamicSizes,
   chain: function () {
     const chainedObject = {}

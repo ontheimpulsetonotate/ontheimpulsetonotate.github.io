@@ -5,8 +5,9 @@ import ProjectCitation from '../components/common/text/projectCitation'
 import TextHeader from '../components/common/text/textHeader'
 import { BLEED_DIRECTIONS } from '../constants/apiConstants'
 import { COLORS } from '../constants/stylesConstants'
+import Size from '../utils/helpers/size'
 import { getVw } from '../utils/sizeUtils'
-import { spanCol } from '../utils/styleUtils'
+import { convertVisualEssayImgSize, spanCol } from '../utils/styleUtils'
 import apiServices from './apiServices'
 
 const _parse = (text, options) => text ? parse(text, options) : undefined
@@ -25,6 +26,7 @@ const parseTextView = (text, {
   parseCitation,
   footnotes,
   projects,
+  onHover,
   handleButtonClick,
 } = {}) => {
   let footnoteIndex = 0
@@ -37,6 +39,7 @@ const parseTextView = (text, {
   const options = {
     replace: domNode => {
       const { children } = domNode
+
       if (domNode.tagName === 'h3')
         return <></>
 
@@ -55,7 +58,8 @@ const parseTextView = (text, {
                   color={COLORS.BLUE}
                   footnote={project ?
                     parseProject(project) :
-                    footnotes?.[footnoteIndex + 1]}>
+                    footnotes?.[footnoteIndex + 1]}
+                  onHover={onHover}>
                   {data}
                 </Citation>
               footnoteIndex++
@@ -94,22 +98,23 @@ const parseTextView = (text, {
   )
 }
 
-const parseVisualEssay = visualEssay =>
+const parseVisualEssay = (visualEssay, isMobile = false, isBlueInsights = false) =>
   visualEssay.map(([imgNum, colStart, colEnd, top, alignBottom, bleedDirection]) => {
     const nodeData = apiServices
       .visualEssayData
       .find(data => data.imgNum[0] === imgNum)
     nodeData.imgLink = nodeData.imgLinks[0]
     const colSpan = [colStart, colEnd]
-    const width = spanCol(colSpan[1] - colSpan[0], bleedDirection ? 1 : 0)
+    const width = spanCol(isMobile, colSpan[1] - colSpan[0], bleedDirection ? 1 : 0)
     const left = spanCol(
+      isMobile,
       colSpan[0] - 1,
       colSpan[0] % 1 ? 0 : bleedDirection === BLEED_DIRECTIONS.LEFT ? 0 : 1,
       1
     )
     return {
       nodeData,
-      top,
+      top: new Size(convertVisualEssayImgSize(top, isMobile, isBlueInsights)),
       width,
       left,
       alignBottom,

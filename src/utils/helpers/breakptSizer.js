@@ -30,6 +30,7 @@ export class BreakptSizer {
     const lowerSize = this.lowerSize * remFactor
     const upperSize = this.upperSize * remFactor
     const { vw, rem } = this.getSlope(lowerSize, upperSize)
+
     return new Size({ vw, vh: this.vh * 100, rem: _.round(rem, 3) })
   }
 

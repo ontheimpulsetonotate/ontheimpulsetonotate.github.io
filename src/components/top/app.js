@@ -2,14 +2,17 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { HashRouter } from 'react-router-dom'
 
-import Main from './main'
+import useIsMobile from '../../hooks/useIsMobile'
+import Desktop from './desktop'
+import Mobile from './mobile'
 
 gsap.registerPlugin(useGSAP)
 
 const App = () => {
+  const isMobile = useIsMobile()
   return (
     <HashRouter>
-      <Main />
+      {isMobile ? <Mobile /> : <Desktop />}
     </HashRouter>
   )
 }

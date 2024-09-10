@@ -3,10 +3,10 @@ import { FONT_SIZES, SIZES } from '../../constants/stylesConstants'
 
 
 const Header = styled.div`
-  padding-top: ${SIZES.PAGE_MARGIN};
+  padding-top: ${SIZES.PAGE_MARGIN_DESKTOP.css};
 
   menu, div {
-    line-height: ${FONT_SIZES.LEADING_S};
+    line-height: ${FONT_SIZES.LEADING_S.css};
   }
 `
 

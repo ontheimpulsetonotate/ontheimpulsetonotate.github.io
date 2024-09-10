@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
-import { COLORS, SIZES, SIZES_RESPONSIVE } from '../../constants/stylesConstants'
-import useImagesLoaded from '../../hooks/useImagesLoaded'
-import { getVh } from '../../utils/sizeUtils'
-import Figure from '../common/img/figure'
-import Citation from '../common/text/citation'
-import ProjectCitation from '../common/text/projectCitation'
+import { COLORS, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
+import useImagesLoaded from '../../../hooks/useImagesLoaded'
+import { getVh } from '../../../utils/sizeUtils'
+import Figure from '../../common/img/figure'
+import Citation from '../../common/text/citation'
+import ProjectCitation from '../../common/text/projectCitation'
+import useIsMobile from '../../../hooks/useIsMobile'
 
 const MixedViewImg = ({ nodeData, containerY }) => {
   const { imgLink, isInterview } = nodeData
   const imgRef = useRef()
+
+  const isMobile = useIsMobile()
   const [isShowing, setIsShowing] = useState(false)
   const { loaded } = useImagesLoaded(imgLink)
 
@@ -18,7 +21,7 @@ const MixedViewImg = ({ nodeData, containerY }) => {
     else setIsShowing(false)
   }, [containerY])
 
-  const opacity = isShowing && loaded ? 1 : 0
+  const opacity = (isShowing || isMobile) && loaded ? 1 : 0
 
   return (
     <Citation
@@ -26,10 +29,11 @@ const MixedViewImg = ({ nodeData, containerY }) => {
       footnote={opacity ? <ProjectCitation {...nodeData} /> : null}
       imgRef={imgRef}>
       <Figure
-        style={{ opacity }}
+        style={{ opacity: isMobile ? undefined : opacity }}
         nodeData={nodeData}
+        width={isMobile ? '100%' : undefined}
         ref={imgRef}
-        maxSize={SIZES_RESPONSIVE.MIXED_VIEW_FIGURUE_SIZE}
+        maxSize={isMobile ? undefined : SIZES_RESPONSIVE.MIXED_VIEW_FIGURUE_SIZE}
         bracketNumbers />
     </Citation>
   )

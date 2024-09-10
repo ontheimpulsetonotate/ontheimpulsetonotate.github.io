@@ -1,19 +1,20 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { VISUAL_ESSAY_IMG_NUM } from '../../constants/apiConstants'
-import { FRAGMENT_ID_PREFIX } from '../../constants/reactConstants'
-import { SIZES } from '../../constants/stylesConstants'
-import visualEssays from '../../data/visualEssays'
-import apiServices from '../../services/apiServices'
-import { arrayify } from '../../utils/commonUtils'
-import { addEventListener } from '../../utils/reactUtils'
-import FullContainer from '../common/containers/fullContainer'
+import { VISUAL_ESSAY_IMG_NUM } from '../../../constants/apiConstants'
+import { FRAGMENT_ID_PREFIX } from '../../../constants/reactConstants'
+import { SIZES } from '../../../constants/stylesConstants'
+import visualEssays from '../../../data/visualEssays'
+import useIsMobile from '../../../hooks/useIsMobile'
+import apiServices from '../../../services/apiServices'
+import { addEventListener } from '../../../utils/reactUtils'
+import FullContainer from '../../common/containers/fullContainer'
 import MixedViewSection from './mixedViewSection'
-import VisualEssay from './visualEssay'
+import VisualEssay from './visualEssay/visualEssay'
 
 const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
   const containerRef = useRef()
   const [containerY, setContainerY] = useState(0)
+  const device = useIsMobile() ? 'mobile' : 'desktop'
 
   useEffect(() => {
     const container = containerRef.current
@@ -41,6 +42,8 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
 
       const afterVisualEssay = willBeAfterVisualEssay
       willBeAfterVisualEssay = hasVisualEssay
+      const isBlueInsights = imgNum[0] === VISUAL_ESSAY_IMG_NUM.BLUE_INSIGHTS
+
       return (
         <React.Fragment key={i}>
           <MixedViewSection
@@ -51,10 +54,12 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
             beforeVisualEssay={hasVisualEssay}
             afterVisualEssay={afterVisualEssay} />
           {hasVisualEssay &&
-            <VisualEssay data={
-              imgNum[0] === VISUAL_ESSAY_IMG_NUM.BLUE_INSIGHTS ?
-                visualEssays.blueInsights :
-                visualEssays.surfaceManipulation} />}
+            <VisualEssay
+              data={
+                isBlueInsights ?
+                  visualEssays.blueInsights[device] :
+                  visualEssays.surfaceManipulation[device]}
+              isBlueInsights={isBlueInsights} />}
         </React.Fragment>
       )
     })
@@ -72,7 +77,7 @@ const Container = styled(FullContainer)`
 
   > div:last-child  {
     > :nth-child(2) {
-      padding-bottom: ${SIZES.MIXED_VIEW_PADDING_BOTTOM};
+      padding-bottom: ${SIZES.MIXED_VIEW_PADDING_BOTTOM.css};
     }
   }
 `

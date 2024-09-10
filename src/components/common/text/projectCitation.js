@@ -4,10 +4,13 @@ import { FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE } from '../../../const
 import parserServices from '../../../services/parserServices'
 import { validateString } from '../../../utils/commonUtils'
 import mixins from '../../../utils/mixins'
+import useIsMobile from '../../../hooks/useIsMobile'
 
 const ProjectCitation = ({ artistFirstName, artistLastName, medium, workDetails, copyright }) => {
+  const isMobile = useIsMobile()
+
   return (
-    <Footnote>
+    <Footnote $isMobile={isMobile}>
       <h3>{artistLastName}{validateString(artistFirstName, ` ${artistFirstName}`)}</h3>
       <h3>{medium}</h3>
       <p>
@@ -22,19 +25,20 @@ const ProjectCitation = ({ artistFirstName, artistLastName, medium, workDetails,
 
 const Footnote = styled.span`
   h3, p {
-    ${mixins.dynamicSizes({ fontSize: FONT_SIZES_RESPONSIVE.SMALL })}
+    ${({ $isMobile }) => mixins.dynamicSizes({ fontSize: FONT_SIZES_RESPONSIVE.SMALL }, $isMobile)}
   }
 
   h3 {
     font-family: ${FONT_FAMILIES.APERCU_COND};
-    ${mixins.dynamicSizes({ lineHeight: FONT_SIZES_RESPONSIVE.LEADING_XS })}
+    ${({ $isMobile }) => mixins.dynamicSizes({ lineHeight: FONT_SIZES_RESPONSIVE.LEADING_XS }, $isMobile)}
   }
 
   p {
-    ${mixins
-    .chain()
-    .dynamicSizes({ paddingTop: FONT_SIZES_RESPONSIVE.LEADING_XS })
-    .paragraphSpacing(FONT_SIZES_RESPONSIVE.LEADING_XS)}
+    ${({ $isMobile }) =>
+    mixins
+      .chain()
+      .dynamicSizes({ paddingTop: FONT_SIZES_RESPONSIVE.LEADING_XS }, $isMobile)
+      .paragraphSpacing(FONT_SIZES_RESPONSIVE.LEADING_XS, $isMobile)}
     font-family: ${FONT_FAMILIES.APERCU};
   }
 `

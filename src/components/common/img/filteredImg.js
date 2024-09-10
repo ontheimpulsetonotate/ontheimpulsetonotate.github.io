@@ -1,13 +1,20 @@
 import styled from 'styled-components'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import _ from 'lodash'
 import mixins from '../../../utils/mixins'
-import { extractStyle } from '../../../utils/styleUtils'
+import useIsMobile from '../../../hooks/useIsMobile'
 
-const FilteredImg = ({ backgroundColor, maxSize, width, height, handleLoad = _.noop, ...rest }) => {
+const FilteredImg = ({
+  backgroundColor,
+  maxWidth,
+  maxHeight,
+  width,
+  height,
+  handleLoad = _.noop,
+  ...rest
+}) => {
   const [isLoaded, setIsLoaded] = useState(false)
-
-  // useEffect(() => console.log(width), [])
+  const isMobile = useIsMobile()
 
   const onLoad = () => {
     handleLoad()
@@ -24,7 +31,9 @@ const FilteredImg = ({ backgroundColor, maxSize, width, height, handleLoad = _.n
         {...rest}
         $width={width}
         $height={height}
-        $maxSize={maxSize}
+        $maxWidth={maxWidth}
+        $maxHeight={maxHeight}
+        $isMobile={isMobile}
         onLoad={onLoad} />
     </FilterImgContainer>
   )
@@ -32,21 +41,19 @@ const FilteredImg = ({ backgroundColor, maxSize, width, height, handleLoad = _.n
 
 export const FilterImgContainer = styled.div`
   display: flex;
-  width: fit-content;
-  height: fit-content;
 `
 
 const StyledImg = styled.img`
   object-fit: cover;
   filter: grayscale(100%);
   mix-blend-mode: screen;
-  ${({ $width, $height, $maxSize }) => mixins
+  ${({ $width, $height, $maxWidth, $maxHeight, $isMobile }) => mixins
     .dynamicSizes({
       width: $width,
       height: $height,
-      maxWidth: $maxSize,
-      maxHeight: $maxSize
-    })}
+      maxWidth: $maxWidth,
+      maxHeight: $maxHeight
+    }, $isMobile)}
 `
 
 export default FilteredImg

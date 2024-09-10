@@ -1,17 +1,20 @@
+import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
-import { SIZES } from '../../constants/stylesConstants'
+import { useMemo } from 'react'
+import { SIZES_RESPONSIVE } from '../../constants/stylesConstants'
 import apiServices from '../../services/apiServices'
+import { getTextContainerSize } from '../../utils/styleUtils'
 import DragContainer from '../common/containers/dragContainer'
 import Text from '../common/text/text'
-import { DATA_KEYS } from '../../constants/apiConstants'
 
 const TextView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
-  const { w, h } = SIZES.getTextContainerSize()
+  const { width } = useWindowSize()
+  const height = useMemo(getTextContainerSize, [width])
   return (
     <DragContainer
       contents={apiServices.textData}
-      elemW={w}
-      elemH={h}
+      elemW={SIZES_RESPONSIVE.TEXT_WIDTH[0]}
+      elemH={height}
       element={Text}
       isOrdered={undefined}
       memoizedNodeData={memoizedNodeData}

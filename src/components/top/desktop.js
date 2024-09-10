@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import styled, { createGlobalStyle } from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES } from '../constants/stylesConstants'
-import breakpts from '../data/breakpoints'
-import useIsAbout from '../hooks/useIsAbout'
-import mixins from '../utils/mixins'
-import { toggleStyle } from '../utils/styleUtils'
-import About from './about'
-import AboutButton from './aboutButton'
-import Header from './common/header'
-import HeaderButton from './headerButton'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES } from '../../constants/stylesConstants'
+import useIsAbout from '../../hooks/useIsAbout'
+import Size from '../../utils/helpers/size'
+import mixins from '../../utils/mixins'
+import { toggleStyle } from '../../utils/styleUtils'
+import About from '../about/about'
+import AboutButton from '../about/aboutButton'
+import Header from '../common/header'
+import HeaderButton from '../common/headerButton'
+import IndexDesktop from '../indices/indexDesktop'
+import ImgView from '../views/imgView'
+import MixedView from '../views/mixedview/mixedView'
+import TextView from '../views/textView'
 import Home from './home'
-import IndexTab from './indexTab'
-import ImgView from './views/imgView'
-import MixedView from './views/mixedView'
-import TextView from './views/textView'
 
-const Main = () => {
+const Desktop = () => {
   const [mixedViewFragmentIndex, setMixedViewFragmentIndex] = useState()
   const [isOrdered, setIsOrdered] = useState(false)
   const isAbout = useIsAbout()
@@ -96,7 +96,7 @@ const Main = () => {
           <Route path='/about' element={<About />} />
           <Route path='*' element={<Navigate to={`/${views.text.url}`} replace />} />
         </Routes>
-        {!isAbout && <IndexTab onRowClick={handleIndexRowClick} />}
+        {!isAbout && <IndexDesktop onRowClick={handleIndexRowClick} />}
       </MainContainer >
     </>
   )
@@ -109,8 +109,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   h1, h2, h3, button, a {
-    font-size: ${FONT_SIZES.REGULAR};
-    line-height: ${FONT_SIZES.LEADING_S};
+    font-size: ${FONT_SIZES.REGULAR.css};
+    line-height: ${FONT_SIZES.LEADING_S.css};
   }
 
   h1, h2, h3, p, button, a {
@@ -119,18 +119,6 @@ const GlobalStyle = createGlobalStyle`
 
   h1, h2, h3, p, button, a {
     letter-spacing: 0.02em;
-  }
-
-
-  // TODO: remove
-  i {
-    @media screen and (min-width: ${breakpts.xxl}px) {
-      background-image: 'aa';
-    }
-
-    @media screen and (min-width: ${breakpts.xl}px) and (max-width: ${breakpts.xxl + 1}px) {
-      background-image: 'aa';
-    }
   }
 
   p {
@@ -171,16 +159,21 @@ const MainContainer = styled.div`
   position: relative;
   margin:
     0
-    ${toggleStyle('$isAbout', SIZES.PAGE_MARGIN, `calc(${SIZES.PAGE_MARGIN} + ${100 - SIZES.CLOSED_INDEX_LEFT_VALUE}vw)`)}
+    ${toggleStyle('$isAbout', SIZES.PAGE_MARGIN_DESKTOP.css, SIZES.PAGE_MARGIN_DESKTOP.add(Size.subFromFullWidth(SIZES.CLOSED_INDEX_LEFT_VALUE)).css)}
     0
-    ${SIZES.PAGE_MARGIN};
+    ${SIZES.PAGE_MARGIN_DESKTOP.css};
 `
 
 const HeaderContainer = styled(Header)`
-  ${mixins.highZIndex(1)}
+  ${mixins
+    .chain()
+    .highZIndex(1)
+    .flex('center', 'initial')}
   position: relative;
-  display: grid;
-  grid-template-columns: ${SIZES.HOME_BUTTON_WIDTH} 1fr 1fr;
+
+  menu {
+    padding-left: 0;
+  }
 
   &, menu {
     pointer-events: none;
@@ -190,8 +183,12 @@ const HeaderContainer = styled(Header)`
     pointer-events: initial;
   }
 
+  h1 {
+    margin-right: ${SIZES.HEADER_INNER_MARGIN.mult(3).css};
+  }
+
   a {
-    margin-right: ${SIZES.HEADER_INNER_MARGIN};
+    margin-right: ${SIZES.HEADER_INNER_MARGIN.css};
   }
 
   :nth-child(3) {
@@ -201,11 +198,12 @@ const HeaderContainer = styled(Header)`
 `
 
 const RightSideNavContainer = styled.div`
-  display: flex;
+  ${mixins.flex('initial', 'flex-end')}
+  flex-grow: 999;
   height: fit-content;
   div a {
     margin-right: 0;
   }
 `
 
-export default Main
+export default Desktop

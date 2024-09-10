@@ -9,6 +9,7 @@ import useMergedRef from '../../../hooks/useMergedRef'
 import { validateString } from '../../../utils/commonUtils'
 import mixins from '../../../utils/mixins'
 import { getPx } from '../../../utils/sizeUtils'
+import { getTextContainerSize } from '../../../utils/styleUtils'
 
 const Node = forwardRef(function Node({
   index,
@@ -117,8 +118,8 @@ const Node = forwardRef(function Node({
 
   const onCollapse = () => {
     const { y } = draggableRef.current.state
-    const newY = getPx(SIZES.PAGE_MARGIN)
-    if (-y >= SIZES.getTextContainerSize().h - newY * 2) {
+    const newY = SIZES.PAGE_MARGIN_DESKTOP.value
+    if (-y >= getTextContainerSize() - newY * 2) {
       draggableRef.current.state.y = newY
       onUnmap()
     }

@@ -9,11 +9,11 @@ const SortArrow = ({ isSorting, isAscending }) => {
 
 const ArrowContainer = styled.span`
   &:last-child {
-    padding-left: ${SIZES.ARROW_PADDING};
+    padding-left: ${SIZES.ARROW_PADDING.css};
   }
 
   &:first-child {
-    padding-right: ${SIZES.ARROW_PADDING};
+    padding-right: ${SIZES.ARROW_PADDING.css};
   }
 `
 
