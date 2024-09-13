@@ -46,15 +46,16 @@ const parseTextView = (text, {
       if (domNode.tagName === 'span') {
         const { attribs } = domNode
         attribs.style += 'text-decoration: none; color:inherit;'
-        if (attribs.style.match('text-decoration:underline')) {
+        const { style } = attribs
+        if (style.match('text-decoration:underline')) {
           const text = children[0]?.data
           if (text) {
             const data = text.replace(/ \[[0-9]+\]/, '')
             if (parseCitation) {
               const project = projects?.[footnoteIndex + 1]
-
               const citation =
                 <Citation
+                  style={{ fontStyle: style.match('font-style:italic') ? 'italic' : undefined }}
                   color={COLORS.BLUE}
                   footnote={project ?
                     parseProject(project) :

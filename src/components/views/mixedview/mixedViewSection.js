@@ -92,6 +92,7 @@ const MixedViewSection = ({
 const BaseImgContainer = styled.div`
  width: 100%;
  box-sizing: border-box;
+ display: flex;
  flex-direction: column;
 `
 
@@ -215,15 +216,14 @@ const MobileSectionContainer = styled(BaseSectionContainer)`
   ${mixins.flex('center', 'initial')}
   flex-direction: column;
   background-color: ${COLORS.LIGHT_BEIGE};
-  &:first-child {
-    ${BaseTextContainer} {
-      padding-top: ${SIZES.PAGE_MARGIN_TOP.css};
-    }
+
+  ${BaseTextContainer} {
+    padding-top: ${SIZES.PAGE_MARGIN_TOP.css};
   }
 
-  &:not(:first-child) {
-    ${BaseTextContainer} {
-      padding-top: ${getMobilePadding};
+  &:not(:last-child) {
+    >:last-child {
+      padding-bottom: calc(${getMobilePadding} - ${SIZES.PAGE_MARGIN_TOP.css});
     }
   }
 

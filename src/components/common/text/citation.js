@@ -5,7 +5,7 @@ import { COLORS } from '../../../constants/stylesConstants'
 import PopUpCitation from './popUpCitation'
 
 
-const Citation = ({ children, footnote, color, imgRef, fixedSize, onHover }) => {
+const Citation = ({ children, footnote, color, imgRef, fixedSize, onHover, style }) => {
   const [hoverRef, isHovering] = useHover()
   const [mouse] = useMouse()
 
@@ -14,11 +14,11 @@ const Citation = ({ children, footnote, color, imgRef, fixedSize, onHover }) => 
     onHover(
       !isHovering ? null :
         { children: footnote, color, imgRef, fixedSize })
-  }, [footnote, color, imgRef, fixedSize, isHovering])
+  }, [!!footnote, color, imgRef, fixedSize, isHovering])
 
   return (
     <>
-      <CitationSpan ref={hoverRef}>
+      <CitationSpan ref={hoverRef} style={style}>
         {children}
       </CitationSpan >
       {isHovering && !onHover &&

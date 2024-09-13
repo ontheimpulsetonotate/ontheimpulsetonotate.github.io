@@ -126,7 +126,6 @@ const imgData = mainData
   .map(nodeData => nodeData.getImgNodes(mainData))
   .flat()
 const mixedData = mainData.filter(({ text }) => text)
-console.log(mainData, mixedData, imgData)
 
 const apiServices = {
   mainData,

@@ -77,7 +77,7 @@ export const SIZES = {
 
   CITATION_MAX_WIDTH: new Size(400),
   CITATION_PADDING: new Size(10),
-  CITATION_OFFSET: new Size(10),
+  CITATION_OFFSET: new Size(20),
 
   // mobile
   HEADER_BUTTON_PADDING: new Size(5),

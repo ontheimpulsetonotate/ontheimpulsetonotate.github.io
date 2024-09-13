@@ -4,6 +4,7 @@ import { COLORS, SIZES } from '../constants/stylesConstants'
 import { arrayify, loopObject, quickArray, validateString } from './commonUtils'
 import { getSize, desktopQueries, mobileQueries } from './sizeUtils'
 import Size from './helpers/size'
+import { toggleStyle } from './styleUtils'
 
 const flex = (
   alignItems = 'initial',
@@ -81,6 +82,12 @@ const dynamicSizes = (config, isMobile) => {
   }, '')
 }
 
+const about = ({ $isAbout }) => `
+  h1, h2, h3, p, button, a {
+    color: ${$isAbout ? COLORS.LIGHT_BEIGE : COLORS.BROWN};
+  }
+`
+
 const mixins = {
   flex,
   highZIndex,
@@ -90,6 +97,7 @@ const mixins = {
   underline,
   border,
   dynamicSizes,
+  about,
   chain: function () {
     const chainedObject = {}
     let accumulatedReturn = ''

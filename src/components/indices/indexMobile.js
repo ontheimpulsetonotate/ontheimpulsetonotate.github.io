@@ -7,7 +7,7 @@ import { padNumber, validateString } from '../../utils/commonUtils'
 import Size from '../../utils/helpers/size'
 import mixins from '../../utils/mixins'
 import FullContainer from '../common/containers/fullContainer'
-import Header from '../common/header'
+import Header from '../common/header/header'
 import { FilterImgContainer } from '../common/img/filteredImg'
 import SortArrow from '../common/text/sortArrow'
 

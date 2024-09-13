@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { FONT_SIZES, SIZES } from '../../constants/stylesConstants'
+import { FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
 
 
 const Header = styled.div`

@@ -8,7 +8,7 @@ import { getDataStringSorter, padNumber, validateString } from '../../utils/comm
 import Size from '../../utils/helpers/size'
 import mixins from '../../utils/mixins'
 import { addEventListener } from '../../utils/reactUtils'
-import Header from '../common/header'
+import Header from '../common/header/header'
 import FilteredImg, { FilterImgContainer } from '../common/img/filteredImg'
 import SortArrow from '../common/text/sortArrow'
 
