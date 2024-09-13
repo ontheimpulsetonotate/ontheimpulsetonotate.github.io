@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { FRAGMENT_ID_PREFIX } from '../../../constants/reactConstants'
 import { COLORS, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE, TIMINGS } from '../../../constants/stylesConstants'
@@ -7,6 +7,7 @@ import apiServices from '../../../services/apiServices'
 import parserServices from '../../../services/parserServices'
 import { validateString } from '../../../utils/commonUtils'
 import mixins from '../../../utils/mixins'
+import { getChildrenHeight } from '../../../utils/reactUtils'
 import { conditionalStyle } from '../../../utils/styleUtils'
 import PopUpCitation from '../../common/text/popUpCitation'
 import MixedViewImg from './mixedViewImg'
@@ -19,6 +20,8 @@ const MixedViewSection = ({
   isLeft,
   beforeVisualEssay,
   afterVisualEssay,
+  sectionHeights,
+  onSetHeight
 }) => {
   const {
     text,
@@ -31,15 +34,75 @@ const MixedViewSection = ({
   } = nodeData
   const containerRef = useRef()
   const isMobile = useIsMobile()
+  const [loadCount, setLoadCount] = useState(0)
+  const handleLoad = () => setLoadCount(prev => prev + 1)
   const imgs = useMemo(() =>
     nodeData.getImgNodes(apiServices.mainData).map((imgNodes, i) =>
       <MixedViewImg
         key={i}
         nodeData={imgNodes}
-        containerY={containerY} />
+        containerY={containerY}
+        onLoad={handleLoad} />
     ), [nodeData, containerY])
   const title = `${sectionTitle}, P. ${pageNum.join('-')}`.toLocaleUpperCase()
   const [citation, setCitation] = useState()
+
+  const textRef = useRef()
+  const imgRef = useRef()
+
+  useEffect(() => {
+    // if (isMobile || loadCount < imgs.length) {
+    //   if (sectionTitle === 'compelled progress') console.log(loadCount, imgs)
+    //   return onSetHeight({
+    //     isInterview,
+    //     sectionTitle,
+
+    //   })
+    // }
+    if (isMobile || loadCount < imgs.length) return
+    const textHeight = getChildrenHeight(textRef.current)
+    const imgHeight = getChildrenHeight(imgRef.current, SIZES.ELEM_MARGIN_DESKTOP.value)
+    onSetHeight({
+      isInterview,
+      sectionTitle,
+      textHeight,
+      imgHeights: isLeft ? [imgHeight, 0] : [0, imgHeight]
+    })
+
+  }, [loadCount])
+
+  const [bufferPadding, setBufferPadding] = useState()
+
+  // TODO: handle before visual essay
+  useEffect(() => {
+
+    if (isMobile || !sectionHeights.every(s => s) || sectionHeights.length === 1) return
+    const textHeight =
+      (sectionHeights[0]?.textHeight ?? 0) +
+      (sectionHeights[1]?.textHeight ?? 0) +
+      getDesktopPaddingSize({
+        $isInterview: sectionHeights[1]?.isInterview,
+        $isFirstInterview: !isInterview && sectionHeights[1]?.isInterview
+      }).value +
+      getDesktopPaddingSize({
+        $isInterview: sectionHeights[2]?.isInterview,
+        $isFirstInterview: !sectionHeights[1]?.isInterview && sectionHeights[2]?.isInterview
+      }).value -
+      SIZES.ELEM_MARGIN_DESKTOP.value
+
+    const imgHeight = sectionHeights[0]?.imgHeights?.[isLeft ? 0 : 1]
+    setBufferPadding(Math.max(0, imgHeight - textHeight))
+    if (imgHeight > textHeight) {
+      console.log(sectionTitle, imgHeight, textHeight, getDesktopPaddingSize({
+        $isInterview: sectionHeights[1]?.isInterview,
+        $isFirstInterview: !isInterview && sectionHeights[1]?.isInterview
+      }).value, getDesktopPaddingSize({
+        $isInterview: sectionHeights[2]?.isInterview,
+        $isFirstInterview: !sectionHeights[1]?.isInterview && sectionHeights[2]?.isInterview
+      }).value)
+    }
+  }, [...sectionHeights])
+
 
   const imgMargin = SIZES.MIXED_VIEW_FIGURE_MARGIN.css
   const ImgContainer = isMobile ? MobileImgContainer : DesktopImgContainer
@@ -48,6 +111,7 @@ const MixedViewSection = ({
 
   const renderImgContainer = useCallback(isLeftContainer => (
     <ImgContainer
+      ref={isLeftContainer === isLeft ? imgRef : undefined}
       style={{
         paddingLeft: validateString(!isLeft, imgMargin),
         paddingRight: validateString(isLeft, imgMargin),
@@ -69,7 +133,10 @@ const MixedViewSection = ({
       id={index ? `${FRAGMENT_ID_PREFIX}${index}` : undefined}
       ref={containerRef}>
       {!isMobile && renderImgContainer(true)}
-      <TextContainer $isMobile={isMobile}>
+      <TextContainer
+        ref={textRef}
+        style={{ paddingBottom: bufferPadding }}
+        $isMobile={isMobile}>
         {parserServices.parseTextView(text, {
           title,
           footnotes,
@@ -129,10 +196,12 @@ const MobileImgContainer = styled(BaseImgContainer)`
   }
 `
 
-const getDesktopPadding = ({ $isInterview, $isFirstInterview } = {}) =>
+const getDesktopPaddingSize = ({ $isInterview, $isFirstInterview } = {}) =>
   !$isInterview ?
-    SIZES.MIXED_VIEW_PADDING_TOP.css :
-    SIZES.MIXED_VIEW_INTERVIEW_PADDING_TOP.mult($isFirstInterview ? 2.5 : 1).css
+    SIZES.MIXED_VIEW_PADDING_TOP :
+    SIZES.MIXED_VIEW_INTERVIEW_PADDING_TOP.mult($isFirstInterview ? 2.5 : 1)
+const getDesktopPadding = (config = {}) =>
+  getDesktopPaddingSize(config).css
 const getMobilePadding = ({ $isInterview }) =>
   !$isInterview ?
     SIZES.MIXED_VIEW_PADDING_TOP_MOBILE.css :

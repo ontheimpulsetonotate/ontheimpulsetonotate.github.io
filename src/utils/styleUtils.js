@@ -78,7 +78,6 @@ export const getSizes = sizes => {
 
 const getBreakptSize = sizes => {
   const breakpt = getBreakpt()
-  console.log(sizes, breakpt)
   return getSizes(sizes)[breakpt].value
 }
 

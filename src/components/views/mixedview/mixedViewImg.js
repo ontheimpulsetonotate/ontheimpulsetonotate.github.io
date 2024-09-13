@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { COLORS, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
+import { COLORS, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
 import useImagesLoaded from '../../../hooks/useImagesLoaded'
 import { getVh } from '../../../utils/sizeUtils'
 import Figure from '../../common/img/figure'
@@ -7,13 +7,17 @@ import Citation from '../../common/text/citation'
 import ProjectCitation from '../../common/text/projectCitation'
 import useIsMobile from '../../../hooks/useIsMobile'
 
-const MixedViewImg = ({ nodeData, containerY }) => {
+const MixedViewImg = ({ nodeData, containerY, onLoad }) => {
   const { imgLink, isInterview } = nodeData
   const imgRef = useRef()
 
   const isMobile = useIsMobile()
   const [isShowing, setIsShowing] = useState(false)
   const { loaded } = useImagesLoaded(imgLink)
+
+  useEffect(() => {
+    if (loaded) onLoad()
+  }, [loaded])
 
   useEffect(() => {
     const { top } = imgRef.current.getBoundingClientRect()

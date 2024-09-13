@@ -12,6 +12,7 @@ import SiteHeader from './siteHeader'
 
 const MenuDesktop = ({ isOrdered, handleOrder }) => {
   const isAbout = useIsAbout()
+
   return (
     <HeaderContainer>
       <SiteHeader defaultPath={views.text.url} />
@@ -21,7 +22,7 @@ const MenuDesktop = ({ isOrdered, handleOrder }) => {
             key={i}
             as={Link}
             to={`/${url}`}
-            $underline={`/${url}` === location.pathname}>
+            $underline={`#/${url}` === location.hash}>
             {text}
           </HeaderButton>
         )}

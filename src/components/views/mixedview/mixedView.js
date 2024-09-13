@@ -6,6 +6,7 @@ import { SIZES } from '../../../constants/stylesConstants'
 import visualEssays from '../../../data/visualEssays'
 import useIsMobile from '../../../hooks/useIsMobile'
 import apiServices from '../../../services/apiServices'
+import { quickArray } from '../../../utils/commonUtils'
 import { addEventListener } from '../../../utils/reactUtils'
 import FullContainer from '../../common/containers/fullContainer'
 import MixedViewSection from './mixedViewSection'
@@ -15,6 +16,9 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
   const containerRef = useRef()
   const [containerY, setContainerY] = useState(0)
   const device = useIsMobile() ? 'mobile' : 'desktop'
+  const [sectionHeights, setSectionHeights] = useState(
+    new Array(apiServices.mixedData.length).fill(undefined)
+  )
 
   useEffect(() => {
     const container = containerRef.current
@@ -44,6 +48,12 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
       willBeAfterVisualEssay = hasVisualEssay
       const isBlueInsights = imgNum[0] === VISUAL_ESSAY_IMG_NUM.BLUE_INSIGHTS
 
+      const handleSetHeight = height => setSectionHeights(prev => {
+        const newHeights = [...prev]
+        newHeights[i] = height
+        return newHeights
+      })
+
       return (
         <React.Fragment key={i}>
           <MixedViewSection
@@ -52,7 +62,9 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
             containerY={containerY}
             isLeft={isLeft}
             beforeVisualEssay={hasVisualEssay}
-            afterVisualEssay={afterVisualEssay} />
+            afterVisualEssay={afterVisualEssay}
+            sectionHeights={sectionHeights.slice(i, i + 3)}
+            onSetHeight={handleSetHeight} />
           {hasVisualEssay &&
             <VisualEssay
               data={
@@ -63,7 +75,7 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
         </React.Fragment>
       )
     })
-  }, [containerY])
+  }, [sectionHeights, containerY])
 
   return (
     <Container ref={containerRef}>
@@ -77,7 +89,7 @@ const Container = styled(FullContainer)`
 
   > div:last-child  {
     > :nth-child(2) {
-      padding-bottom: ${SIZES.MIXED_VIEW_PADDING_BOTTOM.css};
+      padding-bottom: ${SIZES.MIXED_VIEW_PADDING_BOTTOM.mult(6).css};
     }
   }
 `

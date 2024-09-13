@@ -22,6 +22,7 @@ class NodeData {
     this.interviewPrefix = undefined
 
     this.imgLinks = []
+    this.isExtra = undefined
   }
 
   get isText() {
@@ -41,7 +42,6 @@ class NodeData {
   }
 
   getImgLinks() {
-    // /console.log(this.fullNumRange)
     const imgLinks = this.fullNumRange
       .map(num => this.getImgLink(num))
     return this.imgLinks = imgLinks.filter(l => l)
@@ -61,7 +61,7 @@ class NodeData {
 
 
   getImgNodes(allData) {
-    const sameTitle = this.isInterview ?
+    const sameTitle = (this.isInterview || !allData) ?
       [this] :
       allData.filter(data => data.sectionTitle === this.sectionTitle)
 

@@ -123,9 +123,14 @@ const textData = mainData.filter(({ text, isOrphan }) => text && !isOrphan)
 const indexTabData = textData.filter(({ isInterview }) => !isInterview)
 const imgData = mainData
   .filter(({ isImgNode }) => isImgNode)
-  .map(nodeData => nodeData.getImgNodes(mainData))
+  .map(nodeData => nodeData.getImgNodes())
   .flat()
+
+
+
 const mixedData = mainData.filter(({ text }) => text)
+
+console.log(imgData)
 
 const apiServices = {
   mainData,
