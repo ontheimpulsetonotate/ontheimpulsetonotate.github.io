@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.e296e966.css",
-    "main.js": "/static/js/main.98e4f43f.js",
+    "main.js": "/static/js/main.d5a8d7d2.js",
     "static/js/453.a87e3742.chunk.js": "/static/js/453.a87e3742.chunk.js",
     "static/media/BradfordLL-ExtraBoldItalic.otf": "/static/media/BradfordLL-ExtraBoldItalic.81eea84d3d9183d6e528.otf",
     "static/media/BradfordLL-BoldItalic.otf": "/static/media/BradfordLL-BoldItalic.cb945c39335abc35b64c.otf",
@@ -33,13 +33,14 @@
     "static/media/apercu_bold.otf": "/static/media/apercu_bold.94c398003b22f2f734fc.otf",
     "static/media/apercu_light.otf": "/static/media/apercu_light.861d4f24111c3ba25a4c.otf",
     "static/media/apercu_mono.otf": "/static/media/apercu_mono.531f0632a68db392750c.otf",
+    "static/media/bars.svg": "/static/media/bars.eddaac5598c1220f0363383a5cb588cb.svg",
     "index.html": "/index.html",
     "main.e296e966.css.map": "/static/css/main.e296e966.css.map",
-    "main.98e4f43f.js.map": "/static/js/main.98e4f43f.js.map",
+    "main.d5a8d7d2.js.map": "/static/js/main.d5a8d7d2.js.map",
     "453.a87e3742.chunk.js.map": "/static/js/453.a87e3742.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e296e966.css",
-    "static/js/main.98e4f43f.js"
+    "static/js/main.d5a8d7d2.js"
   ]
 }
