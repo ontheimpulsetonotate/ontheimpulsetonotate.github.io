@@ -88,9 +88,9 @@ const TableContainer = styled.div`
   ${mixins.noScrollBar}
   position: absolute;
   width: calc(100% - ${SIZES.PAGE_MARGIN_DESKTOP.mult(2).css});
-  top: ${SIZES.INDEX_STICKY_TOP.css};
+  top: ${SIZES.INDEX_STICKY_TOP_MOBILE.css};
   overflow-y: scroll;
-  height: ${Size.subFromFullHeight(SIZES.INDEX_STICKY_TOP).css};
+  height: ${Size.subFromFullHeight(SIZES.INDEX_STICKY_TOP_MOBILE).css};
 `
 const HeaderContainer = styled(Header)`
   ${mixins.flex('initial', 'space-between')}

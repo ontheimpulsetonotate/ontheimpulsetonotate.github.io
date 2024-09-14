@@ -73,8 +73,8 @@ const MobileContainer = styled(DesktopContainer)`
   align-items: initial;
   box-sizing: border-box;
   min-height: auto;
-  overflow-y: scroll;
-
+  position: relative;
+  height: auto;
 `
 
 const InnerDesktopContainer = styled.div`

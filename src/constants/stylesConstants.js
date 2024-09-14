@@ -1,5 +1,4 @@
 import Size from '../utils/helpers/size'
-import { getBreakpt, getEmifiedPx, getPx, getSize, remify } from '../utils/sizeUtils'
 
 export const FONT_FAMILIES = {
   APERCU: '"Apercu", sans-serif',
@@ -54,8 +53,9 @@ export const SIZES = {
   UNDERLINE_OFFSET: new Size(6),
 
   OPENED_INDEX_LEFT_VALUE: new Size({ vw: 30 }),
-  CLOSED_INDEX_LEFT_VALUE: new Size({ vw: 91.5 }),
-  INDEX_STICKY_TOP: new Size({ rem: 11.25, vh: 20 }),
+  CLOSED_INDEX_LEFT_VALUE: new Size({ vw: 93 }),
+  INDEX_STICKY_TOP_DESKTOP: new Size({ rem: 11.25, vh: 20 }),
+  INDEX_STICKY_TOP_MOBILE: new Size({ rem: 7.5, vh: 20 }),
   INDEX_ARTIST_WIDTH: '35%',
   INDEX_MEDIUM_WIDTH: '25%',
   INDEX_PAGE_NUM_WIDTH: new Size(100),

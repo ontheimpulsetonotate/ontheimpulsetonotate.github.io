@@ -8,7 +8,9 @@ import useIsMobile from '../../../hooks/useIsMobile'
 import apiServices from '../../../services/apiServices'
 import { quickArray } from '../../../utils/commonUtils'
 import { addEventListener } from '../../../utils/reactUtils'
+import { conditionalStyle, toggleStyle } from '../../../utils/styleUtils'
 import FullContainer from '../../common/containers/fullContainer'
+import PopUpCitation from '../../common/text/popUpCitation'
 import MixedViewSection from './mixedViewSection'
 import VisualEssay from './visualEssay/visualEssay'
 
@@ -19,19 +21,22 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
   const [sectionHeights, setSectionHeights] = useState(
     new Array(apiServices.mixedData.length).fill(undefined)
   )
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const container = containerRef.current
     const section = container?.querySelector(`#${FRAGMENT_ID_PREFIX}${fragmentIndex}`)
     if (!section) return
     const { top } = section.getBoundingClientRect()
-    container.scrollBy({ top, behavior: 'smooth' })
+    if (isMobile) section.scrollIntoView({ behavior: 'smooth' })
+    else container.scrollBy({ top, behavior: 'smooth' })
     handleFragmentScroll()
   }, [fragmentIndex])
 
   useEffect(() => addEventListener(containerRef.current, 'scroll', () =>
     setContainerY(containerRef.current.scrollTop)
   ), [])
+  const [citation, setCitation] = useState()
 
   const mixedViewContent = useMemo(() => {
     let isLeft = false
@@ -64,7 +69,8 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
             beforeVisualEssay={hasVisualEssay}
             afterVisualEssay={afterVisualEssay}
             sectionHeights={sectionHeights.slice(i, i + 3)}
-            onSetHeight={handleSetHeight} />
+            onSetHeight={handleSetHeight}
+            onHoverCitation={citation => setCitation(citation)} />
           {hasVisualEssay &&
             <VisualEssay
               data={
@@ -77,16 +83,16 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
     })
   }, [sectionHeights, containerY])
 
+  const Container = isMobile ? MobileContainer : DesktopContainer
   return (
-    <Container ref={containerRef}>
+    <Container ref={containerRef} id='main'>
       {mixedViewContent}
+      <PopUpCitation {...citation} />
     </Container>
   )
 }
 
-const Container = styled(FullContainer)`
-  overflow-y: scroll;
-
+const BasedContainer = styled(FullContainer)`
   > div:last-child  {
     > :nth-child(2) {
       padding-bottom: ${SIZES.MIXED_VIEW_PADDING_BOTTOM.mult(6).css};
@@ -94,5 +100,14 @@ const Container = styled(FullContainer)`
   }
 `
 
+const DesktopContainer = styled(BasedContainer)`
+  overflow-y: scroll;
+`
+
+const MobileContainer = styled(BasedContainer)`
+  overflow-y: hidden;
+  height: fit-content;
+  position: relative;
+`
 
 export default MixedView

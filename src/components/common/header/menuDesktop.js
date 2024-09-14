@@ -30,7 +30,7 @@ const MenuDesktop = ({ isOrdered, handleOrder }) => {
       <RightSideNav>
         {
           !isAbout &&
-          `/${views.mixed.url}` !== location.pathname &&
+          `#/${views.mixed.url}` !== location.hash &&
           <HeaderButton
             onClick={handleOrder}
             $underline={isOrdered}>

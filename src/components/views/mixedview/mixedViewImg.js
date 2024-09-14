@@ -7,7 +7,7 @@ import Citation from '../../common/text/citation'
 import ProjectCitation from '../../common/text/projectCitation'
 import useIsMobile from '../../../hooks/useIsMobile'
 
-const MixedViewImg = ({ nodeData, containerY, onLoad }) => {
+const MixedViewImg = ({ nodeData, containerY, onLoad, onHoverCitation }) => {
   const { imgLink, isInterview } = nodeData
   const imgRef = useRef()
 
@@ -31,7 +31,8 @@ const MixedViewImg = ({ nodeData, containerY, onLoad }) => {
     <Citation
       color={isInterview ? COLORS.BLUE : COLORS.BROWN}
       footnote={opacity ? <ProjectCitation {...nodeData} /> : null}
-      imgRef={imgRef}>
+      imgRef={imgRef}
+      onHover={onHoverCitation}>
       <Figure
         style={{ opacity: isMobile ? undefined : opacity }}
         nodeData={nodeData}

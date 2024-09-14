@@ -133,7 +133,7 @@ const IndexDesktop = ({ onRowClick }) => {
 const IndexDesktopContainer = styled.div`
 ${mixins.highZIndex(4)}
   width: ${Size.subFromFullWidth(SIZES.OPENED_INDEX_LEFT_VALUE).css};
-  height: 100vh;
+  height: 100dvh;
   position: absolute;
   top: 0;
   padding: 0 ${SIZES.PAGE_MARGIN_DESKTOP.css};
@@ -146,9 +146,9 @@ const TableContainer = styled.div`
   ${mixins.noScrollBar}
   position: absolute;
   width: calc(100% - ${SIZES.PAGE_MARGIN_DESKTOP.mult(2).css});
-  top: ${SIZES.INDEX_STICKY_TOP.css};
+  top: ${SIZES.INDEX_STICKY_TOP_DESKTOP.css};
   overflow-y: scroll;
-  height: ${Size.subFromFullHeight(SIZES.INDEX_STICKY_TOP).css};
+  height: ${Size.subFromFullHeight(SIZES.INDEX_STICKY_TOP_DESKTOP).css};
 `
 const HeaderContainer = styled(Header)`
   ${mixins.flex('initial', 'space-between')}

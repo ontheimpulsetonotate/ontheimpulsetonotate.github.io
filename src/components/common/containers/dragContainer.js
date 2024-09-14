@@ -118,7 +118,7 @@ const DragContainer = forwardRef(function DragContainer({
       )}
       <ScrollSizer style={{
         top: validateString(isOrdered, top),
-        height: isOrdered ? `${scrollSize}px` : '100vh'
+        height: isOrdered ? `${scrollSize}px` : '100dvh'
       }} />
     </StyledContainer>
   )

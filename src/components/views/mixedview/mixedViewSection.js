@@ -7,7 +7,7 @@ import apiServices from '../../../services/apiServices'
 import parserServices from '../../../services/parserServices'
 import { validateString } from '../../../utils/commonUtils'
 import mixins from '../../../utils/mixins'
-import { getChildrenHeight } from '../../../utils/reactUtils'
+import { addEventListener, getChildrenHeight } from '../../../utils/reactUtils'
 import { conditionalStyle } from '../../../utils/styleUtils'
 import PopUpCitation from '../../common/text/popUpCitation'
 import MixedViewImg from './mixedViewImg'
@@ -21,7 +21,8 @@ const MixedViewSection = ({
   beforeVisualEssay,
   afterVisualEssay,
   sectionHeights,
-  onSetHeight
+  onSetHeight,
+  onHoverCitation
 }) => {
   const {
     text,
@@ -42,10 +43,11 @@ const MixedViewSection = ({
         key={i}
         nodeData={imgNodes}
         containerY={containerY}
-        onLoad={handleLoad} />
+        onLoad={handleLoad}
+        onHoverCitation={onHoverCitation} />
     ), [nodeData, containerY])
   const title = `${sectionTitle}, P. ${pageNum.join('-')}`.toLocaleUpperCase()
-  const [citation, setCitation] = useState()
+
 
   const textRef = useRef()
   const imgRef = useRef()
@@ -88,7 +90,7 @@ const MixedViewSection = ({
     setBufferPadding(Math.max(
       0,
       current.imgHeight - textHeight,
-      beforeVisualEssay ? getDesktopPaddingSize().value : undefined
+      beforeVisualEssay ? getDesktopPaddingSize().value : -Infinity
     ))
   }, [...sectionHeights])
 
@@ -109,7 +111,6 @@ const MixedViewSection = ({
     </ImgContainer>
   ), [isLeft, imgs])
 
-  const handleHover = citation => setCitation(citation)
 
   return (
     <SectionContainer
@@ -129,11 +130,10 @@ const MixedViewSection = ({
           title,
           footnotes,
           projects,
-          onHover: handleHover
+          onHover: onHoverCitation
         })}
 
       </TextContainer>
-      <PopUpCitation {...citation} />
       {!isMobile && renderImgContainer(false)}
       {isMobile &&
         <ImgContainer>

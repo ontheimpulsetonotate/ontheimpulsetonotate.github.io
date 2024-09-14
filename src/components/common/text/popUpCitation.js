@@ -7,10 +7,17 @@ import parserServices from '../../../services/parserServices'
 import Size from '../../../utils/helpers/size'
 import mixins from '../../../utils/mixins'
 import { extractStyle } from '../../../utils/styleUtils'
+import useWindowMouse from '../../../hooks/useWindowMouse'
 
 
-const PopUpCitation = ({ mouse, children, color, imgRef, fixedSize }) => {
-  const [_mouse] = useMouse()
+const PopUpCitation = ({
+  mouse,
+  children,
+  color,
+  imgRef,
+  fixedSize,
+}) => {
+  const _mouse = useWindowMouse()
   if (!mouse || (!mouse.x && !mouse.y)) mouse = _mouse
   const isMobile = useIsMobile()
 
@@ -18,7 +25,6 @@ const PopUpCitation = ({ mouse, children, color, imgRef, fixedSize }) => {
   const isTop = mouse.y <= window.innerHeight / 2
 
   const bounds = imgRef?.current?.getBoundingClientRect()
-  const paddings = SIZES.CITATION_PADDING.value * 2
   const offset = SIZES.CITATION_OFFSET
   const leftSideOnly = isLeft || isMobile
 
@@ -28,15 +34,26 @@ const PopUpCitation = ({ mouse, children, color, imgRef, fixedSize }) => {
     <StyledPopUpCitation
       style={{
         left: leftSideOnly &&
-          (isMobile ? bounds?.left : offset.add(new Size(mouse.x)).css),
+          (isMobile ?
+            Math.max(
+              SIZES.PAGE_MARGIN_MOBILE.value,
+              Size.subFromFullWidth(SIZES.IMG_MAX_WIDTH)
+                .div(2).add(SIZES.PAGE_MARGIN_MOBILE).value) :
+            offset.add(new Size(mouse.x)).css),
         right: !leftSideOnly &&
           offset.sub(new Size(mouse.x)).add(new Size({ vw: 100 })).css,
         top: isTop && offset.add(new Size(mouse.y)).css,
 
         bottom: !isTop && offset.sub(new Size(mouse.y)).add(new Size({ vh: 100 })).css,
-        width: isMobile ? Size.subFromFullWidth(SIZES.PAGE_MARGIN_MOBILE.mult(2)).css :
+        width: isMobile ?
+          Size.subFromFullWidth(SIZES.PAGE_MARGIN_MOBILE.mult(2))
+            .sub(SIZES.CITATION_PADDING.mult(2)).css :
           fixedSize ? SIZES.CITATION_MAX_WIDTH.css : bounds?.width,
-        maxWidth: isMobile ? SIZES.IMG_MAX_WIDTH.css : SIZES.CITATION_MAX_WIDTH.css,
+        maxWidth: isMobile ?
+          SIZES.IMG_MAX_WIDTH
+            .sub(SIZES.CITATION_PADDING.mult(2))
+            .sub(SIZES.PAGE_MARGIN_MOBILE.mult(2)).css :
+          SIZES.CITATION_MAX_WIDTH.css,
         marginTop: 0
       }}
       $isMobile={isMobile}

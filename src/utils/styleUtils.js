@@ -1,6 +1,7 @@
 import { FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE } from '../constants/stylesConstants'
 import { getBreakpt, getSize, getVh, getVw } from './sizeUtils'
 import Size from './helpers/size'
+import { arrayify } from './commonUtils'
 
 
 export const extractStyle = (key, fallbackString) => props =>
@@ -69,6 +70,7 @@ export const getOrderedData = isImg => {
 // TODO: include between s - m
 export const getSizes = sizes => {
   let fallbackValue
+  sizes = [arrayify(sizes)[0], ...arrayify(sizes)]
   return ['s', 'm', 'l', 'xl', 'xxl'].reduce((result, breakpoint, i, breakpoints) => {
     const sizeValue = sizes[i] ?? fallbackValue
     fallbackValue = sizeValue
