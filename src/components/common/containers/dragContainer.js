@@ -1,15 +1,16 @@
 import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { TIMINGS } from '../../../constants/stylesConstants'
+import useMergedRef from '../../../hooks/useMergedRef'
 import { UNMAPPED_BOUNDS, map, mapPoisson, quickArray, validateString } from '../../../utils/commonUtils'
 import { getMainContainer } from '../../../utils/styleUtils'
 import FullContainer from './fullContainer'
 import Node from './node'
 
 
-const DragContainer = ({
+const DragContainer = forwardRef(function DragContainer({
   contents,
   elemW,
   elemH,
@@ -19,13 +20,15 @@ const DragContainer = ({
   orderedPositions = [],
   scrollSize,
   handleRender,
-  handleMemoizeNodeData
-}) => {
+  handleMemoizeNodeData,
+  handleLayoutShift,
+  handleCitationOver
+}, ref) {
   const [zIndices, setZIndices] = useState(
     memoizedNodeData?.zIndices ?? quickArray(contents.length)
   )
   const { width, height } = useWindowSize()
-  const containerRef = useRef()
+  const containerRef = useMergedRef(ref)
 
   const { left, right, top, bottom } = getMainContainer()
   const defaultUnmappedPositions = useMemo(() =>
@@ -87,6 +90,7 @@ const DragContainer = ({
 
   const handleAnimate = () => hasAnimatedRef.current = true
 
+
   return (
     <StyledContainer
       style={{
@@ -108,6 +112,8 @@ const DragContainer = ({
           handleUnmap={handleUnmap}
           handleRender={handleRender}
           handleAnimate={handleAnimate}
+          handleLayoutShift={handleLayoutShift}
+          handleCitationOver={handleCitationOver}
           render={Element} />
       )}
       <ScrollSizer style={{
@@ -116,7 +122,7 @@ const DragContainer = ({
       }} />
     </StyledContainer>
   )
-}
+})
 
 const StyledContainer = styled(FullContainer)`
   pointer-events: none;

@@ -51,58 +51,46 @@ const MixedViewSection = ({
   const imgRef = useRef()
 
   useEffect(() => {
-    // if (isMobile || loadCount < imgs.length) {
-    //   if (sectionTitle === 'compelled progress') console.log(loadCount, imgs)
-    //   return onSetHeight({
-    //     isInterview,
-    //     sectionTitle,
-
-    //   })
-    // }
     if (isMobile || loadCount < imgs.length) return
-    const textHeight = getChildrenHeight(textRef.current)
     const imgHeight = getChildrenHeight(imgRef.current, SIZES.ELEM_MARGIN_DESKTOP.value)
     onSetHeight({
       isInterview,
-      sectionTitle,
-      textHeight,
-      imgHeights: isLeft ? [imgHeight, 0] : [0, imgHeight]
+      textHeight: getChildrenHeight(textRef.current),
+      imgHeight
     })
-
   }, [loadCount])
 
   const [bufferPadding, setBufferPadding] = useState()
 
-  // TODO: handle before visual essay
   useEffect(() => {
+    if (
+      isMobile ||
+      !sectionHeights.every(s => s) ||
+      sectionHeights.length === 1
+    ) return
 
-    if (isMobile || !sectionHeights.every(s => s) || sectionHeights.length === 1) return
-    const textHeight =
-      (sectionHeights[0]?.textHeight ?? 0) +
-      (sectionHeights[1]?.textHeight ?? 0) +
-      getDesktopPaddingSize({
-        $isInterview: sectionHeights[1]?.isInterview,
-        $isFirstInterview: !isInterview && sectionHeights[1]?.isInterview
-      }).value +
-      getDesktopPaddingSize({
-        $isInterview: sectionHeights[2]?.isInterview,
-        $isFirstInterview: !sectionHeights[1]?.isInterview && sectionHeights[2]?.isInterview
-      }).value -
-      SIZES.ELEM_MARGIN_DESKTOP.value
-
-    const imgHeight = sectionHeights[0]?.imgHeights?.[isLeft ? 0 : 1]
-    setBufferPadding(Math.max(0, imgHeight - textHeight))
-    if (imgHeight > textHeight) {
-      console.log(sectionTitle, imgHeight, textHeight, getDesktopPaddingSize({
-        $isInterview: sectionHeights[1]?.isInterview,
-        $isFirstInterview: !isInterview && sectionHeights[1]?.isInterview
-      }).value, getDesktopPaddingSize({
-        $isInterview: sectionHeights[2]?.isInterview,
-        $isFirstInterview: !sectionHeights[1]?.isInterview && sectionHeights[2]?.isInterview
+    const [current, next, last] = sectionHeights
+    const currentTextHeight = current.textHeight +
+      (beforeVisualEssay ? 0 : getDesktopPaddingSize({
+        $isInterview: next?.isInterview,
+        $isFirstInterview: !isInterview && next?.isInterview
       }).value)
-    }
-  }, [...sectionHeights])
+    const nextTextHeight = (next.textHeight ?? 0) +
+      getDesktopPaddingSize({
+        $isInterview: last?.isInterview,
+        $isFirstInterview: !next.isInterview && last?.isInterview
+      }).value
+    const textHeight =
+      currentTextHeight +
+      (beforeVisualEssay ? 0 : nextTextHeight) -
+      SIZES.ELEM_MARGIN_DESKTOP.value * 3
 
+    setBufferPadding(Math.max(
+      0,
+      current.imgHeight - textHeight,
+      beforeVisualEssay ? getDesktopPaddingSize().value : undefined
+    ))
+  }, [...sectionHeights])
 
   const imgMargin = SIZES.MIXED_VIEW_FIGURE_MARGIN.css
   const ImgContainer = isMobile ? MobileImgContainer : DesktopImgContainer
@@ -141,7 +129,6 @@ const MixedViewSection = ({
           title,
           footnotes,
           projects,
-          parseCitation: true,
           onHover: handleHover
         })}
 

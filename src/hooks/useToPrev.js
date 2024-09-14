@@ -1,6 +1,5 @@
-import { usePrevious } from '@uidotdev/usehooks'
-import { useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import usePrevious from './usePrevious'
 
 const useToPrev = (fallback = '/') => {
   const navigate = useNavigate()

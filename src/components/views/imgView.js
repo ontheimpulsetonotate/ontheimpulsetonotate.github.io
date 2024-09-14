@@ -16,7 +16,7 @@ const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
   const { width } = useWindowSize()
   const { orderedPositions, scrollSize } = useMemo(() => {
     if (!isOrdered) return {}
-    const { colCount, getRowHeight, gap, leftMargin, topMargin } = getOrderedData()
+    const { nodeWidth, colCount, getRowHeight, gap, leftMargin, topMargin } = getOrderedData(true)
     let rows = _.chunk(proportions, colCount)
       .reduce((prev, curr, i) => {
         const nextY = getRowHeight(Math.max(...curr)) + gap + (prev[i - 1] ?? 0)
@@ -28,7 +28,7 @@ const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
     rows = rows.map(y => y + topMargin)
 
     const cols = quickArray(colCount)
-      .map(col => col * (getImgViewFigureSize() + gap) + leftMargin)
+      .map(col => col * (nodeWidth + gap) + leftMargin)
 
     return {
       orderedPositions: quickArray(proportions.length, i => ({

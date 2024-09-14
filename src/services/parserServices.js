@@ -1,4 +1,5 @@
 import parse, { domToReact } from 'html-react-parser'
+import TruncateMarkup from 'react-truncate-markup'
 import Citation from '../components/common/text/citation'
 import ExpandButton from '../components/common/text/expandButton'
 import ProjectCitation from '../components/common/text/projectCitation'
@@ -23,7 +24,6 @@ const parseProject = text => {
 const parseTextView = (text, {
   title,
   truncate,
-  parseCitation,
   footnotes,
   projects,
   onHover,
@@ -51,18 +51,20 @@ const parseTextView = (text, {
           const text = children[0]?.data
           if (text) {
             const data = text.replace(/ \[[0-9]+\]/, '')
-            if (parseCitation) {
+            if (footnotes || projects) {
               const project = projects?.[footnoteIndex + 1]
               const citation =
-                <Citation
-                  style={{ fontStyle: style.match('font-style:italic') ? 'italic' : undefined }}
-                  color={COLORS.BLUE}
-                  footnote={project ?
-                    parseProject(project) :
-                    footnotes?.[footnoteIndex + 1]}
-                  onHover={onHover}>
-                  {data}
-                </Citation>
+                <TruncateMarkup.Atom>
+                  <Citation
+                    style={{ fontStyle: style.match('font-style:italic') ? 'italic' : undefined }}
+                    color={COLORS.BLUE}
+                    footnote={project ?
+                      parseProject(project) :
+                      footnotes?.[footnoteIndex + 1]}
+                    onHover={onHover}>
+                    {data}
+                  </Citation>
+                </TruncateMarkup.Atom>
               footnoteIndex++
               return citation
             }

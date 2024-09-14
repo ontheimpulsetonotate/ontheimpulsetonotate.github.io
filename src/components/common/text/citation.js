@@ -1,5 +1,6 @@
-import { useHover, useMouse } from '@uidotdev/usehooks'
-import { useEffect } from 'react'
+import { useHover, useMouse, useWindowScroll } from '@uidotdev/usehooks'
+import { useEffect, useState } from 'react'
+import TruncateMarkup from 'react-truncate-markup'
 import styled from 'styled-components'
 import { COLORS } from '../../../constants/stylesConstants'
 import PopUpCitation from './popUpCitation'
@@ -7,21 +8,26 @@ import PopUpCitation from './popUpCitation'
 
 const Citation = ({ children, footnote, color, imgRef, fixedSize, onHover, style }) => {
   const [hoverRef, isHovering] = useHover()
+  const [isShown, setIsShown] = useState(false)
   const [mouse] = useMouse()
 
   useEffect(() => {
     if (!onHover) return
     onHover(
-      !isHovering ? null :
+      !isShown ? null :
         { children: footnote, color, imgRef, fixedSize })
   }, [!!footnote, color, imgRef, fixedSize, isHovering])
+
+
+  useEffect(() => setIsShown(isHovering), [isHovering])
+
 
   return (
     <>
       <CitationSpan ref={hoverRef} style={style}>
         {children}
-      </CitationSpan >
-      {isHovering && !onHover &&
+      </CitationSpan>
+      {isShown && !onHover &&
         <PopUpCitation
           mouse={mouse}
           color={color}
@@ -29,7 +35,6 @@ const Citation = ({ children, footnote, color, imgRef, fixedSize, onHover, style
           fixedSize={fixedSize}>
           {footnote}
         </PopUpCitation>}
-
     </>
   )
 }

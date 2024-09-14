@@ -34,7 +34,7 @@ const PopUpCitation = ({ mouse, children, color, imgRef, fixedSize }) => {
         top: isTop && offset.add(new Size(mouse.y)).css,
 
         bottom: !isTop && offset.sub(new Size(mouse.y)).add(new Size({ vh: 100 })).css,
-        width: isMobile ? bounds?.width - paddings :
+        width: isMobile ? Size.subFromFullWidth(SIZES.PAGE_MARGIN_MOBILE.mult(2)).css :
           fixedSize ? SIZES.CITATION_MAX_WIDTH.css : bounds?.width,
         maxWidth: isMobile ? SIZES.IMG_MAX_WIDTH.css : SIZES.CITATION_MAX_WIDTH.css,
         marginTop: 0

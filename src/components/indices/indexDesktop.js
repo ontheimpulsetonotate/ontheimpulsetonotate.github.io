@@ -61,7 +61,7 @@ const IndexDesktop = ({ onRowClick }) => {
       style={{
         transition: validateString(shouldAnimate, `left ${TIMINGS.INDEX_SLIDE}ms ease-in-out`),
         left: indexIsOpened ?
-          SIZES.OPENED_INDEX_LEFT_VALUE.sub(SIZES.PAGE_MARGIN_DESKTOP.mult(3)).css :
+          SIZES.OPENED_INDEX_LEFT_VALUE.sub(SIZES.PAGE_MARGIN_DESKTOP.mult(2)).css :
           SIZES.CLOSED_INDEX_LEFT_VALUE.sub(SIZES.PAGE_MARGIN_DESKTOP).css,
         cursor: validateString(!indexIsOpened, 'pointer')
       }}

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import TruncateMarkup from 'react-truncate-markup'
 import styled from 'styled-components'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
@@ -12,15 +12,18 @@ import TextHeader from './textHeader'
 
 const Text = ({
   id,
+  index,
   nodeData,
   onHover,
   onRender,
   onCollapse,
   onMouseOver,
-  onMouseOut
+  onMouseOut,
+  handleLayoutShift,
+  handleCitationOver
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const { text, sectionTitle, isInterview } = nodeData
+  const { text, sectionTitle, footnotes, projects, isInterview } = nodeData
 
   const handleButtonClick = expand => {
     setIsExpanded(expand)
@@ -29,10 +32,18 @@ const Text = ({
       onCollapse()
     }
   }
+
+  useEffect(() => handleLayoutShift(index, isExpanded), [isExpanded])
   useEffect(() => onRender(), [])
 
   const getParsed = truncate => parserServices
-    .parseTextView(text, { truncate, handleButtonClick })
+    .parseTextView(text, {
+      truncate,
+      footnotes,
+      projects,
+      handleButtonClick,
+      onHover: handleCitationOver
+    })
   const truncated = useMemo(() => (
     <TruncateMarkup
       lines={4}
@@ -45,6 +56,7 @@ const Text = ({
   return (
     <TextContainer
       id={id}
+      className='text-node'
       $color={isInterview ? COLORS.BLUE : COLORS.BROWN}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}>
@@ -67,7 +79,7 @@ const TextContainer = styled.div`
   box-sizing: border-box;
   background-color: white;
 
-  &, * {
+  &, > *, p, button {
     color: ${extractStyle('$color')};
   }
 `
@@ -75,6 +87,9 @@ const TextContainer = styled.div`
 const TextBodyContainer = styled.div`
   p {
    ${mixins.paragraphSpacing(FONT_SIZES_RESPONSIVE.LEADING_M)}
+   span {
+    pointer-events: all;
+   }
   }
 
   button {

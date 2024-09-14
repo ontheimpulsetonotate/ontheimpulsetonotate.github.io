@@ -130,7 +130,6 @@ const imgData = mainData
 
 const mixedData = mainData.filter(({ text }) => text)
 
-console.log(imgData)
 
 const apiServices = {
   mainData,

@@ -34,6 +34,10 @@ const {
 export const getImgViewFigureSize = () =>
   getBreakptSize(SIZES_RESPONSIVE.IMG_VIEW_FIGURE_SIZE)
 
+export const getTextViewSize = () =>
+  getBreakptSize(SIZES_RESPONSIVE.TEXT_WIDTH)
+
+
 
 export const getMainContainer = () => ({
   left: PAGE_MARGIN_DESKTOP.value,
@@ -42,8 +46,8 @@ export const getMainContainer = () => ({
   bottom: getVh()
 })
 
-export const getOrderedData = () => {
-  const maxSize = getImgViewFigureSize()
+export const getOrderedData = isImg => {
+  const nodeWidth = isImg ? getImgViewFigureSize() : getTextViewSize()
   const { left, right, top } = getMainContainer()
   const width = right - left
 
@@ -51,10 +55,11 @@ export const getOrderedData = () => {
   const verticalGap = getBreakptSize(FONT_SIZES_RESPONSIVE.SMALL)
 
   return {
+    nodeWidth,
     gap: horizontalGap,
     leftMargin: PAGE_MARGIN_DESKTOP.value,
     topMargin: top,
-    colCount: Math.floor((width - maxSize) / (maxSize + horizontalGap)) + 1,
+    colCount: Math.floor((width - nodeWidth) / (nodeWidth + horizontalGap)) + 1,
     getRowHeight: proportion =>
       verticalGap * 3 + getImgViewFigureSize() * proportion,
   }
