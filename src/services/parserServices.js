@@ -73,9 +73,6 @@ const parseTextView = (text, {
         }
       }
 
-      if (domNode.tagName === 'a') // TODO: ?
-        return <>{domToReact(children)}</>
-
       if (!domNode.next && domNode.tagName === 'p') {
         if (truncate === false)
           return (

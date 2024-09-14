@@ -197,6 +197,14 @@ const getMobilePadding = ({ $isInterview }) =>
 const BaseTextContainer = styled.div`
   background-color: ${COLORS.LIGHT_BEIGE};
   box-sizing: border-box;
+
+  a {
+    font-family:inherit;
+    font-size: inherit;
+    text-transform: none;
+    font-weight: inherit;
+    text-decoration: underline;
+  }
 `
 
 const DesktopTextContainer = styled(BaseTextContainer)`
