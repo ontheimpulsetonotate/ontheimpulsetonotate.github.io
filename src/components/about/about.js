@@ -72,9 +72,13 @@ const MobileContainer = styled(DesktopContainer)`
   padding: 0 ${SIZES.PAGE_MARGIN_MOBILE.css};
   align-items: initial;
   box-sizing: border-box;
-  min-height: auto;
-  position: relative;
+  min-height: 100dvh;
   height: auto;
+  position: relative;
+
+  &, * {
+    overflow: hidden;
+  }
 `
 
 const InnerDesktopContainer = styled.div`

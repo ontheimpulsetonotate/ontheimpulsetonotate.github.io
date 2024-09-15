@@ -85,7 +85,7 @@ const IndexDesktop = ({ onRowClick }) => {
           {
             headers.map(([name], i) => {
               const isSorting = sort.index === i
-              const isPageHeader = name === 'page'
+              const isPageHeader = name === 'read'
               return (
                 <p key={name} onClick={() => setSort(prev => ({
                   index: i,
