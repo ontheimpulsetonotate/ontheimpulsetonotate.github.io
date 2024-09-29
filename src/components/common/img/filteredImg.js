@@ -45,7 +45,7 @@ export const FilterImgContainer = styled.div`
 
 const StyledImg = styled.img`
   object-fit: cover;
-  filter: grayscale(100%);
+
   mix-blend-mode: screen;
   ${({ $width, $height, $maxWidth, $maxHeight, $isMobile }) => mixins
     .dynamicSizes({
