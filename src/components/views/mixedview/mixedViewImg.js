@@ -29,7 +29,7 @@ const MixedViewImg = ({ nodeData, containerY, onLoad, onHoverCitation }) => {
 
   return (
     <Citation
-      color={isInterview ? COLORS.BLUE : COLORS.BROWN}
+      color={isInterview ? COLORS.TEXT_BLUE : COLORS.BROWN}
       footnote={opacity ? <ProjectCitation {...nodeData} /> : null}
       imgRef={imgRef}
       onHover={onHoverCitation}>

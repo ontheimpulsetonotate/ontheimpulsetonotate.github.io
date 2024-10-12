@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
 import parserServices from '../../../services/parserServices'
 import mixins from '../../../utils/mixins'
-import { extractStyle } from '../../../utils/styleUtils'
+import { extract } from '../../../utils/styleUtils'
 import ExpandButton from './expandButton'
 import TextHeader from './textHeader'
 
@@ -57,7 +57,7 @@ const Text = ({
     <TextContainer
       id={id}
       className='text-node'
-      $color={isInterview ? COLORS.BLUE : COLORS.BROWN}
+      $color={isInterview ? COLORS.TEXT_BLUE : COLORS.BROWN}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}>
       <TextHeader>{sectionTitle}</TextHeader>
@@ -80,7 +80,7 @@ const TextContainer = styled.div`
   background-color: white;
 
   &, > *, p, button {
-    color: ${extractStyle('$color')};
+    color: ${extract('$color')};
   }
 `
 

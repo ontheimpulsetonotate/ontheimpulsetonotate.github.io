@@ -4,13 +4,10 @@ import Size from './helpers/size'
 import { arrayify } from './commonUtils'
 
 
-export const extractStyle = (key, fallbackString) => props =>
+export const extract = (key, fallbackString) => props =>
   fallbackString ? (props[key] ?? fallbackString) : props[key]
 
-export const conditionalStyle = (key, string) => props =>
-  props[key] ? string : ''
-
-export const toggleStyle = (key, styleIfTrue, styleIfFalse) => props =>
+export const styleIf = (key, styleIfTrue, styleIfFalse = '') => props =>
   props[key] ? styleIfTrue : styleIfFalse
 
 export const spanCol = (isMobile, colCount, additionalGaps = 0, marginCount = 0) => {

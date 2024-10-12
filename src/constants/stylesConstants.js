@@ -8,7 +8,7 @@ export const FONT_FAMILIES = {
 }
 
 export const FONT_SIZES = {
-  SMALL: new Size(11),
+  SMALL: new Size(12),
   REGULAR: new Size(15),
   LEADING_S: new Size(15),
   LEADING_M: new Size(18),
@@ -26,18 +26,23 @@ export const FONT_SIZES_RESPONSIVE = {
   LEADING_DL: [19.75, 20, 20.25, 20.5],
 
   // mobile
-  MOBILE_REGULAR: [15, 16],
-  MOBILE_LEADING: [19, 20],
+  MOBILE_REGULAR: [17, 19],
+  MOBILE_LEADING: [23.5, 26],
+  TEXT_HEADER_MOBILE: [17.25, 26.25],
+  LEADING_M_MOBILE: [22, 24.5],
 }
 
 export const COLORS = {
-  GRAY: '#DEDAD7',
-  BROWN: '#A1752A',
-  BLUE: '#2583BE',
-  LIGHT_BLUE: '#D3E6F2',
-  BEIGE: '#FFF3DE',
-  DARK_BEIGE: '#EAE1D0',
-  LIGHT_BEIGE: '#F6F2EB',
+  // BROWN: '#A1752A',
+  BROWN: '#9A6A12',
+  BEIGE: '#F7F3EC',
+
+  // BLUE: '#2583BE',
+  BLUE: '#007AC5', // TODO
+  TEXT_BLUE: '#007AC5', // TODO
+
+  BLUE_VISUAL: '#CCE4F3',
+  BROWN_VISUAL: '#EBE1D0'
 }
 
 const PAGE_MARGIN_MOBILE = new Size(25)
@@ -55,7 +60,7 @@ export const SIZES = {
   OPENED_INDEX_LEFT_VALUE: new Size({ vw: 30 }),
   CLOSED_INDEX_LEFT_VALUE: new Size({ vw: 93 }),
   INDEX_STICKY_TOP_DESKTOP: new Size({ rem: 11.25, vh: 20 }),
-  INDEX_STICKY_TOP_MOBILE: new Size({ rem: 7.5, vh: 20 }),
+  INDEX_STICKY_TOP_MOBILE: new Size({ rem: 7.5, vh: 10 }),
   INDEX_ARTIST_WIDTH: '35%',
   INDEX_MEDIUM_WIDTH: '25%',
   INDEX_PAGE_NUM_WIDTH: new Size(100),
@@ -84,7 +89,8 @@ export const SIZES = {
   HEADER_BARS_HEIGHT: new Size(12.5),
   PAGE_MARGIN_TOP: FONT_SIZES.LEADING_S.add(PAGE_MARGIN_MOBILE.mult(3)),
   PAGE_MAX_WIDTH: new Size(650),
-  IMG_MAX_WIDTH: new Size(650)
+  IMG_MAX_WIDTH: new Size(650),
+  FIGURE_MARGIN_TOP_MOBILE: new Size(15),
 }
 
 export const SIZES_RESPONSIVE = {

@@ -6,7 +6,7 @@ import useIsMobile from '../../../hooks/useIsMobile'
 import parserServices from '../../../services/parserServices'
 import Size from '../../../utils/helpers/size'
 import mixins from '../../../utils/mixins'
-import { extractStyle } from '../../../utils/styleUtils'
+import { extract } from '../../../utils/styleUtils'
 import useWindowMouse from '../../../hooks/useWindowMouse'
 
 
@@ -47,7 +47,7 @@ const PopUpCitation = ({
         bottom: !isTop && offset.sub(new Size(mouse.y)).add(new Size({ vh: 100 })).css,
         width: isMobile ?
           Size.subFromFullWidth(SIZES.PAGE_MARGIN_MOBILE.mult(2))
-            .sub(SIZES.CITATION_PADDING.mult(2)).css :
+            .sub(SIZES.CITATION_PADDING.mult(2)).sub(new Size(2)).css :
           fixedSize ? SIZES.CITATION_MAX_WIDTH.css : bounds?.width,
         maxWidth: isMobile ?
           SIZES.IMG_MAX_WIDTH
@@ -71,14 +71,14 @@ const StyledPopUpCitation = styled.span`
     .dynamicSizes({
       width: SIZES_RESPONSIVE.CITATION_WIDTH,
     })}
-  border-color: ${extractStyle('$color')};
+  border-color: ${extract('$color')};
   position: fixed;
   background-color: white;
   padding: ${SIZES.CITATION_PADDING.css};
   font-family: ${FONT_FAMILIES.APERCU};
 
   &, * {
-    color: ${extractStyle('$color')};
+    color: ${extract('$color')};
   }
 
 

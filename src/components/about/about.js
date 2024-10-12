@@ -62,7 +62,7 @@ const DesktopContainer = styled(FullContainer)`
 
   hr {
     margin: ${SIZES.ELEM_MARGIN_DESKTOP.css} 0;
-    background-color: ${COLORS.LIGHT_BEIGE};
+    background-color: ${COLORS.BEIGE};
     height: 1px;
     border: 0;
   }

@@ -6,7 +6,7 @@ import { FONT_SIZES_RESPONSIVE, SIZES } from '../../constants/stylesConstants'
 import useIsAbout from '../../hooks/useIsAbout'
 import Size from '../../utils/helpers/size'
 import mixins from '../../utils/mixins'
-import { toggleStyle } from '../../utils/styleUtils'
+import { styleIf } from '../../utils/styleUtils'
 import About from '../about/about'
 import MenuDesktop from '../common/header/menuDesktop'
 import IndexDesktop from '../indices/indexDesktop'
@@ -73,7 +73,7 @@ const DeviceStyle = createGlobalStyle`
 const MainContainer = styled.div`
   margin:
     0
-    ${toggleStyle('$isAbout', SIZES.PAGE_MARGIN_DESKTOP.css, SIZES.PAGE_MARGIN_DESKTOP.add(Size.subFromFullWidth(SIZES.CLOSED_INDEX_LEFT_VALUE)).css)}
+    ${styleIf('$isAbout', SIZES.PAGE_MARGIN_DESKTOP.css, SIZES.PAGE_MARGIN_DESKTOP.add(Size.subFromFullWidth(SIZES.CLOSED_INDEX_LEFT_VALUE)).css)}
     0
     ${SIZES.PAGE_MARGIN_DESKTOP.css};
 `

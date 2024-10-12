@@ -45,7 +45,6 @@ const Mobile = ({ mixedViewIndex, handleIndexRowClick }) => {
 
 const DeviceStyle = createGlobalStyle`
   ${mixins.about}
-
     body {
       overflow-y: scroll;
       height: 100dvh;

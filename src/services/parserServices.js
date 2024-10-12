@@ -1,5 +1,6 @@
 import parse, { domToReact } from 'html-react-parser'
 import TruncateMarkup from 'react-truncate-markup'
+import Paragraph from '../components/common/paragraph'
 import Citation from '../components/common/text/citation'
 import ExpandButton from '../components/common/text/expandButton'
 import ProjectCitation from '../components/common/text/projectCitation'
@@ -7,7 +8,6 @@ import TextHeader from '../components/common/text/textHeader'
 import { BLEED_DIRECTIONS } from '../constants/apiConstants'
 import { COLORS } from '../constants/stylesConstants'
 import Size from '../utils/helpers/size'
-import { getVw } from '../utils/sizeUtils'
 import { convertVisualEssayImgSize, spanCol } from '../utils/styleUtils'
 import apiServices from './apiServices'
 
@@ -19,6 +19,77 @@ const parseProject = text => {
     artistLastName={title}
     medium={medium}
     workDetails={workDetails} />
+}
+
+const parseSpan = ({
+  domNode,
+  footnotes,
+  projects,
+  footnoteIndex,
+  accumulateFootnote,
+  onHover
+}) => {
+  const { attribs, children } = domNode
+  attribs.style += 'text-decoration: none; color:inherit;'
+  const { style } = attribs
+
+  if (!style.match('text-decoration:underline')) return
+  const text = children[0]?.data
+  if (!text) return
+
+  const data = text.replace(/ \[[0-9]+\]/, '')
+  if (!footnotes && !projects) {
+    children[0].data = data
+    return
+  }
+
+  const project = projects?.[footnoteIndex + 1]
+  const citation =
+    <TruncateMarkup.Atom>
+      <Citation
+        style={{ fontStyle: style.match('font-style:italic') ? 'italic' : undefined }}
+        color={COLORS.TEXT_BLUE}
+        footnote={project ?
+          parseProject(project) :
+          footnotes?.[footnoteIndex + 1]}
+        onHover={onHover}>
+        {data}
+      </Citation>
+    </TruncateMarkup.Atom>
+  accumulateFootnote()
+  return citation
+}
+
+const parseParagraph = ({
+  domNode,
+  truncate,
+  title,
+  options,
+  handleButtonClick
+}) => {
+  const { children, next } = domNode
+
+  const [firstChild] = children
+  const quoteRegex = /^[“"]/
+  const hang = firstChild?.type === 'text' && firstChild.data.match(quoteRegex)
+  if (hang) domNode.children[0].data = firstChild.data.replace(quoteRegex, '')
+  const reactChildren = domToReact(children, options)
+
+  if (next) return <Paragraph hang={hang}>{reactChildren}</Paragraph>
+
+  if (truncate === false) return (
+    <Paragraph hang={hang}>
+      {reactChildren}
+      <ExpandButton isExpanded={true} handleClick={handleButtonClick} />
+    </Paragraph>
+  )
+
+  if (title) return (
+    <Paragraph hang={hang}>
+      {reactChildren}
+      <TextHeader inline>{title}</TextHeader>
+    </Paragraph>
+  )
 }
 
 const parseTextView = (text, {
@@ -35,61 +106,29 @@ const parseTextView = (text, {
   const html = `<p>${text.replaceAll(regex, '')}</p>`
     .replaceAll(/<br>/g, truncate ? ' ' : '</p><p>')
     .replaceAll(/&lt;br&gt;/g, '')
+    .replaceAll(/-­/g, '-')
+
+  const parsers = {
+    h3: () => <></>,
+    span: domNode => parseSpan({
+      domNode,
+      footnotes,
+      projects,
+      footnoteIndex,
+      onHover,
+      accumulateFootnote: () => footnoteIndex++
+    }),
+    p: domNode => parseParagraph({
+      domNode,
+      truncate,
+      title,
+      options,
+      handleButtonClick
+    })
+  }
 
   const options = {
-    replace: domNode => {
-      const { children } = domNode
-
-      if (domNode.tagName === 'h3')
-        return <></>
-
-      if (domNode.tagName === 'span') {
-        const { attribs } = domNode
-        attribs.style += 'text-decoration: none; color:inherit;'
-        const { style } = attribs
-        if (style.match('text-decoration:underline')) {
-          const text = children[0]?.data
-          if (text) {
-            const data = text.replace(/ \[[0-9]+\]/, '')
-            if (footnotes || projects) {
-              const project = projects?.[footnoteIndex + 1]
-              const citation =
-                <TruncateMarkup.Atom>
-                  <Citation
-                    style={{ fontStyle: style.match('font-style:italic') ? 'italic' : undefined }}
-                    color={COLORS.BLUE}
-                    footnote={project ?
-                      parseProject(project) :
-                      footnotes?.[footnoteIndex + 1]}
-                    onHover={onHover}>
-                    {data}
-                  </Citation>
-                </TruncateMarkup.Atom>
-              footnoteIndex++
-              return citation
-            }
-            children[0].data = data
-          }
-        }
-      }
-
-      if (!domNode.next && domNode.tagName === 'p') {
-        if (truncate === false)
-          return (
-            <p>
-              {domToReact(children, options)}
-              <ExpandButton isExpanded={true} handleClick={handleButtonClick} />
-            </p>
-          )
-        else if (title) return (
-          <p>
-            {domToReact(children, options)}
-            <TextHeader inline> {title}</TextHeader>
-          </p >
-        )
-      }
-
-    }
+    replace: domNode => parsers[domNode.tagName]?.(domNode)
   }
 
   return parse(

@@ -11,7 +11,7 @@ const ProjectCitation = ({ artistFirstName, artistLastName, medium, workDetails,
 
   return (
     <Footnote $isMobile={isMobile}>
-      <h3>{artistLastName}{validateString(artistFirstName, ` ${artistFirstName}`)}</h3>
+      <h3>{artistLastName}{validateString(artistFirstName, `, ${artistFirstName}`)}</h3>
       <h3>{medium}</h3>
       <p>
         <span>{parserServices.parse(workDetails)}</span>

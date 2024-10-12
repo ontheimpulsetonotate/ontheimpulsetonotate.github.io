@@ -80,7 +80,7 @@ const IndexContainer = styled(FullContainer)`
 ${mixins.highZIndex(4)}
   box-sizing: border-box;
   padding: 0 ${SIZES.PAGE_MARGIN_MOBILE.css}; // TODO
-  background-color: ${COLORS.LIGHT_BEIGE};
+  background-color: ${COLORS.BEIGE};
   user-select: none;
 `
 
@@ -142,7 +142,7 @@ const TableHead = styled(Row)`
   ${mixins.border(2)}
   position: sticky;
   top: -1px;
-  background-color: ${COLORS.LIGHT_BEIGE};
+  background-color: ${COLORS.BEIGE};
   cursor: initial;
 
   p {

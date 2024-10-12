@@ -27,7 +27,6 @@ const Img = ({
       nodeData={nodeData}
       src={imgLink}
       width={SIZES_RESPONSIVE.IMG_VIEW_FIGURE_SIZE}
-      noCaption={!isOrdered}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut} />
   )

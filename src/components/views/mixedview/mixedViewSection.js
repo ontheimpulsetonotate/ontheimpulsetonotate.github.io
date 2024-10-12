@@ -8,7 +8,7 @@ import parserServices from '../../../services/parserServices'
 import { validateString } from '../../../utils/commonUtils'
 import mixins from '../../../utils/mixins'
 import { addEventListener, getChildrenHeight } from '../../../utils/reactUtils'
-import { conditionalStyle } from '../../../utils/styleUtils'
+import { styleIf } from '../../../utils/styleUtils'
 import PopUpCitation from '../../common/text/popUpCitation'
 import MixedViewImg from './mixedViewImg'
 
@@ -46,7 +46,7 @@ const MixedViewSection = ({
         onLoad={handleLoad}
         onHoverCitation={onHoverCitation} />
     ), [nodeData, containerY])
-  const title = `${sectionTitle}, P. ${pageNum.join('-')}`.toLocaleUpperCase()
+  const title = ` ${sectionTitle}, P. ${pageNum.join('-')}`.toLocaleUpperCase()
 
 
   const textRef = useRef()
@@ -132,7 +132,6 @@ const MixedViewSection = ({
           projects,
           onHover: onHoverCitation
         })}
-
       </TextContainer>
       {!isMobile && renderImgContainer(false)}
       {isMobile &&
@@ -171,7 +170,7 @@ const DesktopImgContainer = styled(BaseImgContainer)`
 `
 
 const MobileImgContainer = styled(BaseImgContainer)`
-  background-color: ${COLORS.LIGHT_BEIGE};
+  background-color: ${COLORS.BEIGE};
   padding: ${SIZES.PAGE_MARGIN_MOBILE.css} ${SIZES.PAGE_MARGIN_MOBILE.css} 0;
   box-sizing: border-box;
 
@@ -195,7 +194,7 @@ const getMobilePadding = ({ $isInterview }) =>
     SIZES.MIXED_VIEW_INTERVIEW_PADDING_TOP_MOBILE.css
 
 const BaseTextContainer = styled.div`
-  background-color: ${COLORS.LIGHT_BEIGE};
+  // background-color: ${COLORS.BEIGE};
   box-sizing: border-box;
 
   a {
@@ -243,11 +242,11 @@ const MobileTextContainer = styled(BaseTextContainer)`
 
 const BaseSectionContainer = styled.div`
   width: 100%;
-  border-top: ${conditionalStyle('$afterVisualEssay', `1px solid ${COLORS.BROWN}`)};
-  border-bottom: ${conditionalStyle('$beforeVisualEssay', `1px solid ${COLORS.BROWN}`)};
+  /* border-top: ${styleIf('$afterVisualEssay', `1px solid ${COLORS.BROWN}`)}; TODO
+  border-bottom: ${styleIf('$beforeVisualEssay', `1px solid ${COLORS.BROWN}`)}; */
   ${BaseTextContainer} {
     &, * {
-      color: ${conditionalStyle('$isInterview', COLORS.BLUE)};
+      color: ${styleIf('$isInterview', COLORS.TEXT_BLUE)};
     }
   }
 `
@@ -279,7 +278,7 @@ const DesktopSectionContainer = styled(BaseSectionContainer)`
 const MobileSectionContainer = styled(BaseSectionContainer)`
   ${mixins.flex('center', 'initial')}
   flex-direction: column;
-  background-color: ${COLORS.LIGHT_BEIGE};
+  background-color: ${COLORS.BEIGE};
 
   ${BaseTextContainer} {
     padding-top: ${SIZES.PAGE_MARGIN_TOP.css};
