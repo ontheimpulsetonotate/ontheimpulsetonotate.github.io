@@ -38,8 +38,8 @@ export const COLORS = {
   BEIGE: '#F7F3EC',
 
   // BLUE: '#2583BE',
-  BLUE: '#1E78BE', // TODO
-  TEXT_BLUE: '#1E78BE', // TODO
+  BLUE: '#3180C6', // TODO
+  TEXT_BLUE: '#3180C6', // TODO
 
   BLUE_VISUAL: '#CEE1F1',
   BROWN_VISUAL: '#EBE1D0'
