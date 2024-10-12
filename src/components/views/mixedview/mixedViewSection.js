@@ -194,7 +194,7 @@ const getMobilePadding = ({ $isInterview }) =>
     SIZES.MIXED_VIEW_INTERVIEW_PADDING_TOP_MOBILE.css
 
 const BaseTextContainer = styled.div`
-  // background-color: ${COLORS.BEIGE};
+  background-color: ${COLORS.BEIGE};
   box-sizing: border-box;
 
   a {

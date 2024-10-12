@@ -38,10 +38,10 @@ export const COLORS = {
   BEIGE: '#F7F3EC',
 
   // BLUE: '#2583BE',
-  BLUE: '#007AC5', // TODO
-  TEXT_BLUE: '#007AC5', // TODO
+  BLUE: '#1E78BE', // TODO
+  TEXT_BLUE: '#1E78BE', // TODO
 
-  BLUE_VISUAL: '#CCE4F3',
+  BLUE_VISUAL: '#CEE1F1',
   BROWN_VISUAL: '#EBE1D0'
 }
 
