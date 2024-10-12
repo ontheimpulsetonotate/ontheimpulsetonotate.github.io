@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.e296e966.css",
-    "main.js": "/static/js/main.06e645e8.js",
+    "main.js": "/static/js/main.e4e103b4.js",
     "static/js/453.a87e3742.chunk.js": "/static/js/453.a87e3742.chunk.js",
     "static/media/BradfordLL-ExtraBoldItalic.otf": "/static/media/BradfordLL-ExtraBoldItalic.81eea84d3d9183d6e528.otf",
     "static/media/BradfordLL-BoldItalic.otf": "/static/media/BradfordLL-BoldItalic.cb945c39335abc35b64c.otf",
@@ -36,11 +36,11 @@
     "static/media/bars.svg": "/static/media/bars.10f427c6afc3562c42312ef1e0ac410f.svg",
     "index.html": "/index.html",
     "main.e296e966.css.map": "/static/css/main.e296e966.css.map",
-    "main.06e645e8.js.map": "/static/js/main.06e645e8.js.map",
+    "main.e4e103b4.js.map": "/static/js/main.e4e103b4.js.map",
     "453.a87e3742.chunk.js.map": "/static/js/453.a87e3742.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e296e966.css",
-    "static/js/main.06e645e8.js"
+    "static/js/main.e4e103b4.js"
   ]
 }
