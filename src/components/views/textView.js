@@ -1,19 +1,18 @@
 import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { SIZES_RESPONSIVE } from '../../constants/stylesConstants'
+import { CLS_ID, SIZES_RESPONSIVE } from '../../constants/stylesConstants'
 import apiServices from '../../services/apiServices'
+import { quickArray } from '../../utils/commonUtils'
 import { getOrderedData, getTextContainerSize, getTextViewSize } from '../../utils/styleUtils'
 import DragContainer from '../common/containers/dragContainer'
-import Text from '../common/text/text'
-import { quickArray } from '../../utils/commonUtils'
 import PopUpCitation from '../common/text/popUpCitation'
-
+import Text from '../common/text/text'
 
 
 const TextView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
   const { width } = useWindowSize()
-  const height = useMemo(getTextContainerSize, [width])
+  const elemH = useMemo(getTextContainerSize, [width])
   const containerRef = useRef()
   const [layoutShifted, setLayoutShifted] = useState()
   const [citation, setCitation] = useState()
@@ -25,23 +24,22 @@ const TextView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
       .map(col => col * (getTextViewSize() + gap) + leftMargin)
 
     const heights = Array
-      .from(containerRef.current.querySelectorAll('.text-node')) // Bad practice but sue me
+      .from(containerRef.current.querySelectorAll(`.${CLS_ID.TEXT_NODE}`))
       .map(elem => {
         const { height, width } = elem.getBoundingClientRect()
         const transformFactor = width / nodeWidth
         return height / transformFactor
       })
 
-    const colAccumulator = quickArray(colCount, _ => topMargin)
+    const colAccumulator = quickArray(colCount, () => topMargin)
     const rows = heights.map((height, i) => {
       const col = i % colCount
       const top = colAccumulator[col]
-
       colAccumulator[col] += height + gap
       return top
     })
 
-    setLayoutShifted(false)
+    setLayoutShifted()
     return {
       orderedPositions: quickArray(heights.length, i => ({
         i,
@@ -60,7 +58,7 @@ const TextView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
     if (isOrdered) setLayoutShifted([index, isExpanded])
   }
 
-  const handleCitationOver = citation => setCitation(citation)
+  const handleCitationHover = citation => setCitation(citation)
 
   return (
     <>
@@ -68,14 +66,14 @@ const TextView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
         ref={containerRef}
         contents={apiServices.textData}
         elemW={SIZES_RESPONSIVE.TEXT_WIDTH[0]}
-        elemH={height}
+        elemH={elemH}
         element={Text}
         isOrdered={isOrdered}
         memoizedNodeData={memoizedNodeData}
         orderedPositions={orderedPositions}
         scrollSize={scrollSize}
         handleLayoutShift={handleLayoutShift}
-        handleCitationOver={handleCitationOver}
+        handleCitationHover={handleCitationHover}
         handleMemoizeNodeData={handleMemoizeNodeData} />
       <PopUpCitation {...citation} />
     </>

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { forwardRef, useState } from 'react'
 import styled from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_WEIGHTS, SIZES } from '../../../constants/stylesConstants'
 import useIsMobile from '../../../hooks/useIsMobile'
 import { padNumber } from '../../../utils/commonUtils'
 import { extract, styleIf } from '../../../utils/styleUtils'
@@ -11,6 +11,7 @@ import FilteredImg from './filteredImg'
 const Figure = forwardRef(function Figure({
   nodeData,
   style,
+  src,
   color,
   maxSize,
   maxWidth,
@@ -18,11 +19,10 @@ const Figure = forwardRef(function Figure({
   width,
   height,
   bracketNumbers = false,
-  noCaption = false,
   noFade = false,
   ...rest
 }, ref) {
-  const { imgNum, imgLink, interviewPrefix, isInterview } = nodeData
+  const { imgNum, interviewPrefix, isInterview } = nodeData
   const [isLoaded, setIsLoaded] = useState(false)
   let imgNotation = interviewPrefix ?
     `DIALOGUE ${interviewPrefix}${imgNum}` :
@@ -42,7 +42,7 @@ const Figure = forwardRef(function Figure({
       $color={color}
       $isMobile={isMobile}>
       <FilteredImg
-        src={imgLink}
+        src={src}
         backgroundColor={color}
         maxWidth={maxWidth ?? maxSize}
         maxHeight={maxHeight ?? maxSize}
@@ -59,7 +59,7 @@ const ImgContainer = styled.figure`
     font-size: ${FONT_SIZES.SMALL.css};
     color: ${extract('$color')};
     font-family: ${FONT_FAMILIES.APERCU_COND};
-    font-weight: 500;
+    font-weight: ${FONT_WEIGHTS.BOLD};
     margin-top: ${styleIf('$isMobile', SIZES.FIGURE_MARGIN_TOP_MOBILE.css, SIZES.FIGURE_MARGIN_TOP.css)};
   }
 `

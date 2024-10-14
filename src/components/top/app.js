@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { HashRouter } from 'react-router-dom'
 import { createGlobalStyle } from 'styled-components'
 import { views } from '../../constants/reactConstants'
-import { FONT_FAMILIES, FONT_SIZES, SIZES } from '../../constants/stylesConstants'
+import { FONT_FAMILIES, FONT_SIZES, FONT_WEIGHTS, SIZES } from '../../constants/stylesConstants'
 import useIsMobile from '../../hooks/useIsMobile'
 import Header from '../common/header/header'
 import Desktop from './desktop'
@@ -49,7 +49,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   h1, h2, h3, ${Header} button, a {
-    font-weight: 500;
+    font-weight: ${FONT_WEIGHTS.BOLD};
     font-family: ${FONT_FAMILIES.APERCU};
     text-transform: uppercase;
   }

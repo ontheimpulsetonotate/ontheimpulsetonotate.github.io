@@ -1,14 +1,12 @@
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES, TIMINGS } from '../../constants/stylesConstants'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_WEIGHTS, SIZES } from '../../constants/stylesConstants'
 import apiServices from '../../services/apiServices'
 import { padNumber, validateString } from '../../utils/commonUtils'
 import Size from '../../utils/helpers/size'
 import mixins from '../../utils/mixins'
 import FullContainer from '../common/containers/fullContainer'
-import Header from '../common/header/header'
-import { FilterImgContainer } from '../common/img/filteredImg'
 import SortArrow from '../common/text/sortArrow'
 
 
@@ -92,15 +90,6 @@ const TableContainer = styled.div`
   overflow-y: scroll;
   height: ${Size.subFromFullHeight(SIZES.INDEX_STICKY_TOP_MOBILE).css};
 `
-const HeaderContainer = styled(Header)`
-  ${mixins.flex('initial', 'space-between')}
-
-  ${FilterImgContainer} {
-    position: absolute;
-    top: ${SIZES.PAGE_MARGIN_DESKTOP.css};
-    right: ${SIZES.PAGE_MARGIN_DESKTOP.css};
-  }
-`
 
 const Row = styled.div`
   ${mixins
@@ -147,7 +136,7 @@ const TableHead = styled(Row)`
 
   p {
     width: fit-content;
-    font-weight: 500;
+    font-weight: ${FONT_WEIGHTS.BOLD};
     cursor: pointer;
   }
 `

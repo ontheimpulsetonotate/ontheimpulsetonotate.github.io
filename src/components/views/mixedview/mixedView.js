@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { VISUAL_ESSAY_IMG_NUM } from '../../../constants/apiConstants'
 import { FRAGMENT_ID_PREFIX } from '../../../constants/reactConstants'
-import { SIZES } from '../../../constants/stylesConstants'
+import { CLS_ID, SIZES } from '../../../constants/stylesConstants'
 import visualEssays from '../../../data/visualEssays'
 import useIsMobile from '../../../hooks/useIsMobile'
 import apiServices from '../../../services/apiServices'
@@ -14,11 +14,11 @@ import VisualEssay from './visualEssay/visualEssay'
 
 const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
   const containerRef = useRef()
-  const [containerY, setContainerY] = useState(0)
   const device = useIsMobile() ? 'mobile' : 'desktop'
   const [sectionHeights, setSectionHeights] = useState(
     new Array(apiServices.mixedData.length).fill(undefined)
   )
+  const [citation, setCitation] = useState()
   const isMobile = useIsMobile()
 
   useEffect(() => {
@@ -31,10 +31,6 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
     handleFragmentScroll()
   }, [fragmentIndex])
 
-  useEffect(() => addEventListener(containerRef.current, 'scroll', () =>
-    setContainerY(containerRef.current.scrollTop)
-  ), [])
-  const [citation, setCitation] = useState()
 
   const mixedViewContent = useMemo(() => {
     let isLeft = false
@@ -62,28 +58,26 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
           <MixedViewSection
             index={!isInterview && !isOrphan ? imgNum[0] : undefined}
             nodeData={nodeData}
-            containerY={containerY}
             isLeft={isLeft}
             beforeVisualEssay={hasVisualEssay}
             afterVisualEssay={afterVisualEssay}
             sectionHeights={sectionHeights.slice(i, i + 3)}
             onSetHeight={handleSetHeight}
             onHoverCitation={citation => setCitation(citation)} />
-          {hasVisualEssay &&
-            <VisualEssay
-              data={
-                isBlueInsights ?
-                  visualEssays.blueInsights[device] :
-                  visualEssays.surfaceManipulation[device]}
-              isBlueInsights={isBlueInsights} />}
+          {hasVisualEssay && <VisualEssay
+            data={isBlueInsights ?
+              visualEssays.blueInsights[device] :
+              visualEssays.surfaceManipulation[device]}
+            isBlueInsights={isBlueInsights} />}
         </React.Fragment>
       )
     })
-  }, [sectionHeights, containerY])
+
+  }, [sectionHeights])
 
   const Container = isMobile ? MobileContainer : DesktopContainer
   return (
-    <Container ref={containerRef} id='main'>
+    <Container ref={containerRef} id={CLS_ID.MAIN}>
       {mixedViewContent}
       <PopUpCitation {...citation} />
     </Container>

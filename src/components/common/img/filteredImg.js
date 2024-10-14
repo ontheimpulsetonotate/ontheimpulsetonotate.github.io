@@ -1,8 +1,8 @@
-import styled from 'styled-components'
-import { useState } from 'react'
 import _ from 'lodash'
-import mixins from '../../../utils/mixins'
+import { useState } from 'react'
+import styled from 'styled-components'
 import useIsMobile from '../../../hooks/useIsMobile'
+import mixins from '../../../utils/mixins'
 
 const FilteredImg = ({
   backgroundColor,
@@ -20,6 +20,7 @@ const FilteredImg = ({
     handleLoad()
     setIsLoaded(true)
   }
+
   return (
     <FilterImgContainer
       style={{

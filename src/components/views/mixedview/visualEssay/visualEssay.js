@@ -2,12 +2,10 @@ import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
-import { VISUAL_ESSAY_TITLE } from '../../../../constants/apiConstants'
 import { COLORS, SIZES } from '../../../../constants/stylesConstants'
 import useIsMobile from '../../../../hooks/useIsMobile'
 import parserServices from '../../../../services/parserServices'
-import mixins from '../../../../utils/mixins'
-import { convertVisualEssayImgSize, extract, styleIf } from '../../../../utils/styleUtils'
+import { extract, styleIf } from '../../../../utils/styleUtils'
 import VisualEssayImg from './visualEssayImg'
 
 
@@ -46,7 +44,6 @@ const Container = styled.div`
   height: ${extract('$height')};
   position: relative;
 
-  /* ${mixins.border(1, { isBottom: false })}; */ // TODO
   border-color: ${extract('$color')};
   background-color: ${extract('$backgroundColor')};
 

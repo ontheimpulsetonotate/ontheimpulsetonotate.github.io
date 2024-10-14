@@ -1,5 +1,6 @@
 import parse, { domToReact } from 'html-react-parser'
 import TruncateMarkup from 'react-truncate-markup'
+import Anchor from '../components/common/anchor'
 import Paragraph from '../components/common/paragraph'
 import Citation from '../components/common/text/citation'
 import ExpandButton from '../components/common/text/expandButton'
@@ -21,77 +22,6 @@ const parseProject = text => {
     workDetails={workDetails} />
 }
 
-const parseSpan = ({
-  domNode,
-  footnotes,
-  projects,
-  footnoteIndex,
-  accumulateFootnote,
-  onHover
-}) => {
-  const { attribs, children } = domNode
-  attribs.style += 'text-decoration: none; color:inherit;'
-  const { style } = attribs
-
-  if (!style.match('text-decoration:underline')) return
-  const text = children[0]?.data
-  if (!text) return
-
-  const data = text.replace(/ \[[0-9]+\]/, '')
-  if (!footnotes && !projects) {
-    children[0].data = data
-    return
-  }
-
-  const project = projects?.[footnoteIndex + 1]
-  const citation =
-    <TruncateMarkup.Atom>
-      <Citation
-        style={{ fontStyle: style.match('font-style:italic') ? 'italic' : undefined }}
-        color={COLORS.TEXT_BLUE}
-        footnote={project ?
-          parseProject(project) :
-          footnotes?.[footnoteIndex + 1]}
-        onHover={onHover}>
-        {data}
-      </Citation>
-    </TruncateMarkup.Atom>
-  accumulateFootnote()
-  return citation
-}
-
-const parseParagraph = ({
-  domNode,
-  truncate,
-  title,
-  options,
-  handleButtonClick
-}) => {
-  const { children, next } = domNode
-
-  const [firstChild] = children
-  const quoteRegex = /^[“"]/
-  const hang = firstChild?.type === 'text' && firstChild.data.match(quoteRegex)
-  if (hang) domNode.children[0].data = firstChild.data.replace(quoteRegex, '')
-  const reactChildren = domToReact(children, options)
-
-  if (next) return <Paragraph hang={hang}>{reactChildren}</Paragraph>
-
-  if (truncate === false) return (
-    <Paragraph hang={hang}>
-      {reactChildren}
-      <ExpandButton isExpanded={true} handleClick={handleButtonClick} />
-    </Paragraph>
-  )
-
-  if (title) return (
-    <Paragraph hang={hang}>
-      {reactChildren}
-      <TextHeader inline>{title}</TextHeader>
-    </Paragraph>
-  )
-}
-
 const parseTextView = (text, {
   title,
   truncate,
@@ -100,35 +30,77 @@ const parseTextView = (text, {
   onHover,
   handleButtonClick,
 } = {}) => {
-  let footnoteIndex = 0
   const trimSpace = '(<br>|\\s|&#8202;)+'
   const regex = new RegExp(`(^${trimSpace}|${trimSpace}$)`, 'g')
   const html = `<p>${text.replaceAll(regex, '')}</p>`
-    .replaceAll(/<br>/g, truncate ? ' ' : '</p><p>')
-    .replaceAll(/&lt;br&gt;/g, '')
-    .replaceAll(/-­/g, '-')
-
-  const parsers = {
-    h3: () => <></>,
-    span: domNode => parseSpan({
-      domNode,
-      footnotes,
-      projects,
-      footnoteIndex,
-      onHover,
-      accumulateFootnote: () => footnoteIndex++
-    }),
-    p: domNode => parseParagraph({
-      domNode,
-      truncate,
-      title,
-      options,
-      handleButtonClick
-    })
-  }
+    .replaceAll(/<br>/gm, truncate ? ' ' : '</p><p>')
+    .replaceAll(/&lt;br&gt;/gm, '')
+    .replaceAll(/-­/gm, '-')
+    .replaceAll(/<\/a><\/span> +?(<span.*?>)?(\[[0-9]+\])(<\/span>)?/gm, ' $2</a></span>')
 
   const options = {
-    replace: domNode => parsers[domNode.tagName]?.(domNode)
+    replace: domNode => {
+      const { tagName, attribs, children, next } = domNode
+
+      if (tagName === 'h3')
+        return <></>
+
+      const isAnchor = tagName === 'a'
+      if (tagName === 'span' || isAnchor) {
+        attribs.style += 'text-decoration: none; color:inherit;'
+        const { style } = attribs
+
+        if (!isAnchor && !style.match('text-decoration:underline'))
+          return
+
+        const text = children[0]?.data
+        if (!text) return
+
+        const inlineCitaiton = text.replace(/ +?\[[0-9]+\]/, '')
+        const citationNumber = text.match(/(?<=\[)[0-9](?=\])/)?.[0]
+
+        const project = projects?.[citationNumber]
+        const footnote = footnotes?.[citationNumber]
+
+        if (!footnote && !project) {
+          children[0].data = inlineCitaiton
+          return
+        }
+
+        return <TruncateMarkup.Atom>
+          <Citation
+            style={{ fontStyle: style.match('font-style:italic') ? 'italic' : undefined }}
+            color={COLORS.BLUE}
+            footnote={project ? parseProject(project) : footnote}
+            onHover={onHover}>
+            {isAnchor ? <Anchor to={attribs.href}>{inlineCitaiton}</Anchor> : inlineCitaiton}
+          </Citation>
+        </TruncateMarkup.Atom>
+      }
+
+      if (tagName !== 'p') return
+      const [firstChild] = children
+      const quoteRegex = /^[“"]/
+      const hang = firstChild?.type === 'text' && firstChild.data.match(quoteRegex)
+      if (hang) domNode.children[0].data = firstChild.data.replace(quoteRegex, '')
+      const reactChildren = domToReact(children, options)
+
+      if (next) return <Paragraph hang={hang}>{reactChildren}</Paragraph>
+
+      if (truncate === false) return (
+        <Paragraph hang={hang}>
+          {reactChildren}
+          <ExpandButton isExpanded={true} handleClick={handleButtonClick} />
+        </Paragraph>
+      )
+
+      if (title) return (
+        <Paragraph hang={hang}>
+          {reactChildren}
+          <TextHeader inline>{title}</TextHeader>
+        </Paragraph>
+      )
+    }
   }
 
   return parse(

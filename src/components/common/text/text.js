@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import TruncateMarkup from 'react-truncate-markup'
 import styled from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
+import { CLS_ID, COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, FONT_WEIGHTS, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
 import parserServices from '../../../services/parserServices'
 import mixins from '../../../utils/mixins'
 import { extract } from '../../../utils/styleUtils'
@@ -20,7 +20,7 @@ const Text = ({
   onMouseOver,
   onMouseOut,
   handleLayoutShift,
-  handleCitationOver
+  handleCitationHover
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const { text, sectionTitle, footnotes, projects, isInterview } = nodeData
@@ -36,34 +36,33 @@ const Text = ({
   useEffect(() => handleLayoutShift(index, isExpanded), [isExpanded])
   useEffect(() => onRender(), [])
 
-  const getParsed = truncate => parserServices
-    .parseTextView(text, {
-      truncate,
-      footnotes,
-      projects,
-      handleButtonClick,
-      onHover: handleCitationOver
-    })
-  const truncated = useMemo(() => (
-    <TruncateMarkup
-      lines={4}
-      tokenize='words'
-      ellipsis={<ExpandButton isExpanded={isExpanded} handleClick={handleButtonClick} />}>
-      {getParsed(true)}
-    </TruncateMarkup>
-  ), [text])
+  const parsedText = useMemo(() => {
+    const getParsed = truncate => parserServices
+      .parseTextView(text, {
+        truncate,
+        footnotes,
+        projects,
+        handleButtonClick,
+        onHover: handleCitationHover
+      })
+    return isExpanded ? getParsed(false) :
+      <TruncateMarkup
+        lines={4}
+        tokenize='words'
+        ellipsis={<ExpandButton isExpanded={isExpanded} handleClick={handleButtonClick} />}>
+        {getParsed(true)}
+      </TruncateMarkup>
+  }, [isExpanded, text])
 
   return (
     <TextContainer
       id={id}
-      className='text-node'
-      $color={isInterview ? COLORS.TEXT_BLUE : COLORS.BROWN}
+      className={CLS_ID.TEXT_NODE}
+      $color={isInterview ? COLORS.BLUE : COLORS.BROWN}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}>
       <TextHeader>{sectionTitle}</TextHeader>
-      <TextBodyContainer>
-        {isExpanded ? getParsed(false) : truncated}
-      </TextBodyContainer>
+      <TextBodyContainer>{parsedText}</TextBodyContainer>
     </TextContainer>
   )
 }
@@ -86,15 +85,15 @@ const TextContainer = styled.div`
 
 const TextBodyContainer = styled.div`
   p {
-   ${mixins.paragraphSpacing(FONT_SIZES_RESPONSIVE.LEADING_M)}
-   span {
+    ${mixins.paragraphSpacing(FONT_SIZES_RESPONSIVE.LEADING_M)}
+    span {
     pointer-events: all;
-   }
+    }
   }
 
   button {
     font-family: ${FONT_FAMILIES.APERCU_COND};
-    font-weight: 500;
+    font-weight: ${FONT_WEIGHTS.BOLD};
     pointer-events: all;
   }
 `

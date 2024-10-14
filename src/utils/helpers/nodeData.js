@@ -65,7 +65,6 @@ class NodeData {
       [this] :
       allData.filter(data => data.sectionTitle === this.sectionTitle)
 
-
     const result = sameTitle.map((data) =>
       data.imgLinks.map((imgLink, i) =>
         Object.assign(new NodeData(), data, { imgNum: [data.fullNumRange[i]], imgLink })

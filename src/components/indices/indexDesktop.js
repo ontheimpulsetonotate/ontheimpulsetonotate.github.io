@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { DATA_KEYS } from '../../constants/apiConstants'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, SIZES, SIZES_RESPONSIVE, TIMINGS } from '../../constants/stylesConstants'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_WEIGHTS, SIZES, SIZES_RESPONSIVE, TIMINGS } from '../../constants/stylesConstants'
 import apiServices from '../../services/apiServices'
 import { getDataStringSorter, padNumber, validateString } from '../../utils/commonUtils'
 import Size from '../../utils/helpers/size'
@@ -11,6 +11,7 @@ import { addEventListener } from '../../utils/reactUtils'
 import Header from '../common/header/header'
 import FilteredImg, { FilterImgContainer } from '../common/img/filteredImg'
 import SortArrow from '../common/text/sortArrow'
+import { getImgAtSize } from '../../utils/sizeUtils'
 
 
 const IndexDesktop = ({ onRowClick }) => {
@@ -75,7 +76,7 @@ const IndexDesktop = ({ onRowClick }) => {
             tabIndex={buttonFocus}>[CLOSE]</button>}
         {hoverIndex !== undefined &&
           <FilteredImg
-            src={imgLink}
+            src={getImgAtSize(imgLink, 300)}
             backgroundColor={COLORS.BROWN}
             maxWidth={SIZES_RESPONSIVE.INDEX_TAB_FIGURE_SIZE}
             maxHeight={SIZES_RESPONSIVE.INDEX_TAB_FIGURE_SIZE} />}
@@ -200,7 +201,7 @@ const TableHead = styled(Row)`
 
   p {
     width: fit-content;
-    font-weight: 500;
+    font-weight: ${FONT_WEIGHTS.BOLD};
     cursor: pointer;
   }
 `

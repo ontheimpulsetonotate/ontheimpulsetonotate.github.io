@@ -14,14 +14,14 @@ import Home from './home'
 
 const Desktop = ({ mixedViewIndex, handleIndexRowClick }) => {
   const [isOrdered, setIsOrdered] = useState(false)
-  const [memoizedNodeData, setMemoizedPositions] = useState(Array(2))
+  const [memoizedNodeData, setMemoizedNodeData] = useState(Array(2))
   const isAbout = useIsAbout()
 
   const location = useLocation()
   useEffect(() => setIsOrdered(false), [location.pathname])
 
   const handleMemoizeNodeData = (index, nodeData) =>
-    setMemoizedPositions(prev => {
+    setMemoizedNodeData(prev => {
       const newPositions = [...prev]
       newPositions[index] = nodeData
       return newPositions

@@ -8,7 +8,6 @@ import { SIZES, TIMINGS } from '../../../constants/stylesConstants'
 import useMergedRef from '../../../hooks/useMergedRef'
 import { validateString } from '../../../utils/commonUtils'
 import mixins from '../../../utils/mixins'
-import { getPx } from '../../../utils/sizeUtils'
 import { getTextContainerSize } from '../../../utils/styleUtils'
 
 const Node = forwardRef(function Node({
@@ -41,64 +40,55 @@ const Node = forwardRef(function Node({
   const id = `#${containerId}`
 
   useEffect(() => setUseMappedPosition(true), [mappedPosition])
+  useEffect(() => { if (isOrdered) setIsOrdering(true) }, [isOrdered])
 
-  useEffect(() => {
-    if (isOrdered) setIsOrdering(true)
-  }, [isOrdered])
+  useGSAP(() => {
+    if (!childRendered) return
 
-  useGSAP(
-    () => {
-      if (!childRendered) return
+    const delay = !index ? 1 : _.random(0, 12.5, true)
 
-      const delay = !index ? 1 : _.random(0, 12.5, true)
-
-      timeoutRef.current = setTimeout(() => {
-        if (innerRef.current)
-          innerRef.current.style.visibility = 'initial'
-        const animation = gsap
-          .timeline()
-          .to(id,
-            {
-              opacity: 1,
-              duration: shouldAnimate ? 0.25 : 0,
-              ease: 'back.out(2)',
-              onComplete: handleAnimate
-            })
-
-        if (!shouldAnimate) return
-        animation.fromTo(id,
-          { scale: _.random(1.25, 2.25, true) },
+    timeoutRef.current = setTimeout(() => {
+      if (innerRef.current)
+        innerRef.current.style.visibility = 'initial'
+      const animation = gsap
+        .timeline()
+        .to(id,
           {
-            scale: 1,
-            duration: _.random(0.75, 1.5, true),
+            opacity: 1,
+            duration: shouldAnimate ? 0.25 : 0,
             ease: 'back.out(2)',
-            onComplete: () => setHasAnimated(true),
-            delay: -0.25
+            onComplete: handleAnimate
           })
-      }, shouldAnimate ? delay * 1000 : 0)
-    },
-    {
-      scope: innerRef,
-      dependencies: [childRendered]
-    }
-  )
 
-  useGSAP(
-    () => {
-      if (!childRendered || !hasAnimated) return
-      const timeline = (scaleTimelineRef.current ??= gsap.timeline())
-      if (isHovering) timeline.clear()
-      timeline.to(id, {
-        scale: isHovering ? 1.225 : 1,
-        duration: TIMINGS.NODE_SCALE / 1000,
-        ease: 'power1.inOut'
-      })
-    },
-    {
-      scope: innerRef,
-      dependencies: [childRendered, isHovering, hasAnimated]
-    }
-  )
+      if (!shouldAnimate) return
+      animation.fromTo(id,
+        { scale: _.random(1.25, 2.25, true) },
+        {
+          scale: 1,
+          duration: _.random(0.75, 1.5, true),
+          ease: 'back.out(2)',
+          onComplete: () => setHasAnimated(true),
+          delay: -0.25
+        })
+    }, shouldAnimate ? delay * 1000 : 0)
+  }, {
+    scope: innerRef,
+    dependencies: [childRendered]
+  })
+
+  useGSAP(() => {
+    if (!childRendered || !hasAnimated) return
+    const timeline = (scaleTimelineRef.current ??= gsap.timeline())
+    if (isHovering) timeline.clear()
+    timeline.to(id, {
+      scale: isHovering ? 1.225 : 1,
+      duration: TIMINGS.NODE_SCALE / 1000,
+      ease: 'power1.inOut'
+    })
+  }, {
+    scope: innerRef,
+    dependencies: [childRendered, isHovering, hasAnimated]
+  })
 
   useEffect(() => () => clearTimeout(timeoutRef.current), [])
 
@@ -155,7 +145,7 @@ const Node = forwardRef(function Node({
           }
         })}
       </InnerContainer>
-    </Draggable >
+    </Draggable>
   )
 })
 

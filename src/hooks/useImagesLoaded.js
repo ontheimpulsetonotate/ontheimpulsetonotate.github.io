@@ -21,7 +21,6 @@ const useImagesLoaded = (...sources) => {
           newProportions[i] = img.height / img.width
           return newProportions
         })
-        // setProportions(prev => ({ ...prev, [src]: img.height / img.width }))
       }
       img.onerror = err => console.log(err, src)
       img.src = src

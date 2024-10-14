@@ -3,15 +3,12 @@ import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { COLORS } from '../../../constants/stylesConstants'
 import useIsMobile from '../../../hooks/useIsMobile'
-
-import useWindowMouse from '../../../hooks/useWindowMouse'
 import { addEventListener } from '../../../utils/reactUtils'
 import PopUpCitation from './popUpCitation'
 
 
 const Citation = ({ children, footnote, color, imgRef, fixedSize, onHover, style }) => {
   const [isHovering, setIsHovering] = useState(false)
-  const mouse = useWindowMouse()
   const ref = useClickAway(() => setIsHovering(false))
   const isMobile = useIsMobile()
   const [touched, setIsTouched] = useState(false)
@@ -44,21 +41,18 @@ const Citation = ({ children, footnote, color, imgRef, fixedSize, onHover, style
         onMouseOut={() => setIsHovering(false)}>
         {children}
       </CitationSpan>
-      {isHovering &&
-        !onHover &&
-        <PopUpCitation
-          mouse={mouse}
-          color={color}
-          imgRef={imgRef}
-          fixedSize={fixedSize}>
-          {footnote}
-        </PopUpCitation>}
+      <PopUpCitation
+        color={color}
+        imgRef={imgRef}
+        fixedSize={fixedSize}>
+        {isHovering && !onHover && footnote}
+      </PopUpCitation>
     </>
   )
 }
 
 const CitationSpan = styled.span`
-  color: ${COLORS.TEXT_BLUE};
+  color: ${COLORS.BLUE};
   height: fit-content;
   cursor: default;
 `

@@ -1,10 +1,9 @@
 import * as changeCase from 'change-case'
 import _ from 'lodash'
 import { COLORS, SIZES } from '../constants/stylesConstants'
-import { arrayify, loopObject, quickArray, validateString } from './commonUtils'
+import { arrayify, loopObject, validateString } from './commonUtils'
 import { getSize, desktopQueries, mobileQueries } from './sizeUtils'
 import Size from './helpers/size'
-import { styleIf } from './styleUtils'
 
 const flex = (
   alignItems = 'initial',

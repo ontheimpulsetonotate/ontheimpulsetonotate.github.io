@@ -22,12 +22,12 @@ const DragContainer = forwardRef(function DragContainer({
   handleRender,
   handleMemoizeNodeData,
   handleLayoutShift,
-  handleCitationOver
+  handleCitationHover
 }, ref) {
+  const { width, height } = useWindowSize()
   const [zIndices, setZIndices] = useState(
     memoizedNodeData?.zIndices ?? quickArray(contents.length)
   )
-  const { width, height } = useWindowSize()
   const containerRef = useMergedRef(ref)
 
   const { left, right, top, bottom } = getMainContainer()
@@ -65,8 +65,7 @@ const DragContainer = forwardRef(function DragContainer({
 
   const mappedPositions = useMemo(() =>
     unmappedPositions.map(({ x, y }) =>
-      convertCoors({ x, y }, true)), [width, height, isOrdered]
-  )
+      convertCoors({ x, y }, true)), [width, height, isOrdered])
 
   useEffect(() => {
     if (!isOrdered)
@@ -90,12 +89,9 @@ const DragContainer = forwardRef(function DragContainer({
 
   const handleAnimate = () => hasAnimatedRef.current = true
 
-
   return (
     <StyledContainer
-      style={{
-        overflowY: isOrdered ? 'scroll' : 'hidden'
-      }}
+      style={{ overflowY: isOrdered ? 'scroll' : 'hidden' }}
       ref={containerRef}>
       {contents.map((content, i) =>
         <Node
@@ -113,7 +109,7 @@ const DragContainer = forwardRef(function DragContainer({
           handleRender={handleRender}
           handleAnimate={handleAnimate}
           handleLayoutShift={handleLayoutShift}
-          handleCitationOver={handleCitationOver}
+          handleCitationHover={handleCitationHover}
           render={Element} />
       )}
       <ScrollSizer style={{

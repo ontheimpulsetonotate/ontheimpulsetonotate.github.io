@@ -1,7 +1,5 @@
-import { useHover, useMouse } from '@uidotdev/usehooks'
-import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { COLORS, FONT_FAMILIES, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
+import { FONT_FAMILIES, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
 import useIsMobile from '../../../hooks/useIsMobile'
 import parserServices from '../../../services/parserServices'
 import Size from '../../../utils/helpers/size'
@@ -11,14 +9,13 @@ import useWindowMouse from '../../../hooks/useWindowMouse'
 
 
 const PopUpCitation = ({
-  mouse,
   children,
   color,
   imgRef,
   fixedSize,
 }) => {
-  const _mouse = useWindowMouse()
-  if (!mouse || (!mouse.x && !mouse.y)) mouse = _mouse
+  const mouse = useWindowMouse()
+
   const isMobile = useIsMobile()
 
   const isLeft = mouse.x <= window.innerWidth / 2
@@ -28,9 +25,11 @@ const PopUpCitation = ({
   const offset = SIZES.CITATION_OFFSET
   const leftSideOnly = isLeft || isMobile
 
-  if (!children) return
+
   return (
     children &&
+    !!mouse.x &&
+    !!mouse.y &&
     <StyledPopUpCitation
       style={{
         left: leftSideOnly &&

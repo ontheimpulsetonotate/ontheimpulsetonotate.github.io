@@ -7,16 +7,14 @@ import apiServices from '../../../services/apiServices'
 import parserServices from '../../../services/parserServices'
 import { validateString } from '../../../utils/commonUtils'
 import mixins from '../../../utils/mixins'
-import { addEventListener, getChildrenHeight } from '../../../utils/reactUtils'
+import { getChildrenHeight } from '../../../utils/reactUtils'
 import { styleIf } from '../../../utils/styleUtils'
-import PopUpCitation from '../../common/text/popUpCitation'
 import MixedViewImg from './mixedViewImg'
 
 
 const MixedViewSection = ({
   index,
   nodeData,
-  containerY,
   isLeft,
   beforeVisualEssay,
   afterVisualEssay,
@@ -37,17 +35,14 @@ const MixedViewSection = ({
   const isMobile = useIsMobile()
   const [loadCount, setLoadCount] = useState(0)
   const handleLoad = () => setLoadCount(prev => prev + 1)
-  const imgs = useMemo(() =>
-    nodeData.getImgNodes(apiServices.mainData).map((imgNodes, i) =>
-      <MixedViewImg
-        key={i}
-        nodeData={imgNodes}
-        containerY={containerY}
-        onLoad={handleLoad}
-        onHoverCitation={onHoverCitation} />
-    ), [nodeData, containerY])
+  const imgs = useMemo(() => nodeData.getImgNodes(apiServices.mainData)
+    .map((imgNodes, i) => <MixedViewImg
+      key={i}
+      nodeData={imgNodes}
+      onLoad={handleLoad}
+      onHoverCitation={onHoverCitation} />
+    ), [nodeData])
   const title = ` ${sectionTitle}, P. ${pageNum.join('-')}`.toLocaleUpperCase()
-
 
   const textRef = useRef()
   const imgRef = useRef()
@@ -111,7 +106,6 @@ const MixedViewSection = ({
     </ImgContainer>
   ), [isLeft, imgs])
 
-
   return (
     <SectionContainer
       $isMobile={isMobile}
@@ -161,11 +155,8 @@ const DesktopImgContainer = styled(BaseImgContainer)`
     margin-top: ${SIZES.ELEM_MARGIN_DESKTOP.css};
   }
 
- figure {
-    transition: opacity ${TIMINGS.MIXED_FIGURE_OPACITY}ms ease-in-out;
-    &:not(:first-child) {
-      margin-top: ${SIZES.MIXED_VIEW_FIGURE_MARGIN.css};
-    }
+ figure:not(:first-child) {
+    margin-top: ${SIZES.MIXED_VIEW_FIGURE_MARGIN.css};
   }
 `
 
@@ -242,11 +233,9 @@ const MobileTextContainer = styled(BaseTextContainer)`
 
 const BaseSectionContainer = styled.div`
   width: 100%;
-  /* border-top: ${styleIf('$afterVisualEssay', `1px solid ${COLORS.BROWN}`)}; TODO
-  border-bottom: ${styleIf('$beforeVisualEssay', `1px solid ${COLORS.BROWN}`)}; */
   ${BaseTextContainer} {
     &, * {
-      color: ${styleIf('$isInterview', COLORS.TEXT_BLUE)};
+      color: ${styleIf('$isInterview', COLORS.BLUE)};
     }
   }
 `

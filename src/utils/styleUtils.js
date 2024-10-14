@@ -87,7 +87,8 @@ const getBreakptSize = sizes => {
 
 export const convertVisualEssayImgSize = (size, isMobile, isBlueInsights) =>
   isMobile ?
-    Math.max(size - (isBlueInsights ? 2153 : 1886), 0) * getVw() / 393 :
+    Math.max(size - (isBlueInsights ? 2153 : 1886), 0)
+    * getVw() / 393 * SIZES.VISUAL_ESSAY_SPACE_COMPENSATION_MULTIPLIER :
     Math.max(size - 990, 0) * getVw() / 1512
 
 export const getTextContainerSize = () =>

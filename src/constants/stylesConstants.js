@@ -15,6 +15,10 @@ export const FONT_SIZES = {
   LEADING_L: new Size(20),
 }
 
+export const FONT_WEIGHTS = {
+  BOLD: 500
+}
+
 export const FONT_SIZES_RESPONSIVE = {
   SMALL: [10.75, 11],
   REGULAR: [14, 15],
@@ -27,19 +31,15 @@ export const FONT_SIZES_RESPONSIVE = {
 
   // mobile
   MOBILE_REGULAR: [17, 19],
-  MOBILE_LEADING: [23.5, 26],
-  TEXT_HEADER_MOBILE: [17.25, 26.25],
+  MOBILE_LEADING: [23.5, 25.5],
+  TEXT_HEADER_MOBILE: [16.5, 18],
   LEADING_M_MOBILE: [22, 24.5],
 }
 
 export const COLORS = {
-  // BROWN: '#A1752A',
   BROWN: '#9A6A12',
   BEIGE: '#F7F3EC',
-
-  // BLUE: '#2583BE',
-  BLUE: '#3180C6', // TODO
-  TEXT_BLUE: '#3180C6', // TODO
+  BLUE: '#3180C6',
 
   BLUE_VISUAL: '#CEE1F1',
   BROWN_VISUAL: '#EBE1D0'
@@ -90,7 +90,8 @@ export const SIZES = {
   PAGE_MARGIN_TOP: FONT_SIZES.LEADING_S.add(PAGE_MARGIN_MOBILE.mult(3)),
   PAGE_MAX_WIDTH: new Size(650),
   IMG_MAX_WIDTH: new Size(650),
-  FIGURE_MARGIN_TOP_MOBILE: new Size(15),
+  FIGURE_MARGIN_TOP_MOBILE: new Size(11.5),
+  VISUAL_ESSAY_SPACE_COMPENSATION_MULTIPLIER: 1.25
 }
 
 export const SIZES_RESPONSIVE = {
@@ -108,6 +109,16 @@ export const SIZES_RESPONSIVE = {
 export const TIMINGS = {
   ORDER: 500,
   NODE_SCALE: 300,
-  MIXED_FIGURE_OPACITY: 200,
+  MIXED_FIGURE_OPACITY: 125,
   INDEX_SLIDE: 600
 }
+
+export const CLS_ID = {
+  TEXT_NODE: 'text-node',
+  MAIN: 'main'
+}
+
+const createSrcSetSizes = (length, interval) =>
+  Array(length).fill(interval).map((size, i) => size * (1 + i))
+export const IMG_SRCSET = createSrcSetSizes(5, 150)
+export const VISUAL_ESSAY_SRCSET = createSrcSetSizes(8, 125)

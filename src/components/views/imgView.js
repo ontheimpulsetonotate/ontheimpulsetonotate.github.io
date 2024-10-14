@@ -1,7 +1,6 @@
 import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
-import { SIZES } from '../../constants/stylesConstants'
 import apiServices from '../../services/apiServices'
 import { quickArray } from '../../utils/commonUtils'
 import { getImgViewFigureSize, getOrderedData } from '../../utils/styleUtils'
@@ -10,10 +9,10 @@ import Img from '../common/img/img'
 
 
 const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
-  const imgSize = getImgViewFigureSize()
+  const { width } = useWindowSize()
   const [proportions, setProportions] = useState(Array(apiServices.imgData.length))
 
-  const { width } = useWindowSize()
+  const imgSize = getImgViewFigureSize()
   const { orderedPositions, scrollSize } = useMemo(() => {
     if (!isOrdered) return {}
     const { nodeWidth, colCount, getRowHeight, gap, leftMargin, topMargin } = getOrderedData(true)
@@ -39,7 +38,6 @@ const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
       scrollSize: _.last(rows) - rows[0]
     }
   }, [isOrdered, width])
-
 
   const handleRender = (index, proportions) =>
     setProportions(prev => {
