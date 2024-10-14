@@ -27,10 +27,8 @@ const MixedView = ({ aboutIsOpened, fragmentIndex, handleFragmentScroll }) => {
 
     if (memoizedScrollRef.current)
       document.documentElement.scrollTop = memoizedScrollRef.current
-    return addEventListener(window, 'scroll', () => {
-      console.log(document.documentElement.scrollTop)
-      memoizedScrollRef.current = document.documentElement.scrollTop
-    })
+    return addEventListener(window, 'scroll', () =>
+      memoizedScrollRef.current = document.documentElement.scrollTop)
   }, [aboutIsOpened])
 
   useEffect(() => {

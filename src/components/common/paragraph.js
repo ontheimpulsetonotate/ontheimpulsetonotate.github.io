@@ -2,9 +2,11 @@ import styled from 'styled-components'
 import { styleIf } from '../../utils/styleUtils'
 
 const Paragraph = ({ hang, children, ...props }) =>
-  <StyledParagraph {...props} $hang={hang} >
+  <StyledParagraph {...props} $hang={hang}>
     {hang && <span>“</span>}{children}
   </StyledParagraph>
+
+
 
 
 const StyledParagraph = styled.p`

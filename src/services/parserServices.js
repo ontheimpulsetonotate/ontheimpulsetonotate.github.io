@@ -83,7 +83,9 @@ const parseTextView = (text, {
       if (tagName !== 'p') return
       const [firstChild] = children
       const quoteRegex = /^[“"]/
-      const hang = firstChild?.type === 'text' && firstChild.data.match(quoteRegex)
+      const hang =
+        !CSS.supports('hanging-punctuation', 'first') &&
+        firstChild?.type === 'text' && firstChild.data.match(quoteRegex)
       if (hang) domNode.children[0].data = firstChild.data.replace(quoteRegex, '')
       const reactChildren = domToReact(children, options)
 
