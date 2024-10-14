@@ -17,6 +17,7 @@ const App = () => {
   const [mixedViewIndex, setMixedViewIndex] = useState()
   const isMobile = useIsMobile()
   const Device = isMobile ? Mobile : Desktop
+  const [aboutIsOpened, setAboutIsOpened] = useState(false)
 
   const handleIndexRowClick = (i, navigate = _.noop) => {
     setMixedViewIndex(i)
@@ -27,8 +28,10 @@ const App = () => {
     <HashRouter>
       <GlobalStyle />
       <Device
+        aboutIsOpened={aboutIsOpened}
         mixedViewIndex={mixedViewIndex}
         onSetMixedViewIndex={setMixedViewIndex}
+        handleAboutToggle={shouldOpen => setAboutIsOpened(shouldOpen)}
         handleIndexRowClick={handleIndexRowClick} />
     </HashRouter>
   )

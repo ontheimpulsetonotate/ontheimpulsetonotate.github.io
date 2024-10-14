@@ -1,9 +1,8 @@
 
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { createGlobalStyle } from 'styled-components'
 import { views } from '../../constants/reactConstants'
-import useIsAbout from '../../hooks/useIsAbout'
 import mixins from '../../utils/mixins'
 import About from '../about/about'
 import MenuMobile from '../common/header/menuMobile'
@@ -12,9 +11,9 @@ import MixedView from '../views/mixedview/mixedView'
 import Home from './home'
 
 
-const Mobile = ({ mixedViewIndex, handleIndexRowClick }) => {
+const Mobile = ({ aboutIsOpened, mixedViewIndex, handleIndexRowClick, handleAboutToggle }) => {
   const [indexIsOpened, setIndexIsOpened] = useState(false)
-  const isAbout = useIsAbout() && !indexIsOpened
+  const isAbout = aboutIsOpened && !indexIsOpened
 
   const handleClose = () => setIndexIsOpened(false)
   const navigate = useNavigate()
@@ -24,18 +23,21 @@ const Mobile = ({ mixedViewIndex, handleIndexRowClick }) => {
       <DeviceStyle $isAbout={isAbout} />
       <div>
         <MenuMobile
+          aboutIsOpened={aboutIsOpened}
           indexIsOpened={indexIsOpened}
-          onToggleIndex={newState => setIndexIsOpened(newState)} />
+          onToggleIndex={newState => setIndexIsOpened(newState)}
+          handleAboutToggle={handleAboutToggle} />
         <Routes>
           <Route path={`/${views.mixed.url}`} element={
             <Home
               view={MixedView}
+              aboutIsOpened={aboutIsOpened}
               mixedViewFragmentIndex={mixedViewIndex}
               handleFragmentScroll={() => onIndexRowClick()} />
           } />
-          <Route path='/about' element={<About />} />
           <Route path='*' element={<Navigate to={`/${views.mixed.url}`} replace />} />
         </Routes>
+        {aboutIsOpened && <About />}
         {indexIsOpened && <IndexMobile onRowClick={onIndexRowClick} onClose={handleClose} />}
       </div >
     </>

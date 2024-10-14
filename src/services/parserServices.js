@@ -1,6 +1,6 @@
 import parse, { domToReact } from 'html-react-parser'
 import TruncateMarkup from 'react-truncate-markup'
-import Anchor from '../components/common/anchor'
+import ExternalLink from '../components/common/externalLink'
 import Paragraph from '../components/common/paragraph'
 import Citation from '../components/common/text/citation'
 import ExpandButton from '../components/common/text/expandButton'
@@ -73,7 +73,9 @@ const parseTextView = (text, {
             color={COLORS.BLUE}
             footnote={project ? parseProject(project) : footnote}
             onHover={onHover}>
-            {isAnchor ? <Anchor to={attribs.href}>{inlineCitaiton}</Anchor> : inlineCitaiton}
+            {isAnchor ?
+              <ExternalLink to={attribs.href}>{inlineCitaiton}</ExternalLink> :
+              inlineCitaiton}
           </Citation>
         </TruncateMarkup.Atom>
       }

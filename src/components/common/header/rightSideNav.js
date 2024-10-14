@@ -3,12 +3,14 @@ import mixins from '../../../utils/mixins'
 import { SIZES } from '../../../constants/stylesConstants'
 import useIsMobile from '../../../hooks/useIsMobile'
 import { styleIf } from '../../../utils/styleUtils'
-import useIsAbout from '../../../hooks/useIsAbout'
 
-const RightSideNav = ({ children }) => {
+const RightSideNav = ({ children, aboutIsOpened }) => {
   const isMobile = useIsMobile()
-  const isAbout = useIsAbout()
-  return <StyledRightSideNav $hasPadding={!isMobile && !isAbout}>{children}</StyledRightSideNav>
+  return (
+    <StyledRightSideNav $hasPadding={!isMobile && !aboutIsOpened}>
+      {children}
+    </StyledRightSideNav>
+  )
 }
 
 const StyledRightSideNav = styled.div`

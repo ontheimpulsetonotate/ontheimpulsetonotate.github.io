@@ -12,7 +12,7 @@ import PopUpCitation from '../../common/text/popUpCitation'
 import MixedViewSection from './mixedViewSection'
 import VisualEssay from './visualEssay/visualEssay'
 
-const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
+const MixedView = ({ aboutIsOpened, fragmentIndex, handleFragmentScroll }) => {
   const containerRef = useRef()
   const device = useIsMobile() ? 'mobile' : 'desktop'
   const [sectionHeights, setSectionHeights] = useState(
@@ -20,6 +20,18 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
   )
   const [citation, setCitation] = useState()
   const isMobile = useIsMobile()
+  const memoizedScrollRef = useRef()
+
+  useEffect(() => {
+    if (aboutIsOpened) return
+
+    if (memoizedScrollRef.current)
+      document.documentElement.scrollTop = memoizedScrollRef.current
+    return addEventListener(window, 'scroll', () => {
+      console.log(document.documentElement.scrollTop)
+      memoizedScrollRef.current = document.documentElement.scrollTop
+    })
+  }, [aboutIsOpened])
 
   useEffect(() => {
     const container = containerRef.current
@@ -77,7 +89,10 @@ const MixedView = ({ fragmentIndex, handleFragmentScroll }) => {
 
   const Container = isMobile ? MobileContainer : DesktopContainer
   return (
-    <Container ref={containerRef} id={CLS_ID.MAIN}>
+    <Container
+      ref={containerRef}
+      id={CLS_ID.MAIN}
+      style={{ display: isMobile && aboutIsOpened ? 'none' : '' }}>
       {mixedViewContent}
       <PopUpCitation {...citation} />
     </Container>

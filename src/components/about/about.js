@@ -4,6 +4,7 @@ import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, SIZES, SIZES_
 import useIsMobile from '../../hooks/useIsMobile'
 import mixins from '../../utils/mixins'
 import FullContainer from '../common/containers/fullContainer'
+import ExternalLink from '../common/externalLink'
 
 const About = () => {
   const isMobile = useIsMobile()
@@ -38,8 +39,8 @@ const About = () => {
         </div>
         <CreditContainer>
           <p>© 2024</p>
-          <p>designed by lydia Chodosh</p>
-          <p>Developed by donald Zhu</p>
+          <p>designed by <ExternalLink to='https://lydiachodosh.com/'>lydia Chodosh</ExternalLink></p>
+          <p>Developed by <ExternalLink to='https://donaldzhu.ca/'>donald Zhu</ExternalLink></p>
         </CreditContainer>
       </InnerContainer>
     </Container>
@@ -58,6 +59,7 @@ const DesktopContainer = styled(FullContainer)`
     })}
     line-height:  ${FONT_SIZES.LEADING_L.css};
     margin-bottom: ${FONT_SIZES.LEADING_L.css};
+    color: ${COLORS.BEIGE};
   }
 
   hr {
@@ -103,6 +105,12 @@ const CreditContainer = styled.div`
     margin: 0;
     font-family: ${FONT_FAMILIES.APERCU_COND};
     font-size: ${FONT_SIZES.REGULAR.css};
+
+    a {
+      font: inherit;
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
   }
 `
 

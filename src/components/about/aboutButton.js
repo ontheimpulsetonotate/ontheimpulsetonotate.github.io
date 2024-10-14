@@ -1,31 +1,26 @@
 import _ from 'lodash'
 
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import useIsAbout from '../../hooks/useIsAbout'
 import useToPrev from '../../hooks/useToPrev'
 import useIsMobile from '../../hooks/useIsMobile'
 
 
-const AboutButton = ({ mobileIndexIsOpen, mobileOnClick = _.noop }) => {
-  const isAbout = useIsAbout()
+const AboutButton = ({ isOpen, mobileIndexIsOpen, mobileOnClick = _.noop, handleToggle }) => {
   const isMobile = useIsMobile()
-  const navigate = useNavigate()
-  const toPrev = useToPrev()
 
   const handleClick = () => {
-    if (isAbout && !mobileIndexIsOpen)
-      return toPrev()
+    if (isOpen && !mobileIndexIsOpen) return handleToggle(false)
     mobileOnClick()
-    navigate('/about')
+    handleToggle(true)
   }
 
   return (
     <LinkContainer>
       <button
         onClick={handleClick}>
-        [{!isAbout ? '+' :
-          (isMobile ? (mobileIndexIsOpen ? '+' : 'x') : 'CLOSE')}]
+        [{!isOpen ? '+' :
+          (isMobile ? (mobileIndexIsOpen ? '+' : '×') : 'CLOSE')}]
       </button>
     </LinkContainer>
   )
