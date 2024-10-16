@@ -1,15 +1,16 @@
 import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
-import { COLORS, SIZES } from '../../../../constants/stylesConstants'
+import { CLS_ID, COLORS, SIZES } from '../../../../constants/stylesConstants'
 import useIsMobile from '../../../../hooks/useIsMobile'
 import parserServices from '../../../../services/parserServices'
+import { addEventListener, getScrolling } from '../../../../utils/reactUtils'
 import { extract, styleIf } from '../../../../utils/styleUtils'
 import VisualEssayImg from './visualEssayImg'
 
 
-const VisualEssay = ({ data, isBlueInsights }) => {
+const VisualEssay = ({ data, isBlueInsights, handleBlueInsightsIntersect }) => {
   const isMobile = useIsMobile()
   const { width } = useWindowSize()
   const parsedData = useMemo(() =>
@@ -18,15 +19,24 @@ const VisualEssay = ({ data, isBlueInsights }) => {
   const LAST_IMAGE_PROPORTION = isBlueInsights ? 1.4805 : 1.261
 
   const color = isBlueInsights ? COLORS.BLUE : COLORS.BROWN
-  const backgroundColor = isBlueInsights ? COLORS.BLUE_VISUAL : COLORS.BROWN_VISUAL
+  const backgroundColor = isBlueInsights ? COLORS.BLUE_VISUAL : COLORS.BEIGE_VISUAL
 
   const lastImg = _.maxBy(parsedData, img => img.top.value)
   const height = lastImg.top
     .add(lastImg.width.div(LAST_IMAGE_PROPORTION))
     .add(SIZES.MIXED_VIEW_PADDING_BOTTOM).css
 
+  const ref = useRef()
+  useEffect(() => addEventListener(getScrolling(isMobile), 'scroll', () => {
+    if (isBlueInsights) {
+      const { top, bottom } = ref.current.getBoundingClientRect()
+      handleBlueInsightsIntersect(top <= 0 && bottom > 0)
+    }
+  }), [])
+
   return (
     <Container
+      ref={ref}
       $isMobile={isMobile}
       $height={height}
       $color={color}

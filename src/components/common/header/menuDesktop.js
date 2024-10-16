@@ -1,17 +1,24 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { views } from '../../../constants/reactConstants'
-import { SIZES } from '../../../constants/stylesConstants'
+import { COLORS, SIZES } from '../../../constants/stylesConstants'
 import mixins from '../../../utils/mixins'
+import { styleIf } from '../../../utils/styleUtils'
 import AboutButton from '../../about/aboutButton'
 import Header from './header'
 import HeaderButton from './headerButton'
 import RightSideNav from './rightSideNav'
 import SiteHeader from './siteHeader'
 
-const MenuDesktop = ({ aboutIsOpened, isOrdered, handleAboutToggle, handleOrder }) => {
+const MenuDesktop = ({
+  aboutIsOpened,
+  isOrdered,
+  isInBlueInsights,
+  handleAboutToggle,
+  handleOrder
+}) => {
   return (
-    <HeaderContainer>
+    <HeaderContainer $isBlue={!aboutIsOpened && isInBlueInsights}>
       <SiteHeader
         defaultPath={views.text.url}
         onClick={() => handleAboutToggle(false)} />
@@ -58,6 +65,7 @@ const HeaderContainer = styled(Header)`
 
   a, button {
     pointer-events: initial;
+    color: ${styleIf('$isBlue', COLORS.BLUE)};
   }
 
   h1 {

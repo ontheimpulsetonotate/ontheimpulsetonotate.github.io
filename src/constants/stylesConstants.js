@@ -41,8 +41,8 @@ export const COLORS = {
   BEIGE: '#F7F3EC',
   BLUE: '#3180C6',
 
+  BEIGE_VISUAL: '#EBE1D0',
   BLUE_VISUAL: '#CEE1F1',
-  BROWN_VISUAL: '#EBE1D0'
 }
 
 const PAGE_MARGIN_MOBILE = new Size(25)

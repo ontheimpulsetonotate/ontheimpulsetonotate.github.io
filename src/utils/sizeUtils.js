@@ -67,5 +67,5 @@ export const DESKTOP_QUERY = `min-width: ${MOBILE_BP + 1}px`
 
 export const getImgAtSize = (imgLink, size) => {
   const [folder, fileName] = imgLink.split('/')
-  return `${folder}/${size}/${fileName}`
+  return `assets/${folder}/${size}/${fileName}`
 }

@@ -11,7 +11,14 @@ import MenuDesktop from '../common/header/menuDesktop'
 import IndexDesktop from '../indices/indexDesktop'
 import Home from './home'
 
-const Desktop = ({ aboutIsOpened, mixedViewIndex, handleIndexRowClick, handleAboutToggle }) => {
+const Desktop = ({
+  aboutIsOpened,
+  mixedViewIndex,
+  isInBlueInsights,
+  handleBlueInsightsIntersect,
+  handleIndexRowClick,
+  handleAboutToggle
+}) => {
   const [isOrdered, setIsOrdered] = useState(false)
   const [memoizedNodeData, setMemoizedNodeData] = useState(Array(2))
 
@@ -34,6 +41,7 @@ const Desktop = ({ aboutIsOpened, mixedViewIndex, handleIndexRowClick, handleAbo
         <MenuDesktop
           aboutIsOpened={aboutIsOpened}
           isOrdered={isOrdered}
+          isInBlueInsights={isInBlueInsights}
           handleAboutToggle={handleAboutToggle}
           handleOrder={() => setIsOrdered(!isOrdered)} />
         <Routes>
@@ -47,6 +55,7 @@ const Desktop = ({ aboutIsOpened, mixedViewIndex, handleIndexRowClick, handleAbo
                   memoizedNodeData={memoizedNodeData[i]}
                   isOrdered={isOrdered}
                   mixedViewFragmentIndex={mixedViewIndex}
+                  handleBlueInsightsIntersect={handleBlueInsightsIntersect}
                   handleMemoizeNodeData={nodeData => handleMemoizeNodeData(i, nodeData)}
                   handleFragmentScroll={() => onIndexRowClick()} />
               } />

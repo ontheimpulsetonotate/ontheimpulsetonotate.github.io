@@ -18,6 +18,7 @@ const App = () => {
   const isMobile = useIsMobile()
   const Device = isMobile ? Mobile : Desktop
   const [aboutIsOpened, setAboutIsOpened] = useState(false)
+  const [isInBlueInsights, setIsInBlueInsights] = useState(false)
 
   const handleIndexRowClick = (i, navigate = _.noop) => {
     setMixedViewIndex(i)
@@ -30,6 +31,8 @@ const App = () => {
       <Device
         aboutIsOpened={aboutIsOpened}
         mixedViewIndex={mixedViewIndex}
+        isInBlueInsights={isInBlueInsights}
+        handleBlueInsightsIntersect={isIn => setIsInBlueInsights(isIn)}
         onSetMixedViewIndex={setMixedViewIndex}
         handleAboutToggle={shouldOpen => setAboutIsOpened(shouldOpen)}
         handleIndexRowClick={handleIndexRowClick} />

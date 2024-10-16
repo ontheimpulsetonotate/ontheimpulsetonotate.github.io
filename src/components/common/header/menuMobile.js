@@ -5,15 +5,25 @@ import { views } from '../../../constants/reactConstants'
 import { COLORS, FONT_SIZES, SIZES } from '../../../constants/stylesConstants'
 import useIsAbout from '../../../hooks/useIsAbout'
 import mixins from '../../../utils/mixins'
+import { styleIf } from '../../../utils/styleUtils'
 import AboutButton from '../../about/aboutButton'
 import Header from './header'
-
-import SiteHeader from './siteHeader'
 import RightSideNav from './rightSideNav'
+import SiteHeader from './siteHeader'
 
-const MenuMobile = ({ aboutIsOpened, indexIsOpened, onToggleIndex, handleAboutToggle }) => {
+const MenuMobile = ({
+  aboutIsOpened,
+  indexIsOpened,
+  isInBlueInsights,
+  onToggleIndex,
+  handleAboutToggle
+}) => {
+  const isBlue = !aboutIsOpened && !indexIsOpened && isInBlueInsights
   return (
-    <HeaderContainer $aboutIsOpened={aboutIsOpened} $isIndex={indexIsOpened} >
+    <HeaderContainer
+      $aboutIsOpened={aboutIsOpened}
+      $isIndex={indexIsOpened}
+      $isBlue={isBlue}>
       <SiteHeader defaultPath={views.mixed.url} onClick={() => {
         onToggleIndex(false)
         window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -36,11 +46,11 @@ const MenuMobile = ({ aboutIsOpened, indexIsOpened, onToggleIndex, handleAboutTo
 
 
 const HeaderContainer = styled(Header)`
-  ${({ $aboutIsOpened, $isIndex }) => mixins
+  ${({ $isBlue, $aboutIsOpened, $isIndex }) => mixins
     .chain()
     .highZIndex(5)
     .flex('center', 'initial')
-    .border(1, { color: $aboutIsOpened && !$isIndex ? 'white' : COLORS.BROWN })}
+    .border(1, { color: $isBlue ? COLORS.BLUE : $aboutIsOpened && !$isIndex ? 'white' : COLORS.BROWN })}
 
   width: 100vw;
   font-size: ${FONT_SIZES.REGULAR.css};
@@ -51,11 +61,12 @@ const HeaderContainer = styled(Header)`
 
   a, button {
     padding: ${SIZES.HEADER_BUTTON_PADDING.css};
+    color: ${styleIf('$isBlue', COLORS.BLUE)};
   }
 
   svg {
     height: 0.7em;
-    color: ${({ $aboutIsOpened, $isIndex }) => $aboutIsOpened && !$isIndex ? 'white' : COLORS.BROWN};
+    color: ${({ $aboutIsOpened, $isIndex, $isBlue }) => $isBlue ? COLORS.BLUE : $aboutIsOpened && !$isIndex ? 'white' : COLORS.BROWN};
     justify-self: flex-start;
 
     line {

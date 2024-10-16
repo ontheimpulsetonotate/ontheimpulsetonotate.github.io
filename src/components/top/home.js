@@ -4,6 +4,7 @@ const Home = ({
   isOrdered,
   aboutIsOpened,
   mixedViewFragmentIndex,
+  handleBlueInsightsIntersect,
   handleFragmentScroll,
   handleMemoizeNodeData,
 }) => {
@@ -12,6 +13,7 @@ const Home = ({
     aboutIsOpened={aboutIsOpened}
     memoizedNodeData={memoizedNodeData}
     fragmentIndex={mixedViewFragmentIndex}
+    handleBlueInsightsIntersect={handleBlueInsightsIntersect}
     handleMemoizeNodeData={handleMemoizeNodeData}
     handleFragmentScroll={handleFragmentScroll} />
 }

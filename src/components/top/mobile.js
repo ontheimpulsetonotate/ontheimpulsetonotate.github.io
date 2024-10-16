@@ -11,7 +11,13 @@ import MixedView from '../views/mixedview/mixedView'
 import Home from './home'
 
 
-const Mobile = ({ aboutIsOpened, mixedViewIndex, handleIndexRowClick, handleAboutToggle }) => {
+const Mobile = ({
+  aboutIsOpened,
+  mixedViewIndex,
+  isInBlueInsights,
+  handleBlueInsightsIntersect,
+  handleIndexRowClick,
+  handleAboutToggle }) => {
   const [indexIsOpened, setIndexIsOpened] = useState(false)
   const isAbout = aboutIsOpened && !indexIsOpened
 
@@ -25,6 +31,7 @@ const Mobile = ({ aboutIsOpened, mixedViewIndex, handleIndexRowClick, handleAbou
         <MenuMobile
           aboutIsOpened={aboutIsOpened}
           indexIsOpened={indexIsOpened}
+          isInBlueInsights={isInBlueInsights}
           onToggleIndex={newState => setIndexIsOpened(newState)}
           handleAboutToggle={handleAboutToggle} />
         <Routes>
@@ -33,6 +40,7 @@ const Mobile = ({ aboutIsOpened, mixedViewIndex, handleIndexRowClick, handleAbou
               view={MixedView}
               aboutIsOpened={aboutIsOpened}
               mixedViewFragmentIndex={mixedViewIndex}
+              handleBlueInsightsIntersect={handleBlueInsightsIntersect}
               handleFragmentScroll={() => onIndexRowClick()} />
           } />
           <Route path='*' element={<Navigate to={`/${views.mixed.url}`} replace />} />

@@ -1,6 +1,6 @@
 
 export const DATA_KEYS = {
-  IMG_NUM: 'imgNum', // TODO: rename
+  IMG_NUM: 'imgNum',
   IMG_LINK: 'imgLink',
   SECTION_TITLE: 'sectionTitle',
   PAGE_NUM: 'pageNum',
@@ -26,7 +26,7 @@ export const FRAGMENT_TYPES = {
 
 export const VISUAL_ESSAY_IMG_NUM = {
   BLUE_INSIGHTS: 65,
-  SURFACE_MANIPULATION: 162
+  SURFACE_MANIPULATION: 4
 }
 
 export const VISUAL_ESSAY_TITLE = {

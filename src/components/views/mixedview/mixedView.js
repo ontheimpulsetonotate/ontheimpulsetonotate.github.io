@@ -6,13 +6,18 @@ import { CLS_ID, SIZES } from '../../../constants/stylesConstants'
 import visualEssays from '../../../data/visualEssays'
 import useIsMobile from '../../../hooks/useIsMobile'
 import apiServices from '../../../services/apiServices'
-import { addEventListener } from '../../../utils/reactUtils'
+import { addEventListener, getScrolling } from '../../../utils/reactUtils'
 import FullContainer from '../../common/containers/fullContainer'
 import PopUpCitation from '../../common/text/popUpCitation'
 import MixedViewSection from './mixedViewSection'
 import VisualEssay from './visualEssay/visualEssay'
 
-const MixedView = ({ aboutIsOpened, fragmentIndex, handleFragmentScroll }) => {
+const MixedView = ({
+  aboutIsOpened,
+  fragmentIndex,
+  handleBlueInsightsIntersect,
+  handleFragmentScroll
+}) => {
   const containerRef = useRef()
   const device = useIsMobile() ? 'mobile' : 'desktop'
   const [sectionHeights, setSectionHeights] = useState(
@@ -24,10 +29,9 @@ const MixedView = ({ aboutIsOpened, fragmentIndex, handleFragmentScroll }) => {
 
   useEffect(() => {
     if (aboutIsOpened) return
-
     if (memoizedScrollRef.current)
       document.documentElement.scrollTop = memoizedScrollRef.current
-    return addEventListener(window, 'scroll', () =>
+    return addEventListener(getScrolling(isMobile), 'scroll', () =>
       memoizedScrollRef.current = document.documentElement.scrollTop)
   }, [aboutIsOpened])
 
@@ -47,10 +51,9 @@ const MixedView = ({ aboutIsOpened, fragmentIndex, handleFragmentScroll }) => {
     let willBeAfterVisualEssay = false
     return apiServices.mixedData.map((nodeData, i) => {
       const { imgNum, isImgNode, isInterview, isOrphan } = nodeData
-      const hasVisualEssay = [
-        VISUAL_ESSAY_IMG_NUM.BLUE_INSIGHTS,
-        VISUAL_ESSAY_IMG_NUM.SURFACE_MANIPULATION
-      ].includes(imgNum[0])
+
+      const hasVisualEssay = imgNum[0] === VISUAL_ESSAY_IMG_NUM.BLUE_INSIGHTS ||
+        (isInterview && imgNum[0] === VISUAL_ESSAY_IMG_NUM.SURFACE_MANIPULATION)
       if (isImgNode) isLeft = !isLeft
 
       const afterVisualEssay = willBeAfterVisualEssay
@@ -78,7 +81,8 @@ const MixedView = ({ aboutIsOpened, fragmentIndex, handleFragmentScroll }) => {
             data={isBlueInsights ?
               visualEssays.blueInsights[device] :
               visualEssays.surfaceManipulation[device]}
-            isBlueInsights={isBlueInsights} />}
+            isBlueInsights={isBlueInsights}
+            handleBlueInsightsIntersect={handleBlueInsightsIntersect} />}
         </React.Fragment>
       )
     })

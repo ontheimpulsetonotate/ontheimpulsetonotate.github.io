@@ -24,7 +24,7 @@ const FilteredImg = ({
   return (
     <FilterImgContainer
       style={{
-        backgroundColor,
+        // backgroundColor,
         opacity: isLoaded ? 1 : 0,
       }}>
       <StyledImg
@@ -42,12 +42,12 @@ const FilteredImg = ({
 
 export const FilterImgContainer = styled.div`
   display: flex;
+  overflow: hidden;
 `
 
 const StyledImg = styled.img`
   object-fit: cover;
-
-  mix-blend-mode: screen;
+  // mix-blend-mode: screen;
   ${({ $width, $height, $maxWidth, $maxHeight, $isMobile }) => mixins
     .dynamicSizes({
       width: $width,
@@ -55,6 +55,7 @@ const StyledImg = styled.img`
       maxWidth: $maxWidth,
       maxHeight: $maxHeight
     }, $isMobile)}
+  transform: scale(1.005);
 `
 
 export default FilteredImg
