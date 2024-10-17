@@ -77,7 +77,6 @@ const IndexDesktop = ({ onRowClick }) => {
         {hoverIndex !== undefined &&
           <FilteredImg
             src={getImgAtSize(imgLink, 300)}
-            backgroundColor={COLORS.BROWN}
             maxWidth={SIZES_RESPONSIVE.INDEX_TAB_FIGURE_SIZE}
             maxHeight={SIZES_RESPONSIVE.INDEX_TAB_FIGURE_SIZE} />}
       </HeaderContainer>

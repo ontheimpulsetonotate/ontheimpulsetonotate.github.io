@@ -81,11 +81,6 @@ const dynamicSizes = (config, isMobile) => {
   }, '')
 }
 
-const about = ({ $isAbout }) => `
-  h1, h2, h3, p, button, a {
-    color: ${$isAbout ? COLORS.BEIGE : COLORS.BROWN};
-  }
-`
 
 const mixins = {
   flex,
@@ -96,7 +91,6 @@ const mixins = {
   underline,
   border,
   dynamicSizes,
-  about,
   chain: function () {
     const chainedObject = {}
     let accumulatedReturn = ''

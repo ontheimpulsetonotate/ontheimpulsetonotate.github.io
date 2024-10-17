@@ -22,6 +22,8 @@ const parseProject = text => {
     workDetails={workDetails} />
 }
 
+const shouldHang = text => !CSS.supports('hanging-punctuation', 'first') &&
+  text.match(/^[“"]/)
 const parseTextView = (text, {
   title,
   truncate,
@@ -82,12 +84,8 @@ const parseTextView = (text, {
 
       if (tagName !== 'p') return
       const [firstChild] = children
-      const quoteRegex = /^[“"]/
-      const hang =
-        !CSS.supports('hanging-punctuation', 'first') &&
-        firstChild?.type === 'text' && firstChild.data.match(quoteRegex)
-      if (hang) domNode.children[0].data = firstChild.data.replace(quoteRegex, '')
-      const reactChildren = domToReact(children, options)
+      const hang = firstChild?.type === 'text' && shouldHang(firstChild.data)
+      const reactChildren = domToReact(domNode.children, options)
 
       if (next) return <Paragraph hang={hang}>{reactChildren}</Paragraph>
 
@@ -140,7 +138,8 @@ const parseVisualEssay = (visualEssay, isMobile = false, isBlueInsights = false)
 const parserServices = {
   parse: _parse,
   parseTextView,
-  parseVisualEssay
+  parseVisualEssay,
+  shouldHang
 }
 
 export default parserServices

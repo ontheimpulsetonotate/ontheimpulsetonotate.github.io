@@ -27,7 +27,7 @@ const Figure = forwardRef(function Figure({
   let imgNotation = interviewPrefix ?
     `DIALOGUE ${interviewPrefix}${imgNum}` :
     imgNum.map(num => padNumber(num)).join('—')
-  if (bracketNumbers) imgNotation = `[${imgNotation}]`
+  imgNotation = `[${imgNotation}]`
 
   const isMobile = useIsMobile()
   color ??= isInterview ? COLORS.BLUE : COLORS.BROWN
@@ -43,7 +43,6 @@ const Figure = forwardRef(function Figure({
       $isMobile={isMobile}>
       <FilteredImg
         src={src}
-        backgroundColor={color}
         maxWidth={maxWidth ?? maxSize}
         maxHeight={maxHeight ?? maxSize}
         width={width}

@@ -5,7 +5,6 @@ import useIsMobile from '../../../hooks/useIsMobile'
 import mixins from '../../../utils/mixins'
 
 const FilteredImg = ({
-  backgroundColor,
   maxWidth,
   maxHeight,
   width,
@@ -23,10 +22,7 @@ const FilteredImg = ({
 
   return (
     <FilterImgContainer
-      style={{
-        // backgroundColor,
-        opacity: isLoaded ? 1 : 0,
-      }}>
+      style={{ opacity: isLoaded ? 1 : 0, }}>
       <StyledImg
         alt=''
         {...rest}
@@ -47,7 +43,6 @@ export const FilterImgContainer = styled.div`
 
 const StyledImg = styled.img`
   object-fit: cover;
-  // mix-blend-mode: screen;
   ${({ $width, $height, $maxWidth, $maxHeight, $isMobile }) => mixins
     .dynamicSizes({
       width: $width,

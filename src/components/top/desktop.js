@@ -71,7 +71,6 @@ const Desktop = ({
 
 
 const DeviceStyle = createGlobalStyle`
-  ${mixins.about}
   p {
     &, & button {
       ${mixins.dynamicSizes({ fontSize: FONT_SIZES_RESPONSIVE.REGULAR })}

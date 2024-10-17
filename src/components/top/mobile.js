@@ -54,10 +54,9 @@ const Mobile = ({
 
 
 const DeviceStyle = createGlobalStyle`
-  ${mixins.about}
-    body {
-      overflow-y: scroll;
-      height: 100dvh;
+  body {
+    overflow-y: scroll;
+    height: 100dvh;
   }
 
   div {

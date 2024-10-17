@@ -21,7 +21,6 @@ const MenuMobile = ({
   const isBlue = !aboutIsOpened && !indexIsOpened && isInBlueInsights
   return (
     <HeaderContainer
-      $aboutIsOpened={aboutIsOpened}
       $isIndex={indexIsOpened}
       $isBlue={isBlue}>
       <SiteHeader defaultPath={views.mixed.url} onClick={() => {
@@ -46,18 +45,18 @@ const MenuMobile = ({
 
 
 const HeaderContainer = styled(Header)`
-  ${({ $isBlue, $aboutIsOpened, $isIndex }) => mixins
+  ${({ $isBlue }) => mixins
     .chain()
     .highZIndex(5)
     .flex('center', 'initial')
-    .border(1, { color: $isBlue ? COLORS.BLUE : $aboutIsOpened && !$isIndex ? 'white' : COLORS.BROWN })}
+    .border(1, { color: $isBlue ? COLORS.BLUE : COLORS.BROWN })}
 
   width: 100vw;
   font-size: ${FONT_SIZES.REGULAR.css};
   padding: ${SIZES.PAGE_MARGIN_MOBILE.sub(SIZES.HEADER_BUTTON_PADDING).css};
   box-sizing: border-box;
   position: fixed;
-  background-color: ${({ $aboutIsOpened, $isIndex }) => $isIndex ? COLORS.BEIGE : $aboutIsOpened ? COLORS.BROWN : 'white'};
+  background-color: ${({ $isIndex }) => $isIndex ? COLORS.BEIGE : 'white'};
 
   a, button {
     padding: ${SIZES.HEADER_BUTTON_PADDING.css};
@@ -66,7 +65,7 @@ const HeaderContainer = styled(Header)`
 
   svg {
     height: 0.7em;
-    color: ${({ $aboutIsOpened, $isIndex, $isBlue }) => $isBlue ? COLORS.BLUE : $aboutIsOpened && !$isIndex ? 'white' : COLORS.BROWN};
+    color: ${({ $isBlue }) => $isBlue ? COLORS.BLUE : COLORS.BROWN};
     justify-self: flex-start;
 
     line {

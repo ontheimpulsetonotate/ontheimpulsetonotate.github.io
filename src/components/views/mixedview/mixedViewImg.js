@@ -29,7 +29,8 @@ const MixedViewImg = ({ nodeData, onLoad, onHoverCitation }) => {
         style={style}
         nodeData={nodeData}
         width={isMobile ? '100%' : undefined}
-        maxSize={isMobile ? undefined : SIZES_RESPONSIVE.MIXED_VIEW_FIGURUE_SIZE}
+        maxWidth={isMobile ? undefined : SIZES_RESPONSIVE.MIXED_VIEW_FIGURUE_WIDTH}
+        maxHeight={isMobile ? undefined : SIZES_RESPONSIVE.MIXED_VIEW_FIGURUE_HEIGHT}
         bracketNumbers />
     </Citation>
   )

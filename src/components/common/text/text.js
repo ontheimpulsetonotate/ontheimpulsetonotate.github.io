@@ -6,6 +6,7 @@ import { CLS_ID, COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, FONT_
 import parserServices from '../../../services/parserServices'
 import mixins from '../../../utils/mixins'
 import { extract } from '../../../utils/styleUtils'
+import Paragraph from '../paragraph'
 import ExpandButton from './expandButton'
 import TextHeader from './textHeader'
 
@@ -36,6 +37,7 @@ const Text = ({
   useEffect(() => handleLayoutShift(index, isExpanded), [isExpanded])
   useEffect(() => onRender(), [])
 
+  const hang = parserServices.shouldHang(text)
   const parsedText = useMemo(() => {
     const getParsed = truncate => parserServices
       .parseTextView(text, {
@@ -46,12 +48,14 @@ const Text = ({
         onHover: handleCitationHover
       })
     return isExpanded ? getParsed(false) :
-      <TruncateMarkup
-        lines={4}
-        tokenize='words'
-        ellipsis={<ExpandButton isExpanded={isExpanded} handleClick={handleButtonClick} />}>
-        {getParsed(true)}
-      </TruncateMarkup>
+      <Paragraph asDiv hang={hang}>
+        <TruncateMarkup
+          lines={4}
+          tokenize='words'
+          ellipsis={<ExpandButton isExpanded={isExpanded} handleClick={handleButtonClick} />}>
+          {getParsed(true)}
+        </TruncateMarkup>
+      </Paragraph>
   }, [isExpanded, text])
 
   return (

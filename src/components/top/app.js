@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { HashRouter } from 'react-router-dom'
 import { createGlobalStyle } from 'styled-components'
 import { views } from '../../constants/reactConstants'
-import { FONT_FAMILIES, FONT_SIZES, FONT_WEIGHTS, SIZES } from '../../constants/stylesConstants'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_WEIGHTS, SIZES } from '../../constants/stylesConstants'
 import useIsMobile from '../../hooks/useIsMobile'
 import Header from '../common/header/header'
 import Desktop from './desktop'
@@ -52,6 +52,7 @@ const GlobalStyle = createGlobalStyle`
 
   h1, h2, h3, p, button, a {
     letter-spacing: 0.02em;
+    color: ${COLORS.BROWN};
   }
 
   h1, h2, h3, ${Header} button, a {

@@ -102,7 +102,7 @@ const MixedView = ({
 }
 
 const BasedContainer = styled(FullContainer)`
-  > div:last-child  {
+  > div:last-of-type  {
     > :nth-child(2) {
       padding-bottom: ${SIZES.MIXED_VIEW_PADDING_BOTTOM.mult(6).css};
     }

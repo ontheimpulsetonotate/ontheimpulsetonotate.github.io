@@ -1,19 +1,14 @@
 import styled from 'styled-components'
 import { styleIf } from '../../utils/styleUtils'
 
-const Paragraph = ({ hang, children, ...props }) =>
-  <StyledParagraph {...props} $hang={hang}>
-    {hang && <span>“</span>}{children}
-  </StyledParagraph>
-
-
+const Paragraph = ({ hang, asDiv, ...props }) =>
+  <StyledParagraph {...props} as={asDiv ? 'div' : ''} $hang={hang} />
 
 
 const StyledParagraph = styled.p`
-  text-indent: ${styleIf('$hang', '-0.4em')};
-  span:first-child {
-    font-kerning: ${styleIf('$hang', 'none')};
-  }
+   &, & p {
+    text-indent: ${styleIf('$hang', '-0.4em')};
+   }
 `
 
 export default Paragraph
