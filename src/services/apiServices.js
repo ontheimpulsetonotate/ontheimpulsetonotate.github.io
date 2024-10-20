@@ -4,6 +4,7 @@ import noTextHtml from '../data/noText'
 import textHtml from '../data/text'
 import { stringsAreEqual } from '../utils/commonUtils'
 import NodeData from '../utils/helpers/nodeData'
+import httpServices from './httpServices'
 
 
 const dataKeys = [
@@ -60,6 +61,7 @@ const parseCitation = ({ innerHTML }, key, nodeData) => {
   })
   nodeData[key] = notes
 }
+
 
 const parseSheet = (html, isVisualEssay) => {
   const tempDiv = document.createElement('div')
@@ -126,15 +128,37 @@ const imgData = mainData
   .map(nodeData => nodeData.getImgNodes())
   .flat()
 
-
-
 const mixedData = mainData.filter(({ text }) => text)
 
+const textHtmlPromise = httpServices.get('https://docs.google.com/spreadsheets/d/1u7krpdsEa6Y74u-EfCeFo6zYVFf95p6E9p_nIGHec-w/edit?gid=1140937082#gid=1140937082')
+const noTextHtmlPromise = httpServices.get('https://docs.google.com/spreadsheets/d/1u7krpdsEa6Y74u-EfCeFo6zYVFf95p6E9p_nIGHec-w/edit?gid=738622674#gid=738622674')
+
+const mainDataPromise = (async () => {
+  const text = (await textHtmlPromise).data
+  return parseSheet(text)
+})()
+
+const textDataPromise = (async () => {
+  const m = await mainDataPromise
+  console.log(m, mainData)
+  return mainData.filter(({ text, isOrphan }) => text && !isOrphan)
+})()
+
+const imgDataPromise = (async () => {
+  // const mainData = await mainDataPromise
+  return mainData
+    .filter(({ isImgNode }) => isImgNode)
+    .map(nodeData => nodeData.getImgNodes())
+    .flat()
+})()
 
 const apiServices = {
   mainData,
+  mainDataPromise,
   imgData,
+  imgDataPromise,
   textData,
+  textDataPromise,
   mixedData,
   indexTabData,
   visualEssayData,

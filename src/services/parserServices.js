@@ -66,7 +66,7 @@ const parseTextView = (text, {
 
         if (!footnote && !project) {
           children[0].data = inlineCitaiton
-          return <ExternalLink to={attribs.href} noHighlight>{inlineCitaiton}</ExternalLink>
+          return // <ExternalLink to={attribs.href} noHighlight>{inlineCitaiton}</ExternalLink>
         }
 
         return <TruncateMarkup.Atom>

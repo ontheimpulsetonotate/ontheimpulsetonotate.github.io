@@ -64,7 +64,7 @@ const TextView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
     <>
       <DragContainer
         ref={containerRef}
-        contents={apiServices.textData}
+        contents={apiServices.textDataPromise}
         elemW={SIZES_RESPONSIVE.TEXT_WIDTH[0]}
         elemH={elemH}
         element={Text}

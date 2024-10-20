@@ -48,7 +48,7 @@ const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
 
   return (
     <DragContainer
-      contents={apiServices.imgData}
+      contents={apiServices.imgDataPromise}
       elemW={imgSize}
       elemH={imgSize}
       element={Img}
