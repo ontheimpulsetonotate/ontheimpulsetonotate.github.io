@@ -1,5 +1,4 @@
 import { useWindowSize } from '@uidotdev/usehooks'
-import { useMemo } from 'react'
 import styled from 'styled-components'
 import { FONT_FAMILIES, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
 import useIsMobile from '../../../hooks/useIsMobile'
@@ -27,20 +26,18 @@ const PopUpCitation = ({
   const offset = SIZES.CITATION_OFFSET
   const leftSideOnly = isLeft || isMobile
 
-  const left = useMemo(() => leftSideOnly && (isMobile ?
-    Math.max(
-      SIZES.PAGE_MARGIN_MOBILE.value,
-      Size.subFromFullWidth(SIZES.IMG_MAX_WIDTH)
-        .div(2).add(SIZES.PAGE_MARGIN_MOBILE).value) :
-    offset.add(new Size(mouse.x)).css), [leftSideOnly, isMobile, width])
-
   return (
     children &&
     !!mouse.x &&
     !!mouse.y &&
     <StyledPopUpCitation
       style={{
-        left,
+        left: leftSideOnly && (isMobile ?
+          Math.max(
+            SIZES.PAGE_MARGIN_MOBILE.value,
+            Size.subFromFullWidth(SIZES.IMG_MAX_WIDTH)
+              .div(2).add(SIZES.PAGE_MARGIN_MOBILE).value) :
+          offset.add(new Size(mouse.x)).css),
         right: !leftSideOnly &&
           offset.sub(new Size(mouse.x)).add(new Size({ vw: 100 })).css,
         top: isTop && offset.add(new Size(mouse.y)).css,

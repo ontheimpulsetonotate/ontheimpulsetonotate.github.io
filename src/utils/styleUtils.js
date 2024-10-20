@@ -63,8 +63,8 @@ export const getOrderedData = isImg => {
   }
 }
 
-// TODO: consolidate with mixins
-// TODO: include between s - m
+
+// TODO: could consolidate with mixins
 export const getSizes = sizes => {
   let fallbackValue
   sizes = [arrayify(sizes)[0], ...arrayify(sizes)]
@@ -72,7 +72,6 @@ export const getSizes = sizes => {
     const sizeValue = sizes[i] ?? fallbackValue
     fallbackValue = sizeValue
     const nextSizeValue = sizes[i + 1]
-
     result[breakpoint] = nextSizeValue ?
       getSize({ [breakpoints[i]]: sizeValue, [breakpoints[i + 1]]: nextSizeValue }) :
       new Size(sizeValue)

@@ -38,7 +38,7 @@ const About = () => {
           <hr />
         </div>
         <CreditContainer>
-          <p>designed by <ExternalLink {...buttonHoverHandlers} to='https://lydiachodosh.com/'>lydia Chodosh</ExternalLink> + Developed by <ExternalLink {...buttonHoverHandlers} to='https://donaldzhu.ca/'>donald Zhu</ExternalLink></p>
+          <p>designed by <ExternalLink to='https://lydiachodosh.com/'>lydia Chodosh</ExternalLink> + Developed by <ExternalLink to='https://donaldzhu.ca/'>donald Zhu</ExternalLink></p>
           <p>
             This website is a direct translation of the book of the same name,
             designed and written by Lydia Chodosh in partial fulfillment of

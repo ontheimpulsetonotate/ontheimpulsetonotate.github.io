@@ -1,4 +1,6 @@
+import _ from 'lodash'
 import breakpts from '../data/breakpoints'
+import { validateString } from './commonUtils'
 import { BreakptSizer } from './helpers/breakptSizer'
 
 export const breakptSorted = ['xs', 's', 'm', 'l', 'xl', 'xxl']
@@ -46,7 +48,7 @@ export const getBreakpt = () => {
   return breakptSorted[Math.min(i, breakptSorted.length - 1)]
 }
 
-// TODO
+// Redundant but easy to understand
 export const desktopQueries = [
   `(min-width: ${breakpts.s}px) and (max-width: ${breakpts.m - 1}px)`,
   `(min-width: ${breakpts.m}px) and (max-width: ${breakpts.l - 1}px)`,

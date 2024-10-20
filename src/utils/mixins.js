@@ -64,7 +64,6 @@ const dynamicSizes = (config, isMobile) => {
       const sizeValue = sizes[i] ?? fallbackValues[styleName]
       fallbackValues[styleName] = sizeValue
 
-
       if (!sizeValue) return
       if (typeof sizeValue === 'string')
         return cssStyles += (`${styleName}: ${sizeValue};`)
