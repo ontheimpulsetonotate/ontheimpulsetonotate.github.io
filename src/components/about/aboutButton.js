@@ -6,7 +6,13 @@ import useToPrev from '../../hooks/useToPrev'
 import useIsMobile from '../../hooks/useIsMobile'
 
 
-const AboutButton = ({ isOpen, mobileIndexIsOpen, mobileOnClick = _.noop, handleToggle }) => {
+const AboutButton = ({
+  isOpen,
+  mobileIndexIsOpen,
+  mobileOnClick = _.noop,
+  handleToggle,
+  ...props
+}) => {
   const isMobile = useIsMobile()
 
   const handleClick = () => {
@@ -17,8 +23,7 @@ const AboutButton = ({ isOpen, mobileIndexIsOpen, mobileOnClick = _.noop, handle
 
   return (
     <LinkContainer>
-      <button
-        onClick={handleClick}>
+      <button {...props} onClick={handleClick}>
         [{!isOpen ? '+' :
           (isMobile ? (mobileIndexIsOpen ? '+' : '×') : 'CLOSE')}]
       </button>

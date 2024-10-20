@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { DATA_KEYS } from '../../constants/apiConstants'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_WEIGHTS, SIZES, SIZES_RESPONSIVE, TIMINGS } from '../../constants/stylesConstants'
@@ -12,6 +12,7 @@ import Header from '../common/header/header'
 import FilteredImg, { FilterImgContainer } from '../common/img/filteredImg'
 import SortArrow from '../common/text/sortArrow'
 import { getImgAtSize } from '../../utils/sizeUtils'
+import DesktopContext from '../../context/context'
 
 
 const IndexDesktop = ({ onRowClick }) => {
@@ -19,6 +20,8 @@ const IndexDesktop = ({ onRowClick }) => {
   const [shouldAnimate, setShouldAnimate] = useState(false)
   const [sort, setSort] = useState({ index: 0, isAscending: true })
   const [hoverIndex, setHoverIndex] = useState()
+  const { getButtonHoverHandlers } = useContext(DesktopContext)
+  const buttonHoverHandlers = getButtonHoverHandlers(false)
 
   const data = apiServices.indexTabData
 
@@ -33,6 +36,7 @@ const IndexDesktop = ({ onRowClick }) => {
     e.stopPropagation()
     setIndexIsOpened(state)
     setShouldAnimate(true)
+    if (state) buttonHoverHandlers.onMouseOut()
   }
 
   const handleRowClick = (e, { imgNum }) => {
@@ -66,12 +70,14 @@ const IndexDesktop = ({ onRowClick }) => {
           SIZES.CLOSED_INDEX_LEFT_VALUE.sub(SIZES.PAGE_MARGIN_DESKTOP).css,
         cursor: validateString(!indexIsOpened, 'pointer')
       }}
+      {...(indexIsOpened ? {} : buttonHoverHandlers)}
       onClick={e => handleClick(e, true)}
       onTransitionEnd={() => setShouldAnimate(false)}>
       <HeaderContainer>
         <h2>Index</h2>
         {!imgLink &&
           <button
+            {...buttonHoverHandlers}
             onClick={e => handleClick(e, false)}
             tabIndex={buttonFocus}>[CLOSE]</button>}
         {hoverIndex !== undefined &&
@@ -87,10 +93,13 @@ const IndexDesktop = ({ onRowClick }) => {
               const isSorting = sort.index === i
               const isPageHeader = name === 'read'
               return (
-                <p key={name} onClick={() => setSort(prev => ({
-                  index: i,
-                  isAscending: isSorting ? !prev.isAscending : true
-                }))}>
+                <p
+                  key={name}
+                  {...buttonHoverHandlers}
+                  onClick={() => setSort(prev => ({
+                    index: i,
+                    isAscending: isSorting ? !prev.isAscending : true
+                  }))}>
                   {!isPageHeader && name}
                   <SortArrow isSorting={isSorting} isAscending={sort.isAscending} />
                   {isPageHeader && name}
@@ -110,8 +119,14 @@ const IndexDesktop = ({ onRowClick }) => {
           } = nodeData
           return <Row
             key={i}
-            onMouseOver={() => handleMouseEnter(i)}
-            onMouseOut={() => setHoverIndex()}
+            onMouseOver={() => {
+              handleMouseEnter(i)
+              buttonHoverHandlers.onMouseOver()
+            }}
+            onMouseOut={() => {
+              setHoverIndex()
+              buttonHoverHandlers.onMouseOut()
+            }}
             onClick={e => handleRowClick(e, nodeData)}>
             <p>
               {i === hoverIndex && <HoverArrow>→</HoverArrow>}

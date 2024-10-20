@@ -77,7 +77,7 @@ const IndexMobile = ({ onRowClick, onClose }) => {
 const IndexContainer = styled(FullContainer)`
 ${mixins.highZIndex(4)}
   box-sizing: border-box;
-  padding: 0 ${SIZES.PAGE_MARGIN_MOBILE.css}; // TODO
+  padding: 0 ${SIZES.PAGE_MARGIN_MOBILE.css};
   background-color: ${COLORS.BEIGE};
   user-select: none;
 `

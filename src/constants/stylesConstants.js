@@ -84,6 +84,8 @@ export const SIZES = {
   CITATION_PADDING: new Size(10),
   CITATION_OFFSET: new Size(20),
 
+  CURSOR: new Size(32),
+
   // mobile
   HEADER_BUTTON_PADDING: new Size(5),
   HEADER_BARS_HEIGHT: new Size(12.5),

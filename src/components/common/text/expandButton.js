@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 
 
-const ExpandButton = ({ isExpanded, handleClick }) => {
+const ExpandButton = ({ isExpanded, handleClick, ...props }) => {
   return (
-    <ButtonContainer>
+    <ButtonContainer {...props}>
       {isExpanded ? ' ' : '... '}
       <button onClick={() => handleClick(!isExpanded)}>
         [{isExpanded ? 'COLLAPSE' : 'EXPAND'}]

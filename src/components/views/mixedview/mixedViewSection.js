@@ -1,3 +1,4 @@
+import { useWindowSize } from '@uidotdev/usehooks'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { FRAGMENT_ID_PREFIX } from '../../../constants/reactConstants'
@@ -33,6 +34,7 @@ const MixedViewSection = ({
   } = nodeData
   const containerRef = useRef()
   const isMobile = useIsMobile()
+  const { width } = useWindowSize()
   const [loadCount, setLoadCount] = useState(0)
   const handleLoad = () => setLoadCount(prev => prev + 1)
   const imgs = useMemo(() => nodeData.getImgNodes(apiServices.mainData)
@@ -55,7 +57,7 @@ const MixedViewSection = ({
       textHeight: getChildrenHeight(textRef.current),
       imgHeight
     })
-  }, [loadCount])
+  }, [width, loadCount])
 
   const [bufferPadding, setBufferPadding] = useState()
 
@@ -87,7 +89,7 @@ const MixedViewSection = ({
       current.imgHeight - textHeight,
       beforeVisualEssay ? getDesktopPaddingSize().value : -Infinity
     ))
-  }, [...sectionHeights])
+  }, [width, ...sectionHeights])
 
   const imgMargin = SIZES.MIXED_VIEW_FIGURE_MARGIN.css
   const ImgContainer = isMobile ? MobileImgContainer : DesktopImgContainer

@@ -1,7 +1,8 @@
 import { useClickAway } from '@uidotdev/usehooks'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { COLORS } from '../../../constants/stylesConstants'
+import DesktopContext from '../../../context/context'
 import useIsMobile from '../../../hooks/useIsMobile'
 import { addEventListener } from '../../../utils/reactUtils'
 import PopUpCitation from './popUpCitation'
@@ -12,7 +13,8 @@ const Citation = ({ children, footnote, color, imgRef, fixedSize, onHover, style
   const ref = useClickAway(() => setIsHovering(false))
   const isMobile = useIsMobile()
   const [touched, setIsTouched] = useState(false)
-
+  const { getCitationHoverHandlers } = useContext(DesktopContext)
+  const buttonHoverHandlers = getCitationHoverHandlers(color === COLORS.BLUE)
 
   useEffect(() => {
     if (!onHover) return
@@ -29,16 +31,28 @@ const Citation = ({ children, footnote, color, imgRef, fixedSize, onHover, style
     if (isMobile && touched) setIsHovering(false)
   }), [])
 
+  const handleMouseOver = () => {
+    if (!footnote) return
+    setIsHovering(true)
+    buttonHoverHandlers?.onMouseOver()
+  }
+
+  const handleMouseOut = () => {
+    if (!footnote) return
+    setIsHovering(false)
+    buttonHoverHandlers?.onMouseOut()
+  }
+
   return (
     <>
       <CitationSpan
         ref={ref}
         style={style}
         onTouchStart={() => setIsTouched(true)}
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
-        onMouseOver={() => setIsHovering(true)}
-        onMouseOut={() => setIsHovering(false)}>
+        onMouseEnter={handleMouseOver}
+        onMouseLeave={handleMouseOut}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}>
         {children}
       </CitationSpan>
       <PopUpCitation

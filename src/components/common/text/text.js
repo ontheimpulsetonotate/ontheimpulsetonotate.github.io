@@ -1,8 +1,9 @@
 import _ from 'lodash'
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import TruncateMarkup from 'react-truncate-markup'
 import styled from 'styled-components'
-import { CLS_ID, COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, FONT_WEIGHTS, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
+import { CLS_ID, COLORS, FONT_FAMILIES, FONT_SIZES_RESPONSIVE, FONT_WEIGHTS, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
+import DesktopContext from '../../../context/context'
 import parserServices from '../../../services/parserServices'
 import mixins from '../../../utils/mixins'
 import { extract } from '../../../utils/styleUtils'
@@ -25,9 +26,12 @@ const Text = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const { text, sectionTitle, footnotes, projects, isInterview } = nodeData
+  const { getButtonHoverHandlers } = useContext(DesktopContext)
+  const buttonHoverHandlers = getButtonHoverHandlers(isInterview)
 
   const handleButtonClick = expand => {
     setIsExpanded(expand)
+    buttonHoverHandlers.onMouseOut()
     if (!expand) {
       onHover(false)
       onCollapse()
@@ -52,7 +56,11 @@ const Text = ({
         <TruncateMarkup
           lines={4}
           tokenize='words'
-          ellipsis={<ExpandButton isExpanded={isExpanded} handleClick={handleButtonClick} />}>
+          ellipsis={
+            <ExpandButton
+              {...buttonHoverHandlers}
+              isExpanded={isExpanded}
+              handleClick={handleButtonClick} />}>
           {getParsed(true)}
         </TruncateMarkup>
       </Paragraph>

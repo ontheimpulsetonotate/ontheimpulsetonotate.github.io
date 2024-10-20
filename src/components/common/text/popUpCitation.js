@@ -1,11 +1,13 @@
+import { useWindowSize } from '@uidotdev/usehooks'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 import { FONT_FAMILIES, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
 import useIsMobile from '../../../hooks/useIsMobile'
+import useWindowMouse from '../../../hooks/useWindowMouse'
 import parserServices from '../../../services/parserServices'
 import Size from '../../../utils/helpers/size'
 import mixins from '../../../utils/mixins'
 import { extract } from '../../../utils/styleUtils'
-import useWindowMouse from '../../../hooks/useWindowMouse'
 
 
 const PopUpCitation = ({
@@ -15,7 +17,7 @@ const PopUpCitation = ({
   fixedSize,
 }) => {
   const mouse = useWindowMouse()
-
+  const { width } = useWindowSize()
   const isMobile = useIsMobile()
 
   const isLeft = mouse.x <= window.innerWidth / 2
@@ -25,6 +27,12 @@ const PopUpCitation = ({
   const offset = SIZES.CITATION_OFFSET
   const leftSideOnly = isLeft || isMobile
 
+  const left = useMemo(() => leftSideOnly && (isMobile ?
+    Math.max(
+      SIZES.PAGE_MARGIN_MOBILE.value,
+      Size.subFromFullWidth(SIZES.IMG_MAX_WIDTH)
+        .div(2).add(SIZES.PAGE_MARGIN_MOBILE).value) :
+    offset.add(new Size(mouse.x)).css), [leftSideOnly, isMobile, width])
 
   return (
     children &&
@@ -32,13 +40,7 @@ const PopUpCitation = ({
     !!mouse.y &&
     <StyledPopUpCitation
       style={{
-        left: leftSideOnly &&
-          (isMobile ?
-            Math.max(
-              SIZES.PAGE_MARGIN_MOBILE.value,
-              Size.subFromFullWidth(SIZES.IMG_MAX_WIDTH)
-                .div(2).add(SIZES.PAGE_MARGIN_MOBILE).value) :
-            offset.add(new Size(mouse.x)).css),
+        left,
         right: !leftSideOnly &&
           offset.sub(new Size(mouse.x)).add(new Size({ vw: 100 })).css,
         top: isTop && offset.add(new Size(mouse.y)).css,

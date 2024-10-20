@@ -1,7 +1,9 @@
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { views } from '../../../constants/reactConstants'
 import { COLORS, SIZES } from '../../../constants/stylesConstants'
+import DesktopContext from '../../../context/context'
 import mixins from '../../../utils/mixins'
 import { styleIf } from '../../../utils/styleUtils'
 import AboutButton from '../../about/aboutButton'
@@ -17,14 +19,19 @@ const MenuDesktop = ({
   handleAboutToggle,
   handleOrder
 }) => {
+  const { getButtonHoverHandlers } = useContext(DesktopContext)
+  const buttonHoverHandlers = getButtonHoverHandlers(isInBlueInsights)
+
   return (
     <HeaderContainer $isBlue={!aboutIsOpened && isInBlueInsights}>
       <SiteHeader
+        {...buttonHoverHandlers}
         defaultPath={views.text.url}
         onClick={() => handleAboutToggle(false)} />
       <menu>
         {!aboutIsOpened && Object.values(views).map(({ text, url }, i) =>
           <HeaderButton
+            {...buttonHoverHandlers}
             key={i}
             as={Link}
             to={`/${url}`}
@@ -38,12 +45,16 @@ const MenuDesktop = ({
           !aboutIsOpened &&
           `#/${views.mixed.url}` !== location.hash &&
           <HeaderButton
+            {...buttonHoverHandlers}
             onClick={handleOrder}
             $underline={isOrdered}>
             Order
           </HeaderButton>
         }
-        <AboutButton isOpen={aboutIsOpened} handleToggle={handleAboutToggle} />
+        <AboutButton
+          {...buttonHoverHandlers}
+          isOpen={aboutIsOpened}
+          handleToggle={handleAboutToggle} />
       </RightSideNav>
     </HeaderContainer>
   )
