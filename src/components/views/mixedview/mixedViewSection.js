@@ -179,8 +179,8 @@ const getDesktopPaddingSize = ({ $isInterview, $isFirstInterview } = {}) =>
     SIZES.MIXED_VIEW_INTERVIEW_PADDING_TOP.mult($isFirstInterview ? 2.5 : 1)
 const getDesktopPadding = (config = {}) =>
   getDesktopPaddingSize(config).css
-const getMobilePadding = ({ $isInterview }) =>
-  !$isInterview ?
+const getMobilePadding = ({ $beforeVisualEssay, $isInterview }) =>
+  (!$isInterview || $beforeVisualEssay) ?
     SIZES.MIXED_VIEW_PADDING_TOP_MOBILE.css :
     SIZES.MIXED_VIEW_INTERVIEW_PADDING_TOP_MOBILE.css
 

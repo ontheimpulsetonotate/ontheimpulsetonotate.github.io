@@ -64,7 +64,7 @@ const HeaderContainer = styled(Header)`
   }
 
   svg {
-    height: 0.7em;
+    height: 11px;
     color: ${({ $isBlue }) => $isBlue ? COLORS.BLUE : COLORS.BROWN};
     justify-self: flex-start;
 
