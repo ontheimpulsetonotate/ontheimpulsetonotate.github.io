@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { DATA_KEYS, FRAGMENT_TYPES, SPECIAL_NODE_START } from '../constants/apiConstants'
+import { DATA_KEYS, FRAGMENT_TYPES, NO_TEXT_URL, SPECIAL_NODE_START, TEXT_URL } from '../constants/apiConstants'
 import noTextHtml from '../data/noText'
 import textHtml from '../data/text'
 import { stringsAreEqual } from '../utils/commonUtils'
@@ -85,10 +85,9 @@ const parseSheet = (html, isVisualEssay) => {
         isVisualEssay ? FRAGMENT_TYPES.VISUAL_ESSAY :
           !refNum.trim() && title ? FRAGMENT_TYPES.ORPHAN :
             refNum.match(/^\[[0-9–]+\]/) ? FRAGMENT_TYPES.TEXT :
-              // refNum.match(/^\[[0-9]+\]/) ? FRAGMENT_TYPES.TEXT :
               refNum.match(interviewRegExp) ? FRAGMENT_TYPES.INTERVIEW : undefined
 
-      if (!nodeData.type) return
+      if (!refNum || !nodeData.type) return
 
       tdArray.forEach((td, i) => {
         const key = dataKeys[i]
@@ -129,19 +128,26 @@ const visualEssayData = parseSheet(noTextHtml, true)
 const mixedData = mainData.filter(({ text }) => text)
 
 const data = (async () => {
-  const { data } = await httpServices.get('https://docs.google.com/spreadsheets/d/e/2PACX-1vSGHEoLOk5W_cpYcNz--lyJivfpOum_rhBi0r7TCNj7WeJHkGQwfCSv1mSyA4qyQRvG3xirAeULWvQZ/pubhtml')
+  const { data } = await httpServices.get(TEXT_URL)
+  const { data: noTextData } = await httpServices.get(NO_TEXT_URL)
+
   const main = parseSheet(data)
   const text = main.filter(({ text, isOrphan }) => text && !isOrphan)
   const img = main
     .filter(({ isImgNode }) => isImgNode)
     .map(nodeData => nodeData.getImgNodes())
     .flat()
+  const mixed = main.filter(({ text }) => text)
+  const visualEssay = parseSheet(noTextData, true)
   const index = text.filter(({ isInterview }) => !isInterview)
+  console.log(visualEssay)
   return {
     main,
     text,
     img,
+    mixed,
     index,
+    visualEssay
   }
 })()
 

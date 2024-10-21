@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _, { compact } from 'lodash'
 import { FRAGMENT_TYPES, VISUAL_ESSAY_TITLE } from '../../constants/apiConstants'
 import { padNumber, quickArray, stringsAreEqual } from '../commonUtils'
 
