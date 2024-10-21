@@ -64,9 +64,11 @@ const parseTextView = (text, {
         const project = projects?.[citationNumber]
         const footnote = footnotes?.[citationNumber]
 
-        if (!footnote && !project) {
+        const href = attribs.href?.match(
+          /(?<=https:\/\/www\.google\.com\/url\?q=).*(?=&sa=D&)/m)?.[0]
+        if (!footnote && !project && !isAnchor) {
           children[0].data = inlineCitaiton
-          return // <ExternalLink to={attribs.href} noHighlight>{inlineCitaiton}</ExternalLink>
+          return
         }
 
         return <TruncateMarkup.Atom>
@@ -76,7 +78,11 @@ const parseTextView = (text, {
             footnote={project ? parseProject(project) : footnote}
             onHover={onHover}>
             {isAnchor ?
-              <ExternalLink to={attribs.href}>{inlineCitaiton}</ExternalLink> :
+              <ExternalLink
+                to={href}
+                noHighlight={!footnote && !project}>
+                {inlineCitaiton}
+              </ExternalLink> :
               inlineCitaiton}
           </Citation>
         </TruncateMarkup.Atom>

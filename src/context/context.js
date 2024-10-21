@@ -1,9 +1,12 @@
 import { createContext } from 'react'
 import _ from 'lodash'
 
-const DesktopContext = createContext({
+export const DesktopContext = createContext({
   getButtonHoverHandlers: _.noop,
   getCitationHoverHandlers: _.noop
 })
 
-export default DesktopContext
+export const GlobalContext = createContext({
+  data: {}
+})
+

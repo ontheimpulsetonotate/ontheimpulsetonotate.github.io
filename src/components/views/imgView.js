@@ -1,16 +1,15 @@
 import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
-import apiServices from '../../services/apiServices'
 import { quickArray } from '../../utils/commonUtils'
 import { getImgViewFigureSize, getOrderedData } from '../../utils/styleUtils'
 import DragContainer from '../common/containers/dragContainer'
 import Img from '../common/img/img'
 
 
-const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
+const ImgView = ({ data, isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
   const { width } = useWindowSize()
-  const [proportions, setProportions] = useState(Array(apiServices.imgData.length))
+  const [proportions, setProportions] = useState(Array(data.img.length))
 
   const imgSize = getImgViewFigureSize()
   const { orderedPositions, scrollSize } = useMemo(() => {
@@ -48,7 +47,7 @@ const ImgView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
 
   return (
     <DragContainer
-      contents={apiServices.imgDataPromise}
+      contents={data.img}
       elemW={imgSize}
       elemH={imgSize}
       element={Img}

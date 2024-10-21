@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { DATA_KEYS, FRAGMENT_TYPES } from '../constants/apiConstants'
+import { DATA_KEYS, FRAGMENT_TYPES, SPECIAL_NODE_START } from '../constants/apiConstants'
 import noTextHtml from '../data/noText'
 import textHtml from '../data/text'
 import { stringsAreEqual } from '../utils/commonUtils'
@@ -29,11 +29,16 @@ const strip = html => {
   return doc.body.textContent.trim() || ''
 }
 
-const parseNumRange = numRangeString =>
-  [...numRangeString.matchAll(/[0-9]+/g)]
+const parseNumRange = numRangeString => {
+  let numRange = [...numRangeString.matchAll(/[0-9]+/g)]
     .map(match => parseInt(match[0]))
+  if (numRange[0] === SPECIAL_NODE_START) numRange = [13]
+  return numRange
+}
+
 
 const interviewRegExp = /^\[DIALOGUE ([A-Z])[0-9]\]/
+
 const parseNum = ({ innerHTML }, key, nodeData, lastRef) => {
   const { isOrphan, isInterview } = nodeData
   nodeData[key] = parseNumRange(innerHTML)
@@ -62,11 +67,10 @@ const parseCitation = ({ innerHTML }, key, nodeData) => {
   nodeData[key] = notes
 }
 
-
 const parseSheet = (html, isVisualEssay) => {
   const tempDiv = document.createElement('div')
   tempDiv.innerHTML = html
-  const main = tempDiv.querySelector('.grid-container')
+  const main = tempDiv.querySelector('table')
 
   let lastRef
   const data = Array.from(main.querySelector('tbody').children)
@@ -80,7 +84,8 @@ const parseSheet = (html, isVisualEssay) => {
       nodeData.type =
         isVisualEssay ? FRAGMENT_TYPES.VISUAL_ESSAY :
           !refNum.trim() && title ? FRAGMENT_TYPES.ORPHAN :
-            refNum.match(/^\[[0-9]+\]/) ? FRAGMENT_TYPES.TEXT :
+            refNum.match(/^\[[0-9–]+\]/) ? FRAGMENT_TYPES.TEXT :
+              // refNum.match(/^\[[0-9]+\]/) ? FRAGMENT_TYPES.TEXT :
               refNum.match(interviewRegExp) ? FRAGMENT_TYPES.INTERVIEW : undefined
 
       if (!nodeData.type) return
@@ -119,48 +124,33 @@ const parseSheet = (html, isVisualEssay) => {
 }
 
 const mainData = parseSheet(textHtml)
+
 const visualEssayData = parseSheet(noTextHtml, true)
-
-const textData = mainData.filter(({ text, isOrphan }) => text && !isOrphan)
-const indexTabData = textData.filter(({ isInterview }) => !isInterview)
-const imgData = mainData
-  .filter(({ isImgNode }) => isImgNode)
-  .map(nodeData => nodeData.getImgNodes())
-  .flat()
-
 const mixedData = mainData.filter(({ text }) => text)
 
-const textHtmlPromise = httpServices.get('https://docs.google.com/spreadsheets/d/1u7krpdsEa6Y74u-EfCeFo6zYVFf95p6E9p_nIGHec-w/edit?gid=1140937082#gid=1140937082')
-const noTextHtmlPromise = httpServices.get('https://docs.google.com/spreadsheets/d/1u7krpdsEa6Y74u-EfCeFo6zYVFf95p6E9p_nIGHec-w/edit?gid=738622674#gid=738622674')
-
-const mainDataPromise = (async () => {
-  const text = (await textHtmlPromise).data
-  return parseSheet(text)
-})()
-
-const textDataPromise = (async () => {
-  const m = await mainDataPromise
-  console.log(m, mainData)
-  return mainData.filter(({ text, isOrphan }) => text && !isOrphan)
-})()
-
-const imgDataPromise = (async () => {
-  // const mainData = await mainDataPromise
-  return mainData
+const data = (async () => {
+  const { data } = await httpServices.get('https://docs.google.com/spreadsheets/d/e/2PACX-1vSGHEoLOk5W_cpYcNz--lyJivfpOum_rhBi0r7TCNj7WeJHkGQwfCSv1mSyA4qyQRvG3xirAeULWvQZ/pubhtml')
+  const main = parseSheet(data)
+  const text = main.filter(({ text, isOrphan }) => text && !isOrphan)
+  const img = main
     .filter(({ isImgNode }) => isImgNode)
     .map(nodeData => nodeData.getImgNodes())
     .flat()
+  const index = text.filter(({ isInterview }) => !isInterview)
+  return {
+    main,
+    text,
+    img,
+    index,
+  }
 })()
 
 const apiServices = {
+  data,
   mainData,
-  mainDataPromise,
-  imgData,
-  imgDataPromise,
-  textData,
-  textDataPromise,
+
+
   mixedData,
-  indexTabData,
   visualEssayData,
 }
 

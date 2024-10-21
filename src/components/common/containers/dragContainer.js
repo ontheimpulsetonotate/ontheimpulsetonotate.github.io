@@ -1,11 +1,9 @@
 import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
-import usePromise from 'react-promise'
 import styled from 'styled-components'
 import { TIMINGS } from '../../../constants/stylesConstants'
 import useMergedRef from '../../../hooks/useMergedRef'
-import apiServices from '../../../services/apiServices'
 import { UNMAPPED_BOUNDS, map, mapPoisson, quickArray, validateString } from '../../../utils/commonUtils'
 import { getMainContainer } from '../../../utils/styleUtils'
 import FullContainer from './fullContainer'
@@ -13,7 +11,7 @@ import Node from './node'
 
 
 const DragContainer = forwardRef(function DragContainer({
-  contents: _contents,
+  contents,
   elemW,
   elemH,
   isOrdered,
@@ -27,35 +25,19 @@ const DragContainer = forwardRef(function DragContainer({
   handleCitationHover
 }, ref) {
   const { width, height } = useWindowSize()
-  const { value: contents } = usePromise(_contents)
+  const [zIndices, setZIndices] = useState(
+    memoizedNodeData?.zIndices ?? quickArray(contents.length)
+  )
   const containerRef = useMergedRef(ref)
 
-  // const [zIndices, setZIndices] = useState(
-  //   memoizedNodeData?.zIndices ?? quickArray(contents.length)
-  // )
-
-  const [zIndices, setZIndices] = useState([])
-
   const { left, right, top, bottom } = getMainContainer()
-  // const defaultUnmappedPositions = useMemo(() =>
-  //   contents ?
-  //     memoizedNodeData?.unmappedPositions ?? _.shuffle(mapPoisson(
-  //       contents.length,
-  //       ((right - left) / (bottom - top)) / (elemW / elemH)
-  //     )) : [], [!!contents])
-
-  const [unmappedPositions, setUnmappedPositions] = useState([])
-
-  useEffect(() => {
-    if (!contents) return
-    console.log(contents, apiServices.textData)
-    setZIndices(memoizedNodeData?.zIndices ?? quickArray(contents.length))
-    setUnmappedPositions(memoizedNodeData?.unmappedPositions ?? _.shuffle(mapPoisson(
+  const defaultUnmappedPositions = useMemo(() =>
+    memoizedNodeData?.unmappedPositions ?? _.shuffle(mapPoisson(
       contents.length,
       ((right - left) / (bottom - top)) / (elemW / elemH)
-    )))
-  }, [!!contents])
+    )), [])
 
+  const [unmappedPositions, setUnmappedPositions] = useState(defaultUnmappedPositions)
   const hasAnimatedRef = useRef(!!memoizedNodeData?.hasAnimated)
 
   const getPageBounds = () => {
@@ -83,19 +65,21 @@ const DragContainer = forwardRef(function DragContainer({
 
   const mappedPositions = useMemo(() =>
     unmappedPositions.map(({ x, y }) =>
-      convertCoors({ x, y }, true)), [unmappedPositions, width, height, isOrdered])
+      convertCoors({ x, y }, true)), [width, height, isOrdered])
 
   useEffect(() => {
-    if (!isOrdered) containerRef.current.scrollTo({ top: 0, behavior: 'smooth' })
+    if (!isOrdered)
+      containerRef.current.scrollTo({ top: 0, behavior: 'smooth' })
   }, [isOrdered])
 
   useEffect(() => () => {
-    if (contents) handleMemoizeNodeData({
+    handleMemoizeNodeData({
       unmappedPositions, zIndices, hasAnimated: hasAnimatedRef.current
     })
-  }, [contents])
+  }, [])
 
   const handleToTop = i => setZIndices(prev => [..._.without(prev, i), i])
+
   const handleUnmap = (i, coors) =>
     setUnmappedPositions(prev => {
       const newPositions = [...prev]
@@ -109,28 +93,25 @@ const DragContainer = forwardRef(function DragContainer({
     <StyledContainer
       style={{ overflowY: isOrdered ? 'scroll' : 'hidden' }}
       ref={containerRef}>
-      {
-        !!zIndices.length &&
-        !!unmappedPositions.length &&
-        contents?.map((content, i) =>
-          <Node
-            {...content}
-            key={i}
-            index={i}
-            nodeData={contents[i]}
-            isOrdered={isOrdered}
-            shouldAnimate={!memoizedNodeData?.hasAnimated}
-            mappedPosition={mappedPositions[i]}
-            zIndex={zIndices.indexOf(i) + 1}
-            orderedPosition={orderedPositions[i]}
-            handleToTop={handleToTop}
-            handleUnmap={handleUnmap}
-            handleRender={handleRender}
-            handleAnimate={handleAnimate}
-            handleLayoutShift={handleLayoutShift}
-            handleCitationHover={handleCitationHover}
-            render={Element} />
-        )}
+      {contents.map((content, i) =>
+        <Node
+          {...content}
+          key={i}
+          index={i}
+          nodeData={contents[i]}
+          isOrdered={isOrdered}
+          shouldAnimate={!memoizedNodeData?.hasAnimated}
+          mappedPosition={mappedPositions[i]}
+          zIndex={zIndices.indexOf(i) + 1}
+          orderedPosition={orderedPositions[i]}
+          handleToTop={handleToTop}
+          handleUnmap={handleUnmap}
+          handleRender={handleRender}
+          handleAnimate={handleAnimate}
+          handleLayoutShift={handleLayoutShift}
+          handleCitationHover={handleCitationHover}
+          render={Element} />
+      )}
       <ScrollSizer style={{
         top: validateString(isOrdered, top),
         height: isOrdered ? `${scrollSize}px` : '100dvh'

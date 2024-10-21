@@ -38,3 +38,6 @@ export const BLEED_DIRECTIONS = {
   LEFT: 'left',
   RIGHT: 'right'
 }
+
+export const SPECIAL_NODE_START = 13
+export const SPECIAL_NODE_END = 36

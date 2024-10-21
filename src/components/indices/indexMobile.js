@@ -1,7 +1,8 @@
 import _ from 'lodash'
-import { useMemo, useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_WEIGHTS, SIZES } from '../../constants/stylesConstants'
+import { GlobalContext } from '../../context/context'
 import apiServices from '../../services/apiServices'
 import { padNumber, validateString } from '../../utils/commonUtils'
 import Size from '../../utils/helpers/size'
@@ -11,8 +12,8 @@ import SortArrow from '../common/text/sortArrow'
 
 
 const IndexMobile = ({ onRowClick, onClose }) => {
+  const data = useContext(GlobalContext).data?.index ?? []
   const [sort, setSort] = useState({ index: 0, isAscending: true })
-  const data = apiServices.indexTabData
 
   const headers = [
     ['section', () => _.sortBy(data, frag => frag.imgNum[0])],
@@ -28,7 +29,7 @@ const IndexMobile = ({ onRowClick, onClose }) => {
   const sortedData = useMemo(() => {
     const sorted = headers[sort.index][1]()
     return sort.isAscending ? sorted : _.reverse(sorted)
-  }, [sort.index, sort.isAscending])
+  }, [data, sort.index, sort.isAscending])
 
   return (
     <IndexContainer>

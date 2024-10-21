@@ -1,18 +1,15 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_SIZES_RESPONSIVE, FONT_WEIGHTS, SIZES, SIZES_RESPONSIVE } from '../../constants/stylesConstants'
 import useIsMobile from '../../hooks/useIsMobile'
 import mixins from '../../utils/mixins'
 import FullContainer from '../common/containers/fullContainer'
 import ExternalLink from '../common/externalLink'
-import DesktopContext from '../../context/context'
 
 const About = () => {
   const isMobile = useIsMobile()
   const Container = isMobile ? MobileContainer : DesktopContainer
   const InnerContainer = isMobile ? InnerMobileContainer : InnerDesktopContainer
-  const { getButtonHoverHandlers } = useContext(DesktopContext)
-  const buttonHoverHandlers = getButtonHoverHandlers()
 
   return (
     <Container>

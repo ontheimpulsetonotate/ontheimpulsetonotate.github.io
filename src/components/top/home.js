@@ -1,3 +1,6 @@
+import { useContext } from 'react'
+import { GlobalContext } from '../../context/context'
+
 const Home = ({
   view: View,
   memoizedNodeData,
@@ -8,7 +11,9 @@ const Home = ({
   handleFragmentScroll,
   handleMemoizeNodeData,
 }) => {
-  return <View
+  const { data } = useContext(GlobalContext)
+  return data && <View
+    data={data}
     isOrdered={isOrdered}
     aboutIsOpened={aboutIsOpened}
     memoizedNodeData={memoizedNodeData}

@@ -3,7 +3,7 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import TruncateMarkup from 'react-truncate-markup'
 import styled from 'styled-components'
 import { CLS_ID, COLORS, FONT_FAMILIES, FONT_SIZES_RESPONSIVE, FONT_WEIGHTS, SIZES, SIZES_RESPONSIVE } from '../../../constants/stylesConstants'
-import DesktopContext from '../../../context/context'
+import { DesktopContext } from '../../../context/context'
 import parserServices from '../../../services/parserServices'
 import mixins from '../../../utils/mixins'
 import { extract } from '../../../utils/styleUtils'
@@ -108,6 +108,7 @@ const TextBodyContainer = styled.div`
     font-weight: ${FONT_WEIGHTS.BOLD};
     pointer-events: all;
   }
+
 `
 
 

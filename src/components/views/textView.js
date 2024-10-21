@@ -2,7 +2,6 @@ import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { CLS_ID, SIZES_RESPONSIVE } from '../../constants/stylesConstants'
-import apiServices from '../../services/apiServices'
 import { quickArray } from '../../utils/commonUtils'
 import { getOrderedData, getTextContainerSize, getTextViewSize } from '../../utils/styleUtils'
 import DragContainer from '../common/containers/dragContainer'
@@ -10,7 +9,7 @@ import PopUpCitation from '../common/text/popUpCitation'
 import Text from '../common/text/text'
 
 
-const TextView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
+const TextView = ({ data, isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
   const { width } = useWindowSize()
   const elemH = useMemo(getTextContainerSize, [width])
   const containerRef = useRef()
@@ -64,7 +63,7 @@ const TextView = ({ isOrdered, memoizedNodeData, handleMemoizeNodeData }) => {
     <>
       <DragContainer
         ref={containerRef}
-        contents={apiServices.textDataPromise}
+        contents={data.text}
         elemW={SIZES_RESPONSIVE.TEXT_WIDTH[0]}
         elemH={elemH}
         element={Text}

@@ -2,11 +2,14 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import _ from 'lodash'
 import { useState } from 'react'
+import usePromise from 'react-promise'
 import { HashRouter } from 'react-router-dom'
 import { createGlobalStyle } from 'styled-components'
 import { views } from '../../constants/reactConstants'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_WEIGHTS, SIZES } from '../../constants/stylesConstants'
+import { GlobalContext } from '../../context/context'
 import useIsMobile from '../../hooks/useIsMobile'
+import apiServices from '../../services/apiServices'
 import Header from '../common/header/header'
 import Desktop from './desktop'
 import Mobile from './mobile'
@@ -14,6 +17,7 @@ import Mobile from './mobile'
 gsap.registerPlugin(useGSAP)
 
 const App = () => {
+  const { value: data } = usePromise(apiServices.data)
   const [mixedViewIndex, setMixedViewIndex] = useState()
   const isMobile = useIsMobile()
   const Device = isMobile ? Mobile : Desktop
@@ -27,15 +31,17 @@ const App = () => {
 
   return (
     <HashRouter>
-      <GlobalStyle />
-      <Device
-        aboutIsOpened={aboutIsOpened}
-        mixedViewIndex={mixedViewIndex}
-        isInBlueInsights={isInBlueInsights}
-        handleBlueInsightsIntersect={isIn => setIsInBlueInsights(isIn)}
-        onSetMixedViewIndex={setMixedViewIndex}
-        handleAboutToggle={shouldOpen => setAboutIsOpened(shouldOpen)}
-        handleIndexRowClick={handleIndexRowClick} />
+      <GlobalContext.Provider value={{ data }}>
+        <GlobalStyle />
+        <Device
+          aboutIsOpened={aboutIsOpened}
+          mixedViewIndex={mixedViewIndex}
+          isInBlueInsights={isInBlueInsights}
+          handleBlueInsightsIntersect={isIn => setIsInBlueInsights(isIn)}
+          onSetMixedViewIndex={setMixedViewIndex}
+          handleAboutToggle={shouldOpen => setAboutIsOpened(shouldOpen)}
+          handleIndexRowClick={handleIndexRowClick} />
+      </GlobalContext.Provider>
     </HashRouter>
   )
 }
@@ -55,7 +61,7 @@ const GlobalStyle = createGlobalStyle`
     color: ${COLORS.BROWN};
   }
 
-  h1, h2, h3, ${Header} button, a {
+  h1, h2, h3, ${Header} button, ${Header} a {
     font-weight: ${FONT_WEIGHTS.BOLD};
     font-family: ${FONT_FAMILIES.APERCU};
     text-transform: uppercase;

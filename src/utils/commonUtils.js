@@ -1,5 +1,6 @@
 import FastPoissonDiskSampling from 'fast-2d-poisson-disk-sampling'
 import _ from 'lodash'
+import { SPECIAL_NODE_END, SPECIAL_NODE_START } from '../constants/apiConstants'
 
 export const validateString = (validatorOrString, string) => {
   if (!string) return validatorOrString || ''
@@ -90,6 +91,7 @@ export const arrayify = possibleArray =>
     [possibleArray]
 
 export const padNumber = number => _.padStart(number, 3, '0')
+export const getSpecialNodeNumber = () => `${padNumber(SPECIAL_NODE_START)}—${padNumber(SPECIAL_NODE_END)}`
 
 export const filterFalsy = array => array.filter(e => e)
 

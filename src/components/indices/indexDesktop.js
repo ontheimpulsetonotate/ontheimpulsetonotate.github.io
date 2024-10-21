@@ -1,10 +1,9 @@
 import _ from 'lodash'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { DATA_KEYS } from '../../constants/apiConstants'
+import { DATA_KEYS, SPECIAL_NODE_START } from '../../constants/apiConstants'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_WEIGHTS, SIZES, SIZES_RESPONSIVE, TIMINGS } from '../../constants/stylesConstants'
-import apiServices from '../../services/apiServices'
-import { getDataStringSorter, padNumber, validateString } from '../../utils/commonUtils'
+import { getDataStringSorter, getSpecialNodeNumber, padNumber, validateString } from '../../utils/commonUtils'
 import Size from '../../utils/helpers/size'
 import mixins from '../../utils/mixins'
 import { addEventListener } from '../../utils/reactUtils'
@@ -12,18 +11,18 @@ import Header from '../common/header/header'
 import FilteredImg, { FilterImgContainer } from '../common/img/filteredImg'
 import SortArrow from '../common/text/sortArrow'
 import { getImgAtSize } from '../../utils/sizeUtils'
-import DesktopContext from '../../context/context'
+import { DesktopContext, GlobalContext } from '../../context/context'
 
 
 const IndexDesktop = ({ onRowClick }) => {
+  const data = useContext(GlobalContext).data?.index ?? []
+
   const [indexIsOpened, setIndexIsOpened] = useState(false)
   const [shouldAnimate, setShouldAnimate] = useState(false)
   const [sort, setSort] = useState({ index: 0, isAscending: true })
   const [hoverIndex, setHoverIndex] = useState()
   const { getButtonHoverHandlers } = useContext(DesktopContext)
   const buttonHoverHandlers = getButtonHoverHandlers(false)
-
-  const data = apiServices.indexTabData
 
   const headers = [
     ['reference', () => _.sortBy(data, frag => frag.imgNum[0])],
@@ -48,7 +47,7 @@ const IndexDesktop = ({ onRowClick }) => {
   const sortedData = useMemo(() => {
     const sorted = headers[sort.index][1]()
     return sort.isAscending ? sorted : _.reverse(sorted)
-  }, [sort.index, sort.isAscending])
+  }, [data, sort.index, sort.isAscending])
 
   useEffect(() => addEventListener(document, 'click', () => {
     setIndexIsOpened(false)
@@ -117,6 +116,9 @@ const IndexDesktop = ({ onRowClick }) => {
             sectionTitle,
             pageNum
           } = nodeData
+          // TODO for mobile
+          const num = imgNum[0] === SPECIAL_NODE_START ? `[${getSpecialNodeNumber()}]` :
+            imgNum.map(num => `[${padNumber(num)}]`).join('—')
           return <Row
             key={i}
             onMouseOver={() => {
@@ -130,7 +132,7 @@ const IndexDesktop = ({ onRowClick }) => {
             onClick={e => handleRowClick(e, nodeData)}>
             <p>
               {i === hoverIndex && <HoverArrow>→</HoverArrow>}
-              [{imgNum.map(num => padNumber(num)).join('—')}] {artistLastName}{validateString(artistFirstName, `, ${artistFirstName}`)}
+              {num} {artistLastName}{validateString(artistFirstName, `, ${artistFirstName}`)}
             </p>
             <p>{medium}</p>
             <p>{sectionTitle}</p>
