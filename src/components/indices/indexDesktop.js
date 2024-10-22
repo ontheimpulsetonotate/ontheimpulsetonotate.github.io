@@ -67,7 +67,7 @@ const IndexDesktop = ({ onRowClick }) => {
         left: indexIsOpened ?
           SIZES.OPENED_INDEX_LEFT_VALUE.sub(SIZES.PAGE_MARGIN_DESKTOP.mult(2)).css :
           SIZES.CLOSED_INDEX_LEFT_VALUE.sub(SIZES.PAGE_MARGIN_DESKTOP).css,
-        cursor: validateString(!indexIsOpened, 'pointer')
+        // cursor: validateString(!indexIsOpened, 'pointer')
       }}
       {...(indexIsOpened ? {} : buttonHoverHandlers)}
       onClick={e => handleClick(e, true)}
@@ -182,7 +182,7 @@ const Row = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: ${SIZES.INDEX_ARTIST_WIDTH} ${SIZES.INDEX_MEDIUM_WIDTH} 1fr ${SIZES.INDEX_PAGE_NUM_WIDTH.css};
-  cursor: pointer;
+  /* cursor: pointer; */
 
   p {
     font-family: ${FONT_FAMILIES.APERCU_COND};
@@ -213,12 +213,12 @@ const TableHead = styled(Row)`
   position: sticky;
   top: -1px;
   background-color: ${COLORS.BEIGE};
-  cursor: initial;
+  /* cursor: initial; */
 
   p {
     width: fit-content;
     font-weight: ${FONT_WEIGHTS.BOLD};
-    cursor: pointer;
+    /* cursor: pointer; */
   }
 `
 

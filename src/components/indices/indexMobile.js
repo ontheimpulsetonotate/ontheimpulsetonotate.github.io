@@ -101,7 +101,7 @@ const Row = styled.div`
   &:last-child {
       border: none;
   }
-  cursor: pointer;
+  /* cursor: pointer; */
 
   p {
     font-family: ${FONT_FAMILIES.APERCU_COND};
@@ -132,12 +132,12 @@ const TableHead = styled(Row)`
   position: sticky;
   top: -1px;
   background-color: ${COLORS.BEIGE};
-  cursor: initial;
+  /* cursor: initial; */
 
   p {
     width: fit-content;
     font-weight: ${FONT_WEIGHTS.BOLD};
-    cursor: pointer;
+    /* cursor: pointer; */
   }
 `
 

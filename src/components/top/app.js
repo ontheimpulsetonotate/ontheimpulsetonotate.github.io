@@ -105,7 +105,7 @@ const GlobalStyle = createGlobalStyle`
     background-color: inherit;
     width: fit-content;
     user-select: none;
-    cursor: pointer;
+    /* cursor: pointer; */
   }
 
   figure {

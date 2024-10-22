@@ -17,8 +17,8 @@ const flex = (
 
 const highZIndex = level => `z-index: ${'9'.repeat(level)};`
 
+// cursor: move;
 const draggable = () => `
-  cursor: move;
   user-select: none;
   position: absolute;
 `

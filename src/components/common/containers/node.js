@@ -128,7 +128,7 @@ const Node = forwardRef(function Node({
         style={{
           zIndex,
           transition: validateString(isOrdered || isOrdering, `transform ${TIMINGS.ORDER}ms ease-in-out`),
-          cursor: isOrdered || !hasAnimated ? 'initial' : 'move'
+          // cursor: isOrdered || !hasAnimated ? 'initial' : 'move'
         }}>
         {render({
           ...rest,
