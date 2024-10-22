@@ -133,14 +133,9 @@ const parseSheet = (table, isVisualEssay) => {
 }
 
 
-
-const visualEssayData = undefined
-// parseSheet(noTextHtml, true)
-
 const data = (async () => {
   const { data } = await httpServices.get(API_URL)
   const { main, visualEssay } = parseTables(data)
-  console.log(main.map(nodeData => [nodeData.imgNum[0], nodeData.type, nodeData.sectionTitle]))
   const text = main.filter(({ text, isOrphan }) => text && !isOrphan)
   const img = main
     .filter(({ isImgNode }) => isImgNode)
