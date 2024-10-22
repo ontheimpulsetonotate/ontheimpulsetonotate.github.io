@@ -10,11 +10,11 @@ import { extract, styleIf } from '../../../../utils/styleUtils'
 import VisualEssayImg from './visualEssayImg'
 
 
-const VisualEssay = ({ data, isBlueInsights, handleBlueInsightsIntersect }) => {
+const VisualEssay = ({ data, sizeData, isBlueInsights, handleBlueInsightsIntersect }) => {
   const isMobile = useIsMobile()
   const { width } = useWindowSize()
   const parsedData = useMemo(() =>
-    parserServices.parseVisualEssay(data, isMobile), [data, width])
+    parserServices.parseVisualEssay(data, sizeData, isMobile), [data, sizeData, width])
 
   const LAST_IMAGE_PROPORTION = isBlueInsights ? 1.4805 : 1.261
 

@@ -1,7 +1,5 @@
 import _ from 'lodash'
-import { DATA_KEYS, FRAGMENT_TYPES, NO_TEXT_URL, SPECIAL_NODE_START, TEXT_URL } from '../constants/apiConstants'
-import noTextHtml from '../data/noText'
-import textHtml from '../data/text'
+import { DATA_KEYS, FRAGMENT_TYPES, NO_TEXT_SHEET_ID, SPECIAL_NODE_START, TEXT_SHEET_ID, API_URL } from '../constants/apiConstants'
 import { stringsAreEqual } from '../utils/commonUtils'
 import NodeData from '../utils/helpers/nodeData'
 import httpServices from './httpServices'
@@ -67,16 +65,30 @@ const parseCitation = ({ innerHTML }, key, nodeData) => {
   nodeData[key] = notes
 }
 
-const parseSheet = (html, isVisualEssay) => {
+const parseTables = (html) => {
   const tempDiv = document.createElement('div')
   tempDiv.innerHTML = html
-  const main = tempDiv.querySelector('table')
 
+  const tables = Array.from(tempDiv.querySelectorAll('#sheets-viewport > div'))
+    .filter(div => [TEXT_SHEET_ID, NO_TEXT_SHEET_ID].includes(div.id))
+    .map(div => [div.id, div.querySelector('table')])
+  const tableDict = _.fromPairs(tables)
+
+
+  const main = parseSheet(tableDict[TEXT_SHEET_ID], false)
+  const visualEssay = parseSheet(tableDict[NO_TEXT_SHEET_ID], true)
+
+  return { main, visualEssay }
+}
+
+
+const parseSheet = (table, isVisualEssay) => {
   let lastRef
-  const data = Array.from(main.querySelector('tbody').children)
+  const data = Array.from(table.querySelector('tbody').children)
     .slice(2)
     .map(tr => {
       const tdArray = Array.from(tr.querySelectorAll('td')).slice(0, dataKeys.length)
+      if (!tdArray.length) return
       const nodeData = new NodeData()
       const refNum = tdArray[0].innerText
       const title = tdArray[3].innerText
@@ -86,8 +98,7 @@ const parseSheet = (html, isVisualEssay) => {
           !refNum.trim() && title ? FRAGMENT_TYPES.ORPHAN :
             refNum.match(/^\[[0-9–]+\]/) ? FRAGMENT_TYPES.TEXT :
               refNum.match(interviewRegExp) ? FRAGMENT_TYPES.INTERVIEW : undefined
-
-      if (!refNum || !nodeData.type) return
+      if (!refNum && !nodeData.type) return
 
       tdArray.forEach((td, i) => {
         const key = dataKeys[i]
@@ -107,7 +118,6 @@ const parseSheet = (html, isVisualEssay) => {
     .filter(d => d)
 
   if (isVisualEssay) return data
-
   return data
     .filter(nodeData => nodeData && !nodeData.isInterview)
     .map(nodeData => {
@@ -122,25 +132,22 @@ const parseSheet = (html, isVisualEssay) => {
     .filter(d => d)
 }
 
-const mainData = parseSheet(textHtml)
 
-const visualEssayData = parseSheet(noTextHtml, true)
-const mixedData = mainData.filter(({ text }) => text)
+
+const visualEssayData = undefined
+// parseSheet(noTextHtml, true)
 
 const data = (async () => {
-  const { data } = await httpServices.get(TEXT_URL)
-  const { data: noTextData } = await httpServices.get(NO_TEXT_URL)
-
-  const main = parseSheet(data)
+  const { data } = await httpServices.get(API_URL)
+  const { main, visualEssay } = parseTables(data)
+  console.log(main.map(nodeData => [nodeData.imgNum[0], nodeData.type, nodeData.sectionTitle]))
   const text = main.filter(({ text, isOrphan }) => text && !isOrphan)
   const img = main
     .filter(({ isImgNode }) => isImgNode)
     .map(nodeData => nodeData.getImgNodes())
     .flat()
   const mixed = main.filter(({ text }) => text)
-  const visualEssay = parseSheet(noTextData, true)
   const index = text.filter(({ isInterview }) => !isInterview)
-  console.log(visualEssay)
   return {
     main,
     text,
@@ -153,11 +160,6 @@ const data = (async () => {
 
 const apiServices = {
   data,
-  mainData,
-
-
-  mixedData,
-  visualEssayData,
 }
 
 export default apiServices

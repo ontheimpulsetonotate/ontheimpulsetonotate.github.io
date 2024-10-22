@@ -6,7 +6,7 @@ import usePromise from 'react-promise'
 import { HashRouter } from 'react-router-dom'
 import { createGlobalStyle } from 'styled-components'
 import { views } from '../../constants/reactConstants'
-import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_WEIGHTS, SIZES } from '../../constants/stylesConstants'
+import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_WEIGHTS, HYPHEN, SIZES } from '../../constants/stylesConstants'
 import { GlobalContext } from '../../context/context'
 import useIsMobile from '../../hooks/useIsMobile'
 import apiServices from '../../services/apiServices'
@@ -46,6 +46,7 @@ const App = () => {
   )
 }
 
+const limitChars = `${HYPHEN.MIN_LENGTH} ${HYPHEN.BEFORE} ${HYPHEN.AFTER}`
 const GlobalStyle = createGlobalStyle`
  h1, h2, h3, p, button, menu {
     margin: 0;
@@ -75,27 +76,27 @@ const GlobalStyle = createGlobalStyle`
     font-family: ${FONT_FAMILIES.BRADFORD};
 
     -webkit-hyphens: auto;
-    -webkit-hyphenate-limit-before: 3;
-    -webkit-hyphenate-limit-after: 3;
-    -webkit-hyphenate-limit-chars: 5 3 3;
-    -webkit-hyphenate-limit-lines: 2;
+    -webkit-hyphenate-limit-before: ${HYPHEN.BEFORE};
+    -webkit-hyphenate-limit-after: ${HYPHEN.AFTER};
+    -webkit-hyphenate-limit-chars: ${limitChars};
+    -webkit-hyphenate-limit-lines: ${HYPHEN.LIMIT_LINES};
     -webkit-hyphenate-limit-last: always;
-    -webkit-hyphenate-limit-zone: 8%;
+    -webkit-hyphenate-limit-zone: ${HYPHEN.LIMIT_ZONE};
     -moz-hyphens: auto;
-    -moz-hyphenate-limit-chars: 5 3 3;
-    -moz-hyphenate-limit-lines: 2;
+    -moz-hyphenate-limit-chars: ${limitChars};
+    -moz-hyphenate-limit-lines: ${HYPHEN.LIMIT_LINES};
     -moz-hyphenate-limit-last: always;
-    -moz-hyphenate-limit-zone: 8%;
+    -moz-hyphenate-limit-zone: ${HYPHEN.LIMIT_ZONE};
     -ms-hyphens: auto;
-    -ms-hyphenate-limit-chars: 5 3 3;
-    -ms-hyphenate-limit-lines: 2;
+    -ms-hyphenate-limit-chars: ${limitChars};
+    -ms-hyphenate-limit-lines: ${HYPHEN.LIMIT_LINES};
     -ms-hyphenate-limit-last: always;
-    -ms-hyphenate-limit-zone: 8%;
+    -ms-hyphenate-limit-zone: ${HYPHEN.LIMIT_ZONE};
     hyphens: auto;
-    hyphenate-limit-chars: 5 3 3;
-    hyphenate-limit-lines: 2;
+    hyphenate-limit-chars: ${limitChars};
+    hyphenate-limit-lines: ${HYPHEN.LIMIT_LINES};
     hyphenate-limit-last: always;
-    hyphenate-limit-zone: 8%;
+    hyphenate-limit-zone: ${HYPHEN.LIMIT_ZONE};
   }
 
   button {

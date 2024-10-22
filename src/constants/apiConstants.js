@@ -43,6 +43,5 @@ export const SPECIAL_NODE_START = 13
 export const SPECIAL_NODE_END = 36
 
 export const API_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSGHEoLOk5W_cpYcNz--lyJivfpOum_rhBi0r7TCNj7WeJHkGQwfCSv1mSyA4qyQRvG3xirAeULWvQZ/pubhtml'
-const getSheetURL = sheetId => API_URL + `?gid=${sheetId}#gid=${sheetId}`
-export const TEXT_URL = getSheetURL('1140937082')
-export const NO_TEXT_URL = getSheetURL('738622674')
+export const TEXT_SHEET_ID = '1140937082'
+export const NO_TEXT_SHEET_ID = '738622674'

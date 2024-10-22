@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { FRAGMENT_ID_PREFIX } from '../../../constants/reactConstants'
 import { COLORS, FONT_SIZES_RESPONSIVE, SIZES, SIZES_RESPONSIVE, TIMINGS } from '../../../constants/stylesConstants'
 import useIsMobile from '../../../hooks/useIsMobile'
-import apiServices from '../../../services/apiServices'
 import parserServices from '../../../services/parserServices'
 import { validateString } from '../../../utils/commonUtils'
 import mixins from '../../../utils/mixins'
@@ -14,6 +13,7 @@ import MixedViewImg from './mixedViewImg'
 
 
 const MixedViewSection = ({
+  data,
   index,
   nodeData,
   isLeft,
@@ -37,7 +37,7 @@ const MixedViewSection = ({
   const { width } = useWindowSize()
   const [loadCount, setLoadCount] = useState(0)
   const handleLoad = () => setLoadCount(prev => prev + 1)
-  const imgs = useMemo(() => nodeData.getImgNodes(apiServices.mainData)
+  const imgs = useMemo(() => nodeData.getImgNodes(data.main)
     .map((imgNodes, i) => <MixedViewImg
       key={i}
       nodeData={imgNodes}

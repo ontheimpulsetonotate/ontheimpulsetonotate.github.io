@@ -5,7 +5,6 @@ import { FRAGMENT_ID_PREFIX } from '../../../constants/reactConstants'
 import { CLS_ID, SIZES } from '../../../constants/stylesConstants'
 import visualEssays from '../../../data/visualEssays'
 import useIsMobile from '../../../hooks/useIsMobile'
-import apiServices from '../../../services/apiServices'
 import { addEventListener, getScrolling } from '../../../utils/reactUtils'
 import FullContainer from '../../common/containers/fullContainer'
 import PopUpCitation from '../../common/text/popUpCitation'
@@ -13,6 +12,7 @@ import MixedViewSection from './mixedViewSection'
 import VisualEssay from './visualEssay/visualEssay'
 
 const MixedView = ({
+  data,
   aboutIsOpened,
   fragmentIndex,
   handleBlueInsightsIntersect,
@@ -21,7 +21,7 @@ const MixedView = ({
   const containerRef = useRef()
   const device = useIsMobile() ? 'mobile' : 'desktop'
   const [sectionHeights, setSectionHeights] = useState(
-    new Array(apiServices.mixedData.length).fill(undefined)
+    new Array(data.mixed.length).fill(undefined)
   )
   const [citation, setCitation] = useState()
   const isMobile = useIsMobile()
@@ -49,7 +49,7 @@ const MixedView = ({
   const mixedViewContent = useMemo(() => {
     let isLeft = false
     let willBeAfterVisualEssay = false
-    return apiServices.mixedData.map((nodeData, i) => {
+    return data.mixed.map((nodeData, i) => {
       const { imgNum, isImgNode, isInterview, isOrphan } = nodeData
 
       const hasVisualEssay = imgNum[0] === VISUAL_ESSAY_IMG_NUM.BLUE_INSIGHTS ||
@@ -69,6 +69,7 @@ const MixedView = ({
       return (
         <React.Fragment key={i}>
           <MixedViewSection
+            data={data}
             index={!isInterview && !isOrphan ? imgNum[0] : undefined}
             nodeData={nodeData}
             isLeft={isLeft}
@@ -78,7 +79,8 @@ const MixedView = ({
             onSetHeight={handleSetHeight}
             onHoverCitation={citation => setCitation(citation)} />
           {hasVisualEssay && <VisualEssay
-            data={isBlueInsights ?
+            data={data}
+            sizeData={isBlueInsights ?
               visualEssays.blueInsights[device] :
               visualEssays.surfaceManipulation[device]}
             isBlueInsights={isBlueInsights}

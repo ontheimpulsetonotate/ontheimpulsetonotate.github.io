@@ -125,3 +125,11 @@ const createSrcSetSizes = (length, interval) =>
   Array(length).fill(interval).map((size, i) => size * (1 + i))
 export const IMG_SRCSET = createSrcSetSizes(5, 150)
 export const VISUAL_ESSAY_SRCSET = createSrcSetSizes(8, 125)
+
+export const HYPHEN = {
+  BEFORE: 4,
+  AFTER: 4,
+  MIN_LENGTH: 8,
+  LIMIT_ZONE: '10%',
+  LIMIT_LINES: 2
+}

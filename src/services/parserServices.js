@@ -117,10 +117,10 @@ const parseTextView = (text, {
   )
 }
 
-const parseVisualEssay = (visualEssay, isMobile = false, isBlueInsights = false) =>
+const parseVisualEssay = (data, visualEssay, isMobile = false, isBlueInsights = false) =>
   visualEssay.map(([imgNum, colStart, colEnd, top, alignBottom, bleedDirection]) => {
-    const nodeData = apiServices
-      .visualEssayData
+    const nodeData = data
+      .visualEssay
       .find(data => data.imgNum[0] === imgNum)
     nodeData.imgLink = nodeData.imgLinks[0]
     const colSpan = [colStart, colEnd]

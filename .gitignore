@@ -23,4 +23,3 @@ yarn-debug.log*
 yarn-error.log*
 
 scripts/00_Originals
-data/test.html
