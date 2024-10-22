@@ -100,6 +100,10 @@ const DeviceStyle = createGlobalStyle`
       ${mixins.dynamicSizes({ fontSize: FONT_SIZES_RESPONSIVE.REGULAR })}
     }
   }
+
+  * {
+    cursor: none;
+  }
 `
 
 const MainContainer = styled.div`

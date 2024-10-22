@@ -3,10 +3,6 @@ body {
   overflow: hidden;
   text-wrap: pretty;
 
-  * {
-    cursor: none;
-  }
-
   @supports (hanging-punctuation: first) {
     hanging-punctuation: first;
   }
