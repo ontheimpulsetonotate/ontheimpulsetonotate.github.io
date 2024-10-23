@@ -2,8 +2,9 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { VISUAL_ESSAY_IMG_NUM } from '../../../constants/apiConstants'
 import { FRAGMENT_ID_PREFIX } from '../../../constants/reactConstants'
-import { CLS_ID, SIZES } from '../../../constants/stylesConstants'
+import { CLS_ID, SIZES, TIMINGS } from '../../../constants/stylesConstants'
 import visualEssays from '../../../data/visualEssays'
+import useContainerFadeIn from '../../../hooks/useContainerFadeIn'
 import useIsMobile from '../../../hooks/useIsMobile'
 import { addEventListener, getScrolling } from '../../../utils/reactUtils'
 import FullContainer from '../../common/containers/fullContainer'
@@ -45,6 +46,7 @@ const MixedView = ({
     handleFragmentScroll()
   }, [fragmentIndex])
 
+  const fadeStyle = useContainerFadeIn()
 
   const mixedViewContent = useMemo(() => {
     let isLeft = false
@@ -96,7 +98,10 @@ const MixedView = ({
     <Container
       ref={containerRef}
       id={CLS_ID.MAIN}
-      style={{ display: isMobile && aboutIsOpened ? 'none' : '' }}>
+      style={{
+        ...fadeStyle,
+        display: isMobile && aboutIsOpened ? 'none' : ''
+      }}>
       {mixedViewContent}
       <PopUpCitation {...citation} />
     </Container>
@@ -113,6 +118,7 @@ const BasedContainer = styled(FullContainer)`
 
 const DesktopContainer = styled(BasedContainer)`
   overflow-y: scroll;
+  transition: opacity linear ${TIMINGS.MIXED_FIGURE_OPACITY}ms;
 `
 
 const MobileContainer = styled(BasedContainer)`

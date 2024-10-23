@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { TIMINGS } from '../../../constants/stylesConstants'
+import useContainerFadeIn from '../../../hooks/useContainerFadeIn'
 import useMergedRef from '../../../hooks/useMergedRef'
 import { UNMAPPED_BOUNDS, map, mapPoisson, quickArray, validateString } from '../../../utils/commonUtils'
 import { getMainContainer } from '../../../utils/styleUtils'
@@ -72,6 +73,7 @@ const DragContainer = forwardRef(function DragContainer({
       containerRef.current.scrollTo({ top: 0, behavior: 'smooth' })
   }, [isOrdered])
 
+  const fadeStyle = useContainerFadeIn()
   useEffect(() => () => {
     handleMemoizeNodeData({
       unmappedPositions, zIndices, hasAnimated: hasAnimatedRef.current
@@ -91,7 +93,10 @@ const DragContainer = forwardRef(function DragContainer({
 
   return (
     <StyledContainer
-      style={{ overflowY: isOrdered ? 'scroll' : 'hidden' }}
+      style={{
+        ...fadeStyle,
+        overflowY: isOrdered ? 'scroll' : 'hidden',
+      }}
       ref={containerRef}>
       {contents.map((content, i) =>
         <Node

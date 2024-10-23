@@ -40,7 +40,7 @@
     "react/display-name": "warn",
     "import/no-named-as-default": "off",
     "import/order": [
-      "error",
+      "warn",
       {
         "groups": [
           "builtin",

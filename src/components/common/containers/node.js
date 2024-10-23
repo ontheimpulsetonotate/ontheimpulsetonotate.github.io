@@ -45,7 +45,7 @@ const Node = forwardRef(function Node({
   useGSAP(() => {
     if (!childRendered) return
 
-    const delay = !index ? 1 : _.random(0, 12.5, true)
+    const delay = !index ? 1 : _.random(0, TIMINGS.NODE_MAX_DELAY / 1000, true)
 
     timeoutRef.current = setTimeout(() => {
       if (innerRef.current)
