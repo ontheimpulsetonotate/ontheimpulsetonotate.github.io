@@ -10,7 +10,6 @@ import { BLEED_DIRECTIONS } from '../constants/apiConstants'
 import { COLORS } from '../constants/stylesConstants'
 import Size from '../utils/helpers/size'
 import { convertVisualEssayImgSize, spanCol } from '../utils/styleUtils'
-import apiServices from './apiServices'
 
 const _parse = (text, options) => text ? parse(text, options) : undefined
 
@@ -30,6 +29,7 @@ const parseTextView = (text, {
   footnotes,
   projects,
   onHover,
+  buttonHoverHandlers,
   handleButtonClick,
 } = {}) => {
   const trimSpace = '(<br>|\\s|&#8202;)+'
@@ -98,7 +98,10 @@ const parseTextView = (text, {
       if (truncate === false) return (
         <Paragraph hang={hang}>
           {reactChildren}
-          <ExpandButton isExpanded={true} handleClick={handleButtonClick} />
+          <ExpandButton
+            {...buttonHoverHandlers}
+            isExpanded={true}
+            handleClick={handleButtonClick} />
         </Paragraph>
       )
 

@@ -49,7 +49,8 @@ const Text = ({
         footnotes,
         projects,
         handleButtonClick,
-        onHover: handleCitationHover
+        buttonHoverHandlers,
+        onHover: handleCitationHover,
       })
     return isExpanded ? getParsed(false) :
       <Paragraph asDiv hang={hang}>

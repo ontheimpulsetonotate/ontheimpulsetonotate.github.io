@@ -17,7 +17,8 @@ const Mobile = ({
   isInBlueInsights,
   handleBlueInsightsIntersect,
   handleIndexRowClick,
-  handleAboutToggle }) => {
+  handleAboutToggle
+}) => {
   const [indexIsOpened, setIndexIsOpened] = useState(false)
   const isAbout = aboutIsOpened && !indexIsOpened
 

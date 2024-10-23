@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { useContext, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { COLORS, FONT_FAMILIES, FONT_SIZES, FONT_WEIGHTS, SIZES } from '../../constants/stylesConstants'
 import { GlobalContext } from '../../context/context'
@@ -15,7 +15,7 @@ const IndexMobile = ({ onRowClick, onClose }) => {
   const [sort, setSort] = useState({ index: 0, isAscending: true })
 
   const headers = [
-    ['section', () => _.sortBy(data, frag => frag.imgNum[0])],
+    ['section', () => _.sortBy(data, frag => frag.sectionTitle)],
     ['read', () => _.sortBy(data, frag => frag.pageNum[0])]
   ]
 
@@ -24,6 +24,11 @@ const IndexMobile = ({ onRowClick, onClose }) => {
     onRowClick(imgNum[0])
     onClose()
   }
+
+  useEffect(() => {
+    document.body.style.overflowY = 'hidden'
+    return () => document.body.style.overflowY = 'scroll'
+  }, [])
 
   const sortedData = useMemo(() => {
     const sorted = headers[sort.index][1]()
@@ -53,14 +58,13 @@ const IndexMobile = ({ onRowClick, onClose }) => {
         </TableHead>
         {sortedData.map((nodeData, i) => {
           const {
-            artistFirstName,
-            artistLastName,
+            sectionTitle,
             pageNum
           } = nodeData
           return (
             <Row key={i} onClick={e => handleRowClick(e, nodeData)}>
               <p>
-                {artistLastName}{validateString(artistFirstName, `, ${artistFirstName}`)}
+                {sectionTitle}
               </p>
               <p>
                 {!!pageNum.length && `P. ${pageNum.map(num => padNumber(num)).join('—')}`}

@@ -26,7 +26,7 @@ const App = () => {
 
   const handleIndexRowClick = (i, navigate = _.noop) => {
     setMixedViewIndex(i)
-    navigate(views.mixed.url)
+    if (!isMobile) navigate(views.mixed.url)
   }
 
   return (
