@@ -68,6 +68,7 @@ const MixedView = ({
         return newHeights
       })
 
+      const handleHoverCitation = citation => setCitation(citation)
       return (
         <React.Fragment key={i}>
           <MixedViewSection
@@ -79,14 +80,15 @@ const MixedView = ({
             afterVisualEssay={afterVisualEssay}
             sectionHeights={sectionHeights.slice(i, i + 3)}
             onSetHeight={handleSetHeight}
-            onHoverCitation={citation => setCitation(citation)} />
+            onHoverCitation={handleHoverCitation} />
           {hasVisualEssay && <VisualEssay
             data={data}
             sizeData={isBlueInsights ?
               visualEssays.blueInsights[device] :
               visualEssays.surfaceManipulation[device]}
             isBlueInsights={isBlueInsights}
-            handleBlueInsightsIntersect={handleBlueInsightsIntersect} />}
+            handleBlueInsightsIntersect={handleBlueInsightsIntersect}
+            onHoverCitation={handleHoverCitation} />}
         </React.Fragment>
       )
     })

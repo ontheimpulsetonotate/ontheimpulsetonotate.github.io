@@ -51,12 +51,12 @@ const Citation = ({ children, footnote, color, imgRef, fixedSize, onHover, style
         onMouseOut={handleMouseOut}>
         {children}
       </CitationSpan>
-      <PopUpCitation
+      {/* <PopUpCitation
         color={color}
         imgRef={imgRef}
         fixedSize={fixedSize}>
         {isHovering && !onHover && footnote}
-      </PopUpCitation>
+      </PopUpCitation> */}
     </>
   )
 }
